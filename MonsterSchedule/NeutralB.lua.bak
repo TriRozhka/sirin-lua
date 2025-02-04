@@ -1,0 +1,70 @@
+local t = {
+rule_unique_name = {
+	ruleStartTime = "14-01-2020 16:53:00", -- optional
+	ruleEndTime = "14-01-2020 16:53:00", -- optional
+	monsterCode = "00000",
+	schedule = { -- error in schedule disables rule automatically
+		scheduleType = "day", -- hour, day, dayOfWeek, dayOfMonth, delay
+		intervals = {
+			{ -- every day at 10:00
+				hour = 10, -- optional. Default 0
+				minute = 0, -- optional. Default 0
+			},
+			{ -- every day at 22:00
+				hour = 22, -- optional. Default 0
+				minute = 0, -- optional. Default 0
+			},
+		},
+		--[[
+		scheduleType = "hour", -- hour, day, dayOfWeek, dayOfMonth
+		intervals = {
+			{ -- every hour at 0 min
+				minute = 0, -- optional. Default 0
+			},
+			{ -- every hour at 30 min
+				minute = 30, -- optional. Default 0
+			},
+		},
+		]]--
+		--[[
+		scheduleType = "dayOfWeek", -- hour, day, dayOfWeek, dayOfMonth
+		intervals = {
+			{ -- every sunday at 22:00
+				val = 1, -- optional. Default 1. 1 - Sunday, 2 - Monday
+				hour = 22, -- optional. Default 0
+				minute = 0, -- optional. Default 0
+			},
+			{ -- every wednesday at 15:30
+				val = 4,
+				hour = 15, -- optional. Default 0
+				minute = 30, -- optional. Default 0
+			},
+		},
+		]]--
+		--[[
+		scheduleType = "dayOfMonth", -- hour, day, dayOfWeek, dayOfMonth
+		intervals = {
+			{ -- every 1st calendar day at 22:00
+				val = 1, -- optional. Default 1. 1-31
+				hour = 22, -- optional. Default 0
+				minute = 0, -- optional. Default 0
+			},
+			{ -- every 25th calendar day at 15:30
+				val = 25,
+				hour = 15, -- optional. Default 0
+				minute = 30, -- optional. Default 0
+			},
+		},
+		]]--
+	},
+	positions = { -- random selection. error in positions disables rule automatically
+		{ "NeutralB", 0, 100, 20, -30, 200 }, -- Map code, layer, x, y, z, [range]. Default range is 0 - exact position.
+		{ "NeutralB", 0, 200, 80, -230 },
+	},
+	window = 60, -- optional. Default 0. value in minutes. Next respawn time +- window / 2
+	succRate = 100, -- optional. Default 100
+	duration = 0, -- optional. Default 0. value in seconds. If monster not killed in `duration` seconds then despawn monster. if <=0 then no despawn will happen.
+},
+}
+
+return t
