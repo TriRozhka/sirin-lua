@@ -49,9 +49,9 @@ local SirinLootingMgr = {
 
 ---@return SirinLootingMgr self
 function SirinLootingMgr:new(o)
-o = o or {}
-self.__index = self
-return setmetatable(o, self)
+	o = o or {}
+	self.__index = self
+	return setmetatable(o, self)
 end
 
 LootingMgr = SirinLootingMgr:new()
@@ -64,7 +64,7 @@ function SirinLootingMgr:loadScripts()
 	print "Looting table load start"
 
 	repeat
-		TmpItemLooting = FileLoader.LoadChunkedTable(".\\sirin-lua\\ItemLooting")
+		TmpItemLooting = FileLoader.LoadChunkedTable(".\\sirin-lua\\ItemLooting", true)
 
 		if not TmpItemLooting then
 			Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, "Failed to load 'Item looting' scripts!\n")
@@ -75,6 +75,8 @@ function SirinLootingMgr:loadScripts()
 		if not self:validateScriptData() then
 			break
 		end
+
+		self:init()
 
 		if TmpItemLooting then
 			---@type table<integer, table<integer, SirinLootRecord>>?
@@ -232,6 +234,100 @@ function SirinLootingMgr:validateScriptData()
 	end
 
 	return bSucc
+end
+
+function SirinLootingMgr:saveState()
+	local t = {}
+
+	for _,v in pairs(self.m_delayedDrop) do
+		local s = {
+			dwDropTime = v.dwDropTime,
+			pMap = Sirin.mainThread.mapDataToVoid(v.pMap),
+			wLayerIndex = v.wLayerIndex,
+			pos = v.pos,
+			dwOwnerObjSerial = v.dwOwnerObjSerial,
+			wOwnerObjIndex = v.wOwnerObjIndex,
+			byOwnerUserDgr = v.byOwnerUserDgr,
+			dwThrowerObjSerial = v.dwThrowerObjSerial,
+			wThrowerObjIndex = v.wOwnerObjIndex,
+			dwPartyBossSerial = v.dwPartyBossSerial,
+			bPartyShare = v.bPartyShare,
+			pMonRecFld = Sirin.mainThread.baseToVoid(v.pMonRecFld),
+			lootTable = {},
+			dwNextDropIndex = v.dwNextDropIndex,
+			dwAnnounceTime = v.dwAnnounceTime,
+		}
+
+		for _,l in pairs(v.lootTable) do
+			local i = {
+				l[1],
+				Sirin.mainThread.baseToVoid(l[2]),
+			}
+
+			table.insert(s.lootTable, i)
+		end
+
+		table.insert(t, s)
+	end
+
+	if #t > 0 then
+		local Ctx = Sirin.luaThreadManager.LuaGetThread("sirin.guard.data")
+
+		Ctx:Lock()
+
+		Sirin.luaThreadManager.CopyToContext(Ctx, "DelayedDropData", t)
+
+		Ctx:Unlock()
+	end
+end
+
+function SirinLootingMgr:init()
+	local t = {}
+	local Ctx = Sirin.luaThreadManager.LuaGetThread("sirin.guard.data")
+
+	Ctx:Lock()
+
+	if Sirin.luaThreadManager.IsExistGlobal(Ctx, "DelayedDropData") then
+		t = Sirin.luaThreadManager.CopyFromContext(Ctx, "DelayedDropData")
+		Sirin.luaThreadManager.DeleteGlobal(Ctx, "DelayedDropData")
+	end
+
+	Ctx:Unlock()
+
+	if #t > 0 then
+		self.m_tLoopTime = Sirin.mainThread.g_dwCurTime
+
+		for _,v in pairs(t) do
+			local s = {
+				dwDropTime = v.dwDropTime,
+				pMap = Sirin.mainThread.voidToMapData(v.pMap),
+				wLayerIndex = v.wLayerIndex,
+				pos = v.pos,
+				dwOwnerObjSerial = v.dwOwnerObjSerial,
+				wOwnerObjIndex = v.wOwnerObjIndex,
+				byOwnerUserDgr = v.byOwnerUserDgr,
+				dwThrowerObjSerial = v.dwThrowerObjSerial,
+				wThrowerObjIndex = v.wOwnerObjIndex,
+				dwPartyBossSerial = v.dwPartyBossSerial,
+				bPartyShare = v.bPartyShare,
+				pMonRecFld = Sirin.mainThread.baseToMonsterCharacter(Sirin.mainThread.voidToBase(v.pMonRecFld)),
+				lootTable = {},
+				dwNextDropIndex = v.dwNextDropIndex,
+				dwAnnounceTime = v.dwAnnounceTime,
+			}
+
+			for _,l in pairs(v.lootTable) do
+				local i = {
+					l[1],
+					Sirin.mainThread.voidToBase(l[2]),
+				}
+
+				table.insert(s.lootTable, i)
+			end
+
+			table.insert(self.m_delayedDrop, s)
+		end
+	end
 end
 
 function SirinLootingMgr:onLoop()

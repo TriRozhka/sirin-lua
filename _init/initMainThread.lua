@@ -42,6 +42,7 @@ OnThreadEnd = {
 	function() RiftMgr:saveState() end,
 	function() PotionMgr:uninit() end,
 	function() MonsterScheduleMgr:saveState() end,
+	--function() LootingMgr:saveState() end,
 }
 
 MainThread = {}

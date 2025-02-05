@@ -19,6 +19,7 @@ SERVER_2232 = false
 ---@field WriteA fun(pszFileName: string, pszWriteData: string, bWithTime: boolean, bWithDate: boolean)
 ---@field getUUIDv4 fun(): string
 ---@field UUIDv4 (fun(): UUIDv4)|(fun(src: UUIDv4): UUIDv4)
+---@field getZoneVersion fun(): integer
 ---@field CAssetController CAssetController
 ---@field CLanguageAsset CLanguageAsset
 ---@field CTranslationAsset CTranslationAsset
@@ -122,6 +123,7 @@ local console = {}
 ---@field objectToNuclearBomb fun(this: CGameObject): CNuclearBomb
 ---@field g_Player_get fun(nIndex: integer): CPlayer
 ---@field getPlayerBySerial fun(integer): CPlayer
+---@field getActivePlayers fun(): table<integer, CPlayer>
 ---@field objectToPlayer fun(this: CGameObject): CPlayer
 ---@field CQuestMgr__s_tblQuestHappenEvent_get fun(nIndex: integer): CRecordData
 ---@field CQuestMgr__s_tblQuest fun(): CRecordData
@@ -223,6 +225,10 @@ local console = {}
 ---@field _combine_ex_item_result_zocl fun(): _combine_ex_item_result_zocl
 ---@field voidToObject fun(ptr: lightuserdata): CGameObject
 ---@field objectToVoid fun(ptr: CGameObject): lightuserdata
+---@field voidToBase fun(ptr: lightuserdata): _base_fld
+---@field baseToVoid fun(ptr: _base_fld): lightuserdata
+---@field voidToMapData fun(ptr: lightuserdata): CMapData
+---@field mapDataToVoid fun(ptr: CMapData): lightuserdata
 ---@field IsAddAbleTalikToItem fun(byItemTableCode: integer, wItemIndex: integer, dwItemCurLv: integer, pUpgTalik: _ItemUpgrade_fld): boolean
 ---@field GetItemEquipLevel fun(nTableCode: integer, nItemIndex: integer): integer
 ---@field _ContPotionData fun(): _ContPotionData
@@ -344,7 +350,7 @@ local modInfinitePotion = {}
 
 ---@class (exact) modRaceSexClassChange
 ---@field updateRaceSexClass fun(pPlayer: CPlayer, byNewRaceSex: integer, pszClassCode: string): integer
----@field updateBaseShape fun(dwBaseShape: integer): integer
+---@field updateBaseShape fun(pPlayer: CPlayer, dwBaseShape: integer): integer
 local modRaceSexClassChange = {}
 
 ---@class (exact) modForceLogoutAfterUsePotion
@@ -2437,6 +2443,8 @@ function CUserDB:Update_ExtTrunkSlotNum(bySlotNum) end
 ---@param bSlow boolean
 ---@param pszReason string
 function CUserDB:ForceCloseCommand(byKickType, dwPushIP, bSlow, pszReason) end
+---@return boolean
+function CUserDB:Lobby_Char_Request() end
 
 ---@class (exact) EffectData
 ---@field m_bExist integer
@@ -3112,9 +3120,9 @@ local _quest_reward_item = {}
 local _quest_reward_mastery = {}
 
 ---@class (exact) _record_bin_header
----@field m_Header integer
----@field m_nLowNum integer
----@field m_ppsRecord integer
+---@field m_nRecordNum integer
+---@field m_nFieldNum integer
+---@field m_nRecordSize integer
 local _record_bin_header = {}
 
 ---@class (exact) _sec_info

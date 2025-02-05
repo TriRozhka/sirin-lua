@@ -54,11 +54,11 @@ local t = {
 -- ipcsa18 = { 18, { 0, 999 } }, -- Read ModPotionEffect.lua for parameter description.
 
 --[[
----@param pActChar CCharacter
----@param pTargetChar CCharacter
----@return integer
-ipcsa19 = function(pActChar, pTargetChar)
-	local pPlayer = Sirin.mainThread.objectToPlayer(pTargetChar)
+	---@param pActChar CCharacter
+	---@param pTargetChar CCharacter
+	---@return integer
+	ipcsa19 = function(pActChar, pTargetChar)
+		local pPlayer = Sirin.mainThread.objectToPlayer(pTargetChar)
 		local byErrCode = Sirin.mainThread.modRaceSexClassChange.updateRaceSexClass(pPlayer, 0, "BSB0")
 
 		if byErrCode == 0 then
@@ -123,7 +123,7 @@ ipcsa19 = function(pActChar, pTargetChar)
 		end
 
 		return byErrCode
-end,
+	end,
 --]]
 }
 
