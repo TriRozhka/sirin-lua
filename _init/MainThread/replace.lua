@@ -56,7 +56,7 @@ function MainThread.CCharacter__GetAttackDamPoint(pSrcChar, nAttPnt, nAttPart, n
 	-- Implementation of this function is optional
 	return 1
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -68,7 +68,7 @@ function MainThread.CPlayer__apply_have_item_std_effect(pPlayer, nEffCode, fVal,
 	-- Implementation of this function is optional
 	PlayerMgr.CPlayer__apply_have_item_std_effect(pPlayer, nEffCode, fVal, bAdd, nDiffCnt)
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -79,7 +79,7 @@ function MainThread.CPlayer__apply_normal_item_std_effect(pPlayer, nEffCode, fVa
 	-- Implementation of this function is optional
 	PlayerMgr.CPlayer__apply_normal_item_std_effect(pPlayer, nEffCode, fVal, bEquip)
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -89,7 +89,7 @@ function MainThread.CPlayer__apply_case_equip_upgrade_effect(pPlayer, pItem, bEq
 	-- Implementation of this function is optional
 	PlayerMgr.CPlayer__apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip)
 end
-]]--
+--]]
 
 --[[
 ---@param pAttack CAttack
@@ -173,7 +173,7 @@ function MainThread.ItemCombineMgr__MakeNewItems(pCombineMgr, pPlayerItemDB, pRe
 	-- Implementation of this function is optional
 	return CombineExMgr.MakeNewItems(pCombineMgr, pPlayerItemDB, pRecv, pSend)
 end
-]]--
+--]]
 
 --[[
 ---@param pQuestMgr CQuestMgr

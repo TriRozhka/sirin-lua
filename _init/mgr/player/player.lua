@@ -1895,7 +1895,7 @@ function sirinPlayer.CPlayer__apply_case_equip_upgrade_effect(pPlayer, pItem, bE
 				local handler = apply_case_talik[talik_index]
 
 				if handler then
-					handler(pPlayer, fApplyEff, bEquip)
+					handler(pPlayer, fApplyEff, bEquip, pItem)
 				end
 
 				if talik_index == 5 then
@@ -1932,7 +1932,7 @@ function sirinPlayer.GetIncompleteStackSerial(pPlayer, byItemTableCode, dwItemIn
 
 		for i = 0, pPlayer.m_Param.m_dbInven.m_nUsedNum - 1 do
 			local pCon = pPlayer.m_Param.m_dbInven:m_List_get(i)
-			if pCon.m_bLoad and not pCon.m_bLock and pCon.m_byTableCode == byItemTableCode and pCon.m_wItemIndex == dwItemIndex and pCon.m_dwDur + nFitNum <= nStackSize then
+			if pCon.m_byLoad == 1 and not pCon.m_bLock and pCon.m_byTableCode == byItemTableCode and pCon.m_wItemIndex == dwItemIndex and pCon.m_dwDur + nFitNum <= nStackSize then
 				table.insert(Inven, pCon)
 			end
 		end

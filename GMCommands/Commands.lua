@@ -126,17 +126,19 @@ local t = {
 	---@return boolean
 	function (pPlayer)
 		local list = pPlayer.m_Param.m_QuestDB:GetActiveQuestList()
-		for k,v in ipairs(list) do
+
+		for _,v in pairs(list) do
 			repeat
-				if v.byQuestType == 255 then
+				if v[2].byQuestType == 255 then
 					break
 				end
 
-				pPlayer:SendMsg_QuestFailure(5, k - 1)
-				pPlayer.m_QuestMgr:DeleteQuestData(k - 1)
-				pPlayer.m_pUserDB:Update_QuestDelete(k - 1)
+				pPlayer:SendMsg_QuestFailure(5, v[1])
+				pPlayer.m_QuestMgr:DeleteQuestData(v[1])
+				pPlayer.m_pUserDB:Update_QuestDelete(v[1])
 			until true
 		end
+
 		return true
 	end
 },

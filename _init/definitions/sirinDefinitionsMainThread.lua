@@ -119,6 +119,8 @@ local console = {}
 ---@field objectToHolyKeeper fun(this: CGameObject): CHolyKeeper
 ---@field objectToHolyStone fun(this: CGameObject): CHolyStone
 ---@field getMapData (fun(strMapCode: string): CMapData)|(fun(nMapIndex: integer): CMapData)
+---@field g_Monster_get fun(nIndex: integer): CMonster
+---@field getActiveMonsters fun(strMapCode?: string, nLayerIndex?: integer): table<integer, CMonster>
 ---@field objectToMonster fun(this: CGameObject): CMonster
 ---@field objectToNuclearBomb fun(this: CGameObject): CNuclearBomb
 ---@field g_Player_get fun(nIndex: integer): CPlayer
@@ -875,7 +877,7 @@ function CGameObject:GetCurSecNum() end
 ---@field byRaceCode integer
 ---@field pItem _STORAGE_LIST___db_con
 ---@field nIniIndex integer
----@field bQuick integer
+---@field bQuick boolean
 local _tower_create_setdata = {}
 
 ---@class (exact) CGuardTower: CCharacter
@@ -1028,7 +1030,7 @@ function CHolyStoneSaveData:m_dwTerm_set(a1, a2) end
 ---@field m_strHolyMental string
 ---@field m_fKeeperHPRate number
 ---@field m_fFirstKeeperHPRate number
----@field m_bScheduleCodePre integer
+---@field m_nScheduleCodePre integer m_bScheduleCodePre
 ---@field m_byKeeperDestroyRace integer
 ---@field m_bConsumable boolean
 ---@field m_pMentalPass boolean
@@ -1099,7 +1101,7 @@ function CHolyStoneSystem:SetKeeperDestroyRace(a1) end
 ---@field m_dwEventGuildSerial integer
 ---@field m_byEventRaceCode integer
 ---@field m_byEventLootAuth integer
----@field m_bHolyScanner integer
+---@field m_nHolyScanner integer m_bHolyScanner
 ---@field m_Item _STORAGE_LIST___db_con
 ---@field m_bHide boolean
 local CItemBox = {}
@@ -1254,7 +1256,7 @@ function CLuaSendBuffer:PushDouble(a1) end
 ---@field m_tmrAccountPing lightuserdata CMyTimer
 ---@field m_tmrStateMsgGotoWeb lightuserdata CMyTimer
 ---@field m_tmrCheckRadarDelay lightuserdata CMyTimer
----@field m_bFreeServer integer
+---@field m_nFreeServer integer m_bFreeServer
 ---@field m_bRuleThread boolean
 ---@field m_bDQSThread boolean
 ---@field m_tblPlayer CRecordData
@@ -1320,7 +1322,7 @@ function CLuaSendBuffer:PushDouble(a1) end
 ---@field m_pTimeLimitMgr lightuserdata TimeLimitMgr
 ---@field m_tmCheckForceClose lightuserdata CMyTimer
 ---@field m_MobMessage lightuserdata _mob_message
----@field m_bLimitPlayerLevel integer
+---@field m_nLimitPlayerLevel integer m_bLimitPlayerLevel
 ---@field m_byLimitPlayerLevel integer
 ---@field m_bFlyOnOff boolean
 ---@field m_bFlyLog boolean
@@ -1770,7 +1772,7 @@ function CPartyPlayer:IsPartyMember(a1) end
 ---@field m_dwContItemEffEndTime integer
 ---@field m_PotionParam CPotionParam
 ---@field m_PotionBufUse CExtPotionBuf
----@field m_bCntEnable integer
+---@field m_nCntEnable integer m_bCntEnable
 ---@field m_tmLoginTime lightuserdata _SYSTEMTIME
 ---@field m_tmCalcTime lightuserdata _SYSTEMTIME
 ---@field m_tmrAccumPlayingTime lightuserdata CMyTimer
@@ -2363,8 +2365,8 @@ function CTrap:Destroy(byDesType) end
 ---@field m_aszAvatorName string
 ---@field m_dwSerial integer
 ---@field m_byNameLen integer
----@field m_AvatorData lightuserdata _AVATOR_DATA
----@field m_AvatorData_bk lightuserdata _AVATOR_DATA
+---@field m_AvatorData _AVATOR_DATA
+---@field m_AvatorData_bk _AVATOR_DATA
 ---@field m_bActive boolean
 ---@field m_bField boolean
 ---@field m_bWndFullMode boolean
@@ -2408,13 +2410,13 @@ function CUserDB:Update_MaxLevel(a1) end
 ---@param byStorageCode integer
 ---@param bySlot integer
 ---@param qwAmount integer
----@param bUpdate integer
+---@param bUpdate boolean
 ---@return boolean
 function CUserDB:Update_ItemDur(byStorageCode, bySlot, qwAmount, bUpdate) end
 ---@param byStorageCode integer
 ---@param bySlot integer
 ---@param dwUpgrade integer
----@param bUpdate integer
+---@param bUpdate boolean
 ---@return boolean
 function CUserDB:Update_ItemUpgrade(byStorageCode, bySlot, dwUpgrade, bUpdate) end
 ---@param bySlotIndex integer
@@ -2447,7 +2449,9 @@ function CUserDB:ForceCloseCommand(byKickType, dwPushIP, bSlow, pszReason) end
 function CUserDB:Lobby_Char_Request() end
 
 ---@class (exact) EffectData
----@field m_bExist integer
+---@field nEffCode integer
+---@field fEffUnit number
+---@field fEffUnitMax number
 local EffectData = {}
 
 ---@class (exact) ItemCombineMgr
@@ -2497,9 +2501,12 @@ function _ContPotionData:GetEffectIndex() end
 
 ---@class (exact) _Exttrunk_db_load: _STORAGE_LIST
 local _Exttrunk_db_load = {}
----@param a1 integer
+---@param nIndex integer
 ---@return integer
-function _Exttrunk_db_load:m_byItemSlotRace_get(a1) end
+function _Exttrunk_db_load:m_byItemSlotRace_get(nIndex) end
+---@param nIndex integer
+---@param val integer
+function _Exttrunk_db_load:m_byItemSlotRace_set(nIndex, val) end
 ---@param a1 integer
 ---@return _STORAGE_LIST___db_con
 function _Exttrunk_db_load:m_ExtList_get(a1) end
@@ -2618,24 +2625,6 @@ local _QUEST_CASH = {}
 ---@field byStoneMapMoveInfo integer
 local _QUEST_CASH_OTHER = {}
 
----@class (exact) _STAT_DB_BASE
----@field m_dwDefenceCnt integer
----@field m_dwShieldCnt integer
----@field m_dwSpecialCum integer
-local _STAT_DB_BASE = {}
----@param a1 integer
----@return integer
-function _STAT_DB_BASE:m_dwDamWpCnt_get(a1) end
----@param a1 integer
----@return integer
-function _STAT_DB_BASE:m_dwSkillCum_get(a1) end
----@param a1 integer
----@return integer
-function _STAT_DB_BASE:m_dwForceCum_get(a1) end
----@param a1 integer
----@return integer
-function _STAT_DB_BASE:m_dwMakeCum_get(a1) end
-
 ---@class (exact) _STORAGE_LIST
 ---@field m_nListNum integer
 ---@field m_nUsedNum integer
@@ -2664,7 +2653,7 @@ local _STORAGE_LIST___db_con = {}
 ---@alias __ITEM _STORAGE_LIST___db_con
 
 ---@class (exact) _STORAGE_LIST___storage_con
----@field m_bLoad integer
+---@field m_byLoad integer m_bLoad
 ---@field m_byTableCode integer
 ---@field m_byClientIndex integer
 ---@field m_wItemIndex integer
@@ -2703,30 +2692,6 @@ function _TRAP_PARAM:m_Item_get(a1) end
 ---@field pItem CTrap
 ---@field dwSerial integer
 local _TRAP_PARAM___param = {}
-
----@class (exact) _UNIT_DB_BASE
-local _UNIT_DB_BASE = {}
----@param a1 integer
----@return _UNIT_DB_BASE___LIST
-function _UNIT_DB_BASE:m_List_get(a1) end
-
----@class (exact) _UNIT_DB_BASE___LIST
----@field bySlotIndex integer
----@field byFrame integer
----@field dwGauge integer
----@field nPullingFee integer
----@field dwCutTime integer
----@field wBooster integer
-local _UNIT_DB_BASE___LIST = {}
----@param a1 integer
----@return integer
-function _UNIT_DB_BASE___LIST:byPart_get(a1) end
----@param a1 integer
----@return integer
-function _UNIT_DB_BASE___LIST:dwBullet_get(a1) end
----@param a1 integer
----@return integer
-function _UNIT_DB_BASE___LIST:dwSpare_get(a1) end
 
 ---@class (exact) _WEAPON_PARAM
 ---@field pFixWp _STORAGE_LIST___db_con
@@ -2870,7 +2835,7 @@ function _character_db_load:m_byDftPart_get(a1) end
 ---@class (exact) _combine_ex_item_request_clzo
 ---@field wManualIndex integer
 ---@field byCombineSlotNum integer
----@field bUseNpcLink integer
+---@field nUseNpcLink integer bUseNpcLink
 ---@field clientTimeSerial integer
 local _combine_ex_item_request_clzo = {}
 ---@param a1 integer
@@ -3031,10 +2996,10 @@ function _force_db_load:m_List_get(a1) end
 local _happen_event_condition_node = {}
 
 ---@class (exact) _happen_event_node
----@field m_bUse integer
----@field m_bQuestRepeat integer
+---@field m_nUse integer m_bUse
+---@field m_nQuestRepeat integer m_bQuestRepeat
 ---@field m_nQuestType integer
----@field m_bSelectQuestManual integer
+---@field m_nSelectQuestManual integer m_bSelectQuestManual
 ---@field m_nAcepProNum integer
 ---@field m_nAcepProDen integer
 local _happen_event_node = {}
@@ -3164,9 +3129,12 @@ local _skill_lv_up_data = {}
 
 ---@class (exact) _trunk_db_load: _STORAGE_LIST
 local _trunk_db_load = {}
----@param a1 integer
+---@param nIndex integer
 ---@return integer
-function _trunk_db_load:m_byItemSlotRace_get(a1) end
+function _trunk_db_load:m_byItemSlotRace_get(nIndex) end
+---@param nIndex integer
+---@param val integer
+function _trunk_db_load:m_byItemSlotRace_set(nIndex, val) end
 ---@param a1 integer
 ---@return _STORAGE_LIST___db_con
 function _trunk_db_load:m_List_get(a1) end
@@ -3462,14 +3430,20 @@ local _QUEST_DB_BASE___START_NPC_QUEST_HISTORY = {}
 ---@return integer
 function _QUEST_DB_BASE___START_NPC_QUEST_HISTORY:tmStartTime() end
 
+---@class (exact) sirinActiveQuestData
+---@field [1] integer
+---@field [2] _QUEST_DB_BASE___LIST
+local sirinActiveQuestData = {}
+
 ---@class (exact) _QUEST_DB_BASE
 ---@field dwListCnt integer
 local _QUEST_DB_BASE = {}
 ---@param i integer
 ---@return _QUEST_DB_BASE___LIST
 function _QUEST_DB_BASE:m_List_get(i) end
----@return table<integer, _QUEST_DB_BASE___LIST>
-function _QUEST_DB_BASE:GetActiveQuestList() end
+---@param byType? integer
+---@return table<integer, sirinActiveQuestData>
+function _QUEST_DB_BASE:GetActiveQuestList(byType) end
 ---@param i integer
 ---@return _QUEST_DB_BASE___NPC_QUEST_HISTORY
 function _QUEST_DB_BASE:m_History_get(i) end
@@ -3529,6 +3503,28 @@ function _NPCQuestIndexTempData:Init() end
 ---@field byTableCode integer
 ---@field wItemIndex integer
 local _INVENKEY = {}
+
+---@class (exact) _EQUIPKEY
+---@field zItemIndex integer
+local _EQUIPKEY = {}
+
+---@class (exact) _LINKKEY
+---@field wEffectCode integer
+local _LINKKEY = {}
+
+---@class (exact) _EMBELLKEY
+---@field bySlotIndex integer
+---@field byTableCode integer
+---@field wItemIndex integer
+local _EMBELLKEY = {}
+
+---@class (exact) _FORCEKEY
+---@field dwKey integer
+local _FORCEKEY = {}
+
+---@class (exact) _ANIMUSKEY
+---@field byItemIndex integer
+local _ANIMUSKEY = {}
 
 ---@class (exact) _good_storage_info
 ---@field byItemTableCode integer
@@ -3621,7 +3617,7 @@ local _store_dummy = {}
 ---@class (exact) CLogFile
 ---@field m_szFileName string
 ---@field m_dwLogCount integer
----@field m_bWriteAble integer
+---@field m_nWriteAble integer m_bWriteAble
 ---@field m_bAddCount boolean
 ---@field m_bDate boolean
 ---@field m_bTrace boolean
@@ -3630,11 +3626,348 @@ local CLogFile = {}
 ---@param str string
 function CLogFile:Write(str) end
 ---@param file_name string
----@param bWritable integer
+---@param nIsWritable integer
 ---@param bTrace boolean
 ---@param bDate boolean
 ---@param bAddCount boolean
-function CLogFile:SetWriteLogFile(file_name, bWritable, bTrace, bDate, bAddCount) end
+function CLogFile:SetWriteLogFile(file_name, nIsWritable, bTrace, bDate, bAddCount) end
+
+---@class (exact) _REGED_AVATOR_DB
+---@field m_wszAvatorName string
+---@field m_dwRecordNum integer
+---@field m_byRaceSexCode integer
+---@field m_bySlotIndex integer
+---@field m_szClassCode string
+---@field m_byLevel integer
+---@field m_dwDalant integer
+---@field m_dwGold integer
+---@field m_dwBaseShape integer
+---@field m_dwLastConnTime integer
+local _REGED_AVATOR_DB = {}
+---@param index integer
+---@return _EQUIPKEY
+function _REGED_AVATOR_DB:m_EquipKey_get(index) end
+---@param index integer
+---@return integer
+function _REGED_AVATOR_DB:m_byEquipLv_get(index) end
+---@param index integer
+---@param val integer
+function _REGED_AVATOR_DB:m_byEquipLv_set(index, val) end
+
+---@class (exact) _REGED : _REGED_AVATOR_DB
+local _REGED = {}
+---@param index integer
+---@return integer
+function _REGED:m_dwFixEquipLv_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_dwFixEquipLv_set(index, val) end
+---@param index integer
+---@return integer
+function _REGED:m_dwItemETSerial_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_dwItemETSerial_set(index, val) end
+---@param index integer
+---@return integer
+function _REGED:m_lnUID_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_lnUID_set(index, val) end
+---@param index integer
+---@return integer
+function _REGED:m_byCsMethod_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_byCsMethod_set(index, val) end
+---@param index integer
+---@return integer
+function _REGED:m_dwET_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_dwET_set(index, val) end
+---@param index integer
+---@return integer
+function _REGED:m_dwLendRegdTime_get(index) end
+---@param index integer
+---@param val integer
+function _REGED:m_dwLendRegdTime_set(index, val) end
+
+---@class (exact) _AVATOR_DB_BASE : _REGED
+---@field m_dwHP integer
+---@field m_dwFP integer
+---@field m_dwSP integer
+---@field m_dwDP integer
+---@field m_dExp number
+---@field m_dLossExp number
+---@field m_dPvPPoint number
+---@field m_dPvPCashBag number
+---@field m_dwPvpRank integer
+---@field m_wRankRate integer
+---@field m_dwRadarDelayTime integer
+---@field m_byBagNum integer
+---@field m_byMapCode integer
+---@field m_dwClassInitCnt integer
+---@field m_byLastClassGrade integer
+---@field m_fStartPos_x number
+---@field m_fStartPos_y number
+---@field m_fStartPos_z number
+---@field m_dwTotalPlayMin integer
+---@field m_dwStartPlayTime integer
+---@field m_szBindMapCode string
+---@field m_szBindDummy string
+---@field m_dwGuildSerial integer
+---@field m_byClassInGuild integer
+---@field m_dwGuildExplusDate integer
+---@field m_byGuildExplusApprovNum integer
+---@field m_byGuildExplusSeniorNum integer
+---@field m_dwAccountSerial integer
+---@field m_bOverlapVote boolean
+---@field m_dwGivebackCount integer
+---@field m_dwCashAmount integer
+---@field m_dwTakeLastMentalTicket integer
+---@field m_dwTakeLastCriTicket integer
+---@field m_byMaxLevel integer
+---@field m_dPvPPointLeak number
+---@field m_dwGuildEntryDelay integer
+---@field m_byPlayerInteg integer
+local _AVATOR_DB_BASE = {}
+---@param index integer
+---@return integer
+function _AVATOR_DB_BASE:m_zClassHistory_get(index) end
+---@param index integer
+---@param val integer
+function _AVATOR_DB_BASE:m_zClassHistory_set(index, val) end
+---@param index integer
+---@return integer
+function _AVATOR_DB_BASE:m_dwPunishment_get(index) end
+---@param index integer
+---@param val integer
+function _AVATOR_DB_BASE:m_dwPunishment_set(index, val) end
+---@param index integer
+---@return integer
+function _AVATOR_DB_BASE:m_dwElectSerial_get(index) end
+---@param index integer
+---@param val integer
+function _AVATOR_DB_BASE:m_dwElectSerial_set(index, val) end
+---@param index integer
+---@return integer
+function _AVATOR_DB_BASE:m_dwRaceBattleRecord_get(index) end
+---@param index integer
+---@param val integer
+function _AVATOR_DB_BASE:m_dwRaceBattleRecord_set(index, val) end
+
+---@class (exact) _LINK_DB_BASE___LIST
+---@field Key integer
+local _LINK_DB_BASE___LIST = {}
+
+---@class (exact) _LINK_DB_BASE
+---@field m_byLinkBoardLock integer
+local _LINK_DB_BASE = {}
+---@param index integer
+---@return _LINK_DB_BASE___LIST
+function _LINK_DB_BASE:m_LinkList_get(index) end
+---@param index integer
+---@return integer
+function _LINK_DB_BASE:m_dwLendRegdTime_get(index) end
+---@param index integer
+---@param val integer
+function _LINK_DB_BASE:m_dwLendRegdTime_set(index, val) end
+
+---@class (exact) _EQUIP_DB_BASE___EMBELLISH_LIST
+---@field Key _EMBELLKEY
+---@field wAmount integer
+---@field dwItemETSerial integer
+---@field lnUID integer
+---@field byCsMethod integer
+---@field dwT integer
+---@field dwLendRegdTime integer
+local _EQUIP_DB_BASE___EMBELLISH_LIST = {}
+
+---@class (exact) _EQUIP_DB_BASE
+local _EQUIP_DB_BASE = {}
+---@param index integer
+---@return _EQUIP_DB_BASE___EMBELLISH_LIST
+function _EQUIP_DB_BASE:m_EmbellishList_get(index) end
+
+---@class (exact) _FORCE_DB_BASE___LIST
+---@field Key _FORCEKEY
+---@field dwItemETSerial integer
+---@field lnUID integer
+---@field byCsMethod integer
+---@field dwT integer
+---@field m_dwLendRegdTime integer
+local _FORCE_DB_BASE___LIST = {}
+
+---@class (exact) _FORCE_DB_BASE
+local _FORCE_DB_BASE = {}
+---@param index integer
+---@return _FORCE_DB_BASE___LIST
+function _FORCE_DB_BASE:m_List_get(index) end
+
+---@class (exact) _ANIMUS_DB_BASE___LIST
+---@field Key _ANIMUSKEY
+---@field dwExp integer
+---@field dwParam integer
+---@field dwItemETSerial integer
+---@field lnUID integer
+---@field byCsMethod integer
+---@field dwT integer
+---@field dwLendRegdTime integer
+local _ANIMUS_DB_BASE___LIST = {}
+
+---@class (exact) _ANIMUS_DB_BASE
+local _ANIMUS_DB_BASE = {}
+---@param index integer
+---@return _ANIMUS_DB_BASE___LIST
+function _ANIMUS_DB_BASE:m_List_get(index) end
+
+---@class (exact) _STAT_DB_BASE
+---@field m_dwDefenceCnt integer
+---@field m_dwShieldCnt integer
+---@---@field m_dwSpecialCum integer
+local _STAT_DB_BASE = {}
+---@param index integer
+---@return integer
+function _STAT_DB_BASE:m_dwDamWpCnt_get(index) end
+---@param index integer
+---@param val integer
+function _STAT_DB_BASE:m_dwDamWpCnt_set(index, val) end
+---@param index integer
+---@return integer
+function _STAT_DB_BASE:m_dwSkillCum_get(index) end
+---@param index integer
+---@param val integer
+function _STAT_DB_BASE:m_dwSkillCum_set(index, val) end
+---@param index integer
+---@return integer
+function _STAT_DB_BASE:m_dwForceCum_get(index) end
+---@param index integer
+---@param val integer
+function _STAT_DB_BASE:m_dwForceCum_set(index, val) end
+---@param index integer
+---@return integer
+function _STAT_DB_BASE:m_dwMakeCum_get(index) end
+---@param index integer
+---@param val integer
+function _STAT_DB_BASE:m_dwMakeCum_set(index, val) end
+
+---@class (exact) _INVEN_DB_BASE___LIST
+---@field Key _INVENKEY
+---@field dwDur integer
+---@field dwUpt integer
+---@field dwItemETSerial integer
+---@field lnUID integer
+---@field byCsMethod integer
+---@field dwT integer
+---@field dwLendRegdTime integer
+local _INVEN_DB_BASE___LIST = {}
+
+---@class (exact) _INVEN_DB_BASE
+local _INVEN_DB_BASE = {}
+---@param index integer
+---@return _INVEN_DB_BASE___LIST
+function _INVEN_DB_BASE:m_List_get(index) end
+
+---@class (exact) _CUTTING_DB_BASE___LIST
+---@field Key _INVENKEY
+---@field dwDur integer
+local _CUTTING_DB_BASE___LIST = {}
+
+---@class (exact) _CUTTING_DB_BASE
+---@field m_bOldDataLoad boolean
+---@field m_byLeftNum integer
+local _CUTTING_DB_BASE = {}
+---@param index integer
+---@return _CUTTING_DB_BASE___LIST
+function _CUTTING_DB_BASE:m_List_get(index) end
+
+---@class (exact) _UNIT_DB_BASE___LIST
+---@field bySlotIndex integer
+---@field byFrame integer
+---@field dwGauge integer
+---@field nPullingFee integer
+---@field dwCutTime integer
+---@field wBooster integer
+local _UNIT_DB_BASE___LIST = {}
+---@param index integer
+---@return integer
+function _UNIT_DB_BASE___LIST:byPart_get(index) end
+---@param index integer
+---@param val integer
+function _UNIT_DB_BASE___LIST:byPart_set(index, val) end
+---@param index integer
+---@return integer
+function _UNIT_DB_BASE___LIST:dwBullet_get(index) end
+---@param index integer
+---@param val integer
+function _UNIT_DB_BASE___LIST:dwBullet_set(index, val) end
+---@param index integer
+---@return integer
+function _UNIT_DB_BASE___LIST:dwSpare_get(index) end
+---@param index integer
+---@param val integer
+function _UNIT_DB_BASE___LIST:dwSpare_set(index, val) end
+
+---@class (exact) _UNIT_DB_BASE
+local _UNIT_DB_BASE = {}
+---@param index integer
+---@return _UNIT_DB_BASE___LIST
+function _UNIT_DB_BASE:m_List_get(index) end
+
+---@class (exact) _SFCONT_DB_BASE___LIST
+---@field dwKey integer
+local _SFCONT_DB_BASE___LIST = {}
+
+---@class (exact) _SFCONT_DB_BASE
+local _SFCONT_DB_BASE = {}
+---@param index integer
+---@param sub_index integer
+---@return _SFCONT_DB_BASE___LIST
+function _SFCONT_DB_BASE:m_List_get(index, sub_index) end
+
+---@class (exact) _TRADE_DB_BASE___LIST
+---@field byState integer
+---@field dwRegistSerial integer
+---@field byInvenIndex integer
+---@field dwPrice integer
+---@field tStartTime integer
+---@field bySellTurm integer
+---@field dwBuyerSerial integer
+---@field dwTax integer
+---@field tResultTime integer
+---@field wszBuyerName string
+---@field szBuyerAccount string
+local _TRADE_DB_BASE___LIST = {}
+
+---@class (exact) _TRADE_DB_BASE
+local _TRADE_DB_BASE = {}
+---@param index integer
+---@return _TRADE_DB_BASE___LIST
+function _TRADE_DB_BASE:m_List_get(index) end
+
+---@class (exact) _BUDDY_DB_BASE___LIST
+---@field dwSerial integer
+---@field wszName string
+local _BUDDY_DB_BASE___LIST = {}
+
+---@class (exact) _BUDDY_DB_BASE
+local _BUDDY_DB_BASE = {}
+---@param index integer
+---@return _BUDDY_DB_BASE___LIST
+function _BUDDY_DB_BASE:m_List_get(index) end
+
+---@class (exact) _TRUNK_DB_BASE___LIST
+---@field Key _INVENKEY
+---@field dwDur integer
+---@field dwUpt integer
+---@field byRace integer
+---@field dwItemETSerial integer
+---@field lnUID integer
+---@field byCsMethod integer
+---@field dwT integer
+---@field dwLendRegdTime integer
+local _TRUNK_DB_BASE___LIST = {}
 
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4

@@ -35,7 +35,7 @@ local monsterLevelDiffRate = {
 ---@field m_bDebugLog boolean
 ---@field m_tLoopTime integer
 ---@field m_strUUID string
----@field pszLogPath string
+---@field m_pszLogPath string
 local SirinLootingMgr = {
 	m_nBossDropDelay = 10,
 	m_nBbossDropRange = 150,
@@ -44,7 +44,7 @@ local SirinLootingMgr = {
 	m_bDebugLog = false,
 	m_tLoopTime = 0,
 	m_strUUID = Sirin.getUUIDv4(),
-	pszLogPath = '.\\sirin-log\\guard\\LuaLooting.log',
+	m_pszLogPath = '.\\sirin-log\\guard\\LuaLooting.log',
 }
 
 ---@return SirinLootingMgr self
@@ -68,7 +68,7 @@ function SirinLootingMgr:loadScripts()
 
 		if not TmpItemLooting then
 			Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, "Failed to load 'Item looting' scripts!\n")
-			Sirin.WriteA(self.pszLogPath, "Failed to load 'Item looting' scripts!\n", true, true)
+			Sirin.WriteA(self.m_pszLogPath, "Failed to load 'Item looting' scripts!\n", true, true)
 			break
 		end
 

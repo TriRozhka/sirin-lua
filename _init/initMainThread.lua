@@ -1,3 +1,4 @@
+---@module '_init.definitions.sirinDefinitionsMainThread2.lua'
 ---@module '_init.definitions.sirinDefinitionsMainThread.lua'
 ---@module '_init.definitions.sirinDefinitionsMainThread_Structs.lua'
 

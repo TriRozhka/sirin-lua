@@ -2411,7 +2411,7 @@ function SirinRiftMgr:canUseRift(pLuaRift, pPlayer)
 				if type(c.itemRequire[equipName]) == 'table' then
 					local bConditionPassed = false
 
-					if not pPlayer.m_Param.m_dbEquip:m_List_get(byCurEquip - 1).m_bLoad then
+					if pPlayer.m_Param.m_dbEquip:m_List_get(byCurEquip - 1).m_byLoad == 0 then
 						nErr = 60 + byCurEquip - 1
 						break
 					end
@@ -2485,7 +2485,7 @@ function SirinRiftMgr:canUseRift(pLuaRift, pPlayer)
 			for j = 0, pPlayer.m_Param.m_dbInven.m_nUsedNum - 1 do
 				local pCon = pPlayer.m_Param.m_dbInven:m_List_get(j)
 
-				if pCon.m_bLoad and not pCon.m_bLock then
+				if pCon.m_byLoad == 1 and not pCon.m_bLock then
 					table.insert(Inven, pCon)
 				end
 			end
@@ -2497,7 +2497,7 @@ function SirinRiftMgr:canUseRift(pLuaRift, pPlayer)
 					if item.m_byTableCode == consume.m_byTableCode and item.m_wItemIndex == consume.m_wItemIndex then
 						if consume.m_qwQuantity > 0 then
 							if Sirin.mainThread.IsOverLapItem(consume.m_byTableCode) then
-								if item.m_dwDur >= consume.m_qwQuantity then
+								if item.m_dwDur > consume.m_qwQuantity then
 									table.insert(AlterList, { pCon = item, nAlter = -consume.m_qwQuantity })
 									consume.m_qwQuantity = 0
 								else

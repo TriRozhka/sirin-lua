@@ -25,7 +25,7 @@ rule_unique_name = {
 				minute = 30, -- optional. Default 0
 			},
 		},
-		]]--
+		--]]
 		--[[
 		scheduleType = "dayOfWeek", -- hour, day, dayOfWeek, dayOfMonth
 		intervals = {
@@ -40,9 +40,9 @@ rule_unique_name = {
 				minute = 30, -- optional. Default 0
 			},
 		},
-		]]--
+		--]]
 		--[[
-		scheduleType = "dayOfMonth", -- hour, day, dayOfWeek, dayOfMonth
+		_scheduleType = "dayOfMonth", -- hour, day, dayOfWeek, dayOfMonth
 		intervals = {
 			{ -- every 1st calendar day at 22:00
 				val = 1, -- optional. Default 1. 1-31
@@ -55,7 +55,7 @@ rule_unique_name = {
 				minute = 30, -- optional. Default 0
 			},
 		},
-		]]--
+		--]]
 	},
 	positions = { -- random selection. error in positions disables rule automatically
 		{ "NeutralB", 0, 100, 20, -30, 200 }, -- Map code, layer, x, y, z, [range]. Default range is 0 - exact position.

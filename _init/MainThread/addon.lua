@@ -339,11 +339,3 @@ end
 function MainThread.CGuild__PopMoneyComplete(dwRetCode, dwProcRet, dwGuildSerial, dTotalDalant, dTotalGold)
 	-- Implementation of this function is optional
 end
-
---[[
----@param pPlayer CPlayer
----@param byNewLevel integer
-function MainThread.CPlayer__OnSetLevel(pPlayer, byNewLevel)
-	-- Implementation of this function is optional
-end
---]]

@@ -339,29 +339,29 @@ function SirinMonsterSpawnRule:updateSummonTime()
 
 		if self.m_tNextBirthTime < tNextWindowMin or self.m_tNextBirthTime > tNextWindowMax then
 			self.m_tNextBirthTime = self.m_tNextScheduleRefreshTime + math.random(-w, 0)
-			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "NextBirth", tostring(self.m_tNextBirthTime), MonsterScheduleMgr.pszSavePath)
+			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "NextBirth", tostring(self.m_tNextBirthTime), MonsterScheduleMgr.m_pszSavePath)
 
 			if MonsterScheduleMgr.m_bDebugLog then
 				local emsg = string.format("Monster summon time update. id: %s next summon: %s", self.m_strScriptID, os.date(_, self.m_tNextBirthTime))
 				print(os.date(_, os.time()) .. " " .. emsg)
-				Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+				Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 			end
 		else
 			if MonsterScheduleMgr.m_bDebugLog then
 				local emsg = string.format("Monster summon time update. id: %s next summon: (unchanged) %s", self.m_strScriptID, os.date(_, self.m_tNextBirthTime))
 				print(os.date(_, os.time()) .. " " .. emsg)
-				Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+				Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 			end
 		end
 	else
 		if self.m_tNextBirthTime ~= self.m_tNextScheduleRefreshTime then
 			self.m_tNextBirthTime = self.m_tNextScheduleRefreshTime
-			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "NextBirth", tostring(self.m_tNextBirthTime), MonsterScheduleMgr.pszSavePath)
+			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "NextBirth", tostring(self.m_tNextBirthTime), MonsterScheduleMgr.m_pszSavePath)
 
 			if MonsterScheduleMgr.m_bDebugLog then
 				local emsg = string.format("Monster summon time update. id: %s next summon: %s", self.m_strScriptID, os.date(_, self.m_tNextBirthTime))
 				print(os.date(_, os.time()) .. " " .. emsg)
-				Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+				Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 			end
 		end
 	end
@@ -389,7 +389,7 @@ function SirinMonster:respawn()
 		if not self.m_pCObj then
 			local emsg = string.format("Monster schedule re-spawn failure! id: %s", self.m_strScriptID)
 			Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, emsg)
-			Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+			Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 		else
 			self.m_dwObjectSerial = self.m_pCObj.m_dwObjSerial
 			MonsterScheduleMgr.m_Monsteres[self.m_dwObjectSerial] = self
@@ -397,7 +397,7 @@ function SirinMonster:respawn()
 			if MonsterScheduleMgr.m_bDebugLog then
 				local emsg = string.format("Monster re-birth. id: %s map: %s layer: %d pos(%.2f, %.2f, %.2f)", self.m_strScriptID, pMap.m_pMapSet.m_strCode, wLayer, x, y, z)
 				print(os.date(_, os.time()) .. " " .. emsg)
-				Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+				Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 			end
 		end
 	else
@@ -425,7 +425,7 @@ function SirinMonster:spawn()
 		if not r then
 			local emsg = string.format("Monster schedule GetRandPosInRange failure! id: %s map: %s layer: %d pos(%.2f, %.2f, %.2f)", self.m_strScriptID, s[1].m_pMapSet.m_strCode, s[2], s[3], s[4], s[5])
 			Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, emsg)
-			Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+			Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 		end
 	end
 
@@ -434,7 +434,7 @@ function SirinMonster:spawn()
 	if not self.m_pCObj then
 		local emsg = string.format("Monster schedule spawn failure! id: %s", self.m_strScriptID)
 		Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, emsg)
-		Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+		Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 	else
 		self.m_dwObjectSerial = self.m_pCObj.m_dwObjSerial
 		MonsterScheduleMgr.m_Monsteres[self.m_dwObjectSerial] = self
@@ -442,7 +442,7 @@ function SirinMonster:spawn()
 		if MonsterScheduleMgr.m_bDebugLog then
 			local emsg = string.format("Monster birth. id: %s map: %s layer: %d pos(%.2f, %.2f, %.2f)", self.m_strScriptID, self.m_pCObj.m_pCurMap.m_pMapSet.m_strCode, self.m_pCObj.m_wMapLayerIndex, self.m_pCObj.m_fCurPos_x, self.m_pCObj.m_fCurPos_y, self.m_pCObj.m_fCurPos_z)
 			print(os.date(_, os.time()) .. " " .. emsg)
-			Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+			Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 		end
 	end
 end
@@ -451,13 +451,13 @@ function SirinMonster:die()
 	if MonsterScheduleMgr.m_bDebugLog then
 		local emsg = string.format("Monster die. id: %s map: %s layer: %d pos(%.2f, %.2f, %.2f)", self.m_strScriptID, self.m_pCObj.m_pCurMap.m_pMapSet.m_strCode, self.m_pCObj.m_wMapLayerIndex, self.m_pCObj.m_fCurPos_x, self.m_pCObj.m_fCurPos_y, self.m_pCObj.m_fCurPos_z)
 		print(os.date(_, self.m_Rule.m_tLastDeathTime) .. " " .. emsg)
-		Sirin.WriteA(MonsterScheduleMgr.pszLogPath, emsg, true, true)
+		Sirin.WriteA(MonsterScheduleMgr.m_pszLogPath, emsg, true, true)
 	end
 
 	MonsterScheduleMgr.m_Monsteres[self.m_dwObjectSerial] = nil
 	self.m_Rule.m_tLastDeathTime = os.time()
 	self.m_pCObj = nil
-	Sirin.WritePrivateProfileStringA(self.m_strScriptID, "LastDeath", tostring(self.m_Rule.m_tLastDeathTime), MonsterScheduleMgr.pszSavePath)
+	Sirin.WritePrivateProfileStringA(self.m_strScriptID, "LastDeath", tostring(self.m_Rule.m_tLastDeathTime), MonsterScheduleMgr.m_pszSavePath)
 
 	if self.m_Rule.m_Script.schedule.scheduleType == "delay" then
 		local l, n = getScheduleTime(self.m_Rule.m_Script)
@@ -481,16 +481,16 @@ end
 ---@field m_bDebugLog boolean
 ---@field m_tLoopTime integer
 ---@field m_strUUID string
----@field pszLogPath string
----@field pszSavePath string
+---@field m_pszLogPath string
+---@field m_pszSavePath string
 local SirinMonsterScheduleMgr = {
 	m_SpawnRules = {},
 	m_Monsteres = {},
 	m_bDebugLog = false,
 	m_tLoopTime = 0,
 	m_strUUID = Sirin.getUUIDv4(),
-	pszLogPath = '.\\sirin-log\\guard\\LuaMonsterSchedule.log',
-	pszSavePath = '..\\SystemSave\\LuaMonsterSchedule.ini',
+	m_pszLogPath = '.\\sirin-log\\guard\\LuaMonsterSchedule.log',
+	m_pszSavePath = '..\\SystemSave\\LuaMonsterSchedule.ini',
 }
 
 ---@return SirinMonsterScheduleMgr self
@@ -527,7 +527,7 @@ function SirinMonsterScheduleMgr:loadScripts()
 
 		if not TmpMonsterSchedule then
 			Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, "Failed to load 'Monster schedule' scripts!\n")
-			Sirin.WriteA(self.pszLogPath, "Failed to load 'Monster schedule' scripts!\n", true, true)
+			Sirin.WriteA(self.m_pszLogPath, "Failed to load 'Monster schedule' scripts!\n", true, true)
 			break
 		end
 
@@ -770,7 +770,7 @@ function SirinMonsterScheduleMgr:validateScriptData()
 
 		if not bSucc then
 			TmpMonsterSchedule = nil
-			Sirin.WriteA(self.pszLogPath, "SirinMonsterScheduleMgr:validateScriptData(...) bSucc == false!\n", true, true)
+			Sirin.WriteA(self.m_pszLogPath, "SirinMonsterScheduleMgr:validateScriptData(...) bSucc == false!\n", true, true)
 		end
 
 	until true
@@ -786,7 +786,7 @@ function SirinMonsterScheduleMgr:onLoop()
 			if v.m_luaObj:isLive() and v.m_Script.duration > 0 and self.m_tLoopTime > v.m_tLastBirthTime + v.m_Script.duration then
 				v.m_luaObj:despawn()
 				v.m_tLastDeathTime = self.m_tLoopTime
-				Sirin.WritePrivateProfileStringA(k, "LastDeath", tostring(v.m_tLastDeathTime), self.pszSavePath)
+				Sirin.WritePrivateProfileStringA(k, "LastDeath", tostring(v.m_tLastDeathTime), self.m_pszSavePath)
 
 				if v.m_Script.schedule.scheduleType == "delay" then
 					local l, n = getScheduleTime(v.m_Script)
@@ -798,7 +798,7 @@ function SirinMonsterScheduleMgr:onLoop()
 				if self.m_bDebugLog then
 					local emsg = string.format("Monster schedule duration despawn id: %s", k)
 					print(os.date(_, self.m_tLoopTime) .. " " .. emsg)
-					Sirin.WriteA(self.pszLogPath, emsg, true, true)
+					Sirin.WriteA(self.m_pszLogPath, emsg, true, true)
 				end
 			end
 
@@ -811,7 +811,7 @@ function SirinMonsterScheduleMgr:onLoop()
 			if not v.m_luaObj:isLive() then
 				if v.m_tNextBirthTime > v.m_tLastBirthTime and self.m_tLoopTime > v.m_tNextBirthTime and v.m_Script:isActive(v.m_tNextBirthTime) then
 					v.m_tLastBirthTime = v.m_tNextBirthTime
-					Sirin.WritePrivateProfileStringA(k, "LastBirth", tostring(v.m_tLastBirthTime), self.pszSavePath)
+					Sirin.WritePrivateProfileStringA(k, "LastBirth", tostring(v.m_tLastBirthTime), self.m_pszSavePath)
 
 					if math.random(100) <= v.m_Script.succRate then
 						v.m_luaObj:spawn()
@@ -819,7 +819,7 @@ function SirinMonsterScheduleMgr:onLoop()
 						if self.m_bDebugLog then
 							local emsg = string.format("Monster schedule spawn failure (random)! id: %s", k)
 							print(os.date(_, self.m_tLoopTime) .. " " .. emsg)
-							Sirin.WriteA(self.pszLogPath, emsg, true, true)
+							Sirin.WriteA(self.m_pszLogPath, emsg, true, true)
 						end
 					end
 				end
@@ -833,9 +833,9 @@ function SirinMonsterScheduleMgr:onLoop()
 			v.m_tNextBirthTime = 0
 			v.m_tLastBirthTime = 0
 			v.m_tLastDeathTime = 0
-			Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.pszSavePath)
-			Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.pszSavePath)
-			Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.m_pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.m_pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.m_pszSavePath)
 
 			if v.m_luaObj:isLive() then
 				v.m_luaObj:despawn()
@@ -843,7 +843,7 @@ function SirinMonsterScheduleMgr:onLoop()
 				if self.m_bDebugLog then
 					local emsg = string.format("Monster schedule inactive despawn id: %s", k)
 					print(os.date(_, self.m_tLoopTime) .. " " .. emsg)
-					Sirin.WriteA(self.pszLogPath, emsg, true, true)
+					Sirin.WriteA(self.m_pszLogPath, emsg, true, true)
 				end
 			end
 		end
@@ -927,11 +927,11 @@ function SirinMonsterScheduleMgr:init()
 			newRule.m_tLastDeathTime = t[k][4]
 			t[k] = nil
 		else
-			local len, str = Sirin.GetPrivateProfileStringA(k, "NextBirth", "0", self.pszSavePath)
+			local len, str = Sirin.GetPrivateProfileStringA(k, "NextBirth", "0", self.m_pszSavePath)
 			newRule.m_tNextBirthTime = tonumber(str) or 0
-			len, str = Sirin.GetPrivateProfileStringA(k, "LastBirth", "0", self.pszSavePath)
+			len, str = Sirin.GetPrivateProfileStringA(k, "LastBirth", "0", self.m_pszSavePath)
 			newRule.m_tLastBirthTime = tonumber(str) or 0
-			len, str = Sirin.GetPrivateProfileStringA(k, "LastDeath", "0", self.pszSavePath)
+			len, str = Sirin.GetPrivateProfileStringA(k, "LastDeath", "0", self.m_pszSavePath)
 			newRule.m_tLastDeathTime = tonumber(str) or 0
 			bShouldBeSpawned = newRule.m_tLastBirthTime > newRule.m_tLastDeathTime
 		end
@@ -941,9 +941,9 @@ function SirinMonsterScheduleMgr:init()
 			newRule.m_tNextBirthTime = 0
 			newRule.m_tLastBirthTime = 0
 			newRule.m_tLastDeathTime = 0
-			Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.pszSavePath)
-			Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.pszSavePath)
-			Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.m_pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.m_pszSavePath)
+			Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.m_pszSavePath)
 		else
 			if newRule.m_tNextBirthTime == 0 then
 				newRule:updateSummonTime()
@@ -952,7 +952,7 @@ function SirinMonsterScheduleMgr:init()
 			if not bShouldBeSpawned and newRule.m_tNextBirthTime > newRule.m_tLastBirthTime and self.m_tLoopTime > newRule.m_tNextBirthTime and newRule.m_Script:isActive(newRule.m_tNextBirthTime) then
 				bShouldBeSpawned = true
 				newRule.m_tLastBirthTime = newRule.m_tNextBirthTime
-				Sirin.WritePrivateProfileStringA(k, "LastBirth", tostring(newRule.m_tLastBirthTime), self.pszSavePath)
+				Sirin.WritePrivateProfileStringA(k, "LastBirth", tostring(newRule.m_tLastBirthTime), self.m_pszSavePath)
 			end
 		end
 
@@ -980,9 +980,9 @@ function SirinMonsterScheduleMgr:init()
 			pMon:Destroy(1, nil)
 		end
 
-		Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.pszSavePath)
-		Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.pszSavePath)
-		Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.m_pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.m_pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.m_pszSavePath)
 	end
 
 	for k, v in pairs(oldRules) do
@@ -990,8 +990,8 @@ function SirinMonsterScheduleMgr:init()
 			v.m_luaObj:despawn()
 		end
 
-		Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.pszSavePath)
-		Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.pszSavePath)
-		Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "NextBirth", "0", self.m_pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "LastBirth", "0", self.m_pszSavePath)
+		Sirin.WritePrivateProfileStringA(k, "LastDeath", "0", self.m_pszSavePath)
 	end
 end

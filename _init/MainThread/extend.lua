@@ -101,7 +101,7 @@ end
 function MainThread.ItemCombineMgr__RequestCombineAcceptProcess(pPlayer, Selected)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CPlayer
@@ -113,7 +113,7 @@ end
 function MainThread.CPlayer__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CAnimus
@@ -125,7 +125,7 @@ end
 function MainThread.CAnimus__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CGuardTower
@@ -137,7 +137,7 @@ end
 function MainThread.CGuardTower__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CHolyKeeper
@@ -149,7 +149,7 @@ end
 function MainThread.CHolyKeeper__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CHolyStone
@@ -161,7 +161,7 @@ end
 function MainThread.CHolyStone__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CTrap
@@ -173,7 +173,7 @@ end
 function MainThread.CTrap__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget CMonster
@@ -185,7 +185,7 @@ end
 function MainThread.CMonster__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pTarget AutominePersonal
@@ -197,7 +197,7 @@ end
 function MainThread.AutominePersonal__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -207,7 +207,7 @@ end
 function MainThread.CPlayer__CalcExp(pPlayer, pDst, nDam, kPartyExpNotify)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -222,7 +222,7 @@ function MainThread.CPlayer__AlterExp(pPlayer, dAlterExp, bReward, bUseExpRecove
 
 	return dAlterExp
 end
-]]--
+--]]
 
 --[[
 ---@param pAnimus CAnimus
@@ -230,7 +230,7 @@ end
 function MainThread.CAnimus__CalcAttExp(pAnimus, pAT)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pAnimus CAnimus
@@ -242,7 +242,7 @@ function MainThread.CAnimus__AlterExp(pAnimus, nAddExp)
 
 	return nAddExp
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -254,7 +254,7 @@ end
 function MainThread.CPlayer__OnEmb_AddStorage(pPlayer, byStorageCode, pCon, bEquipChange, bAdd, Ret)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -267,7 +267,7 @@ end
 function MainThread.CPlayer__OnEmb_DelStorage(pPlayer, byStorageCode, byStorageIndex, bEquipChange, bDelete, strErrorCodePos, Ret)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -280,7 +280,7 @@ end
 function MainThread.CPlayer__OnEmb_AlterDurPoint(pPlayer, byStorageCode, byStorageIndex, nAlter, bUpdate, bSend, Ret)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 ---@param pPlayer CPlayer
 ---@param wIndex integer
@@ -297,7 +297,7 @@ end
 function MainThread.CPlayer__SendMsg_InsertNewQuest(pPlayer, bySlotIndex, pQuestDB)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -306,7 +306,7 @@ end
 function MainThread.CPlayer__SendMsg_InsertNextQuest(pPlayer, bySlotIndex, pQuestDB)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -371,7 +371,7 @@ function MainThread.CPlayer__pc_GuildEstablishRequest(pPlayer, strGuildName)
 	-- Implementation of this function is optional
 	return true
 end
-]]--
+--]]
 
 --[[
 ---@param pGuild CGuild
@@ -388,14 +388,14 @@ function MainThread.CPlayer__pc_GuildJoinApplyRequest(pPlayer, pGuild)
 	-- Implementation of this function is optional
 	return true
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
 function MainThread.CPlayer__SendMsg_GuildJoinApplyCancelResult(pPlayer)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -406,7 +406,7 @@ function MainThread.CPlayer__pc_GuildJoinAcceptRequest(pPlayer, dwApplierSerial,
 	-- Implementation of this function is optional
 	return true
 end
-]]--#region
+--]]
 
 --[[
 ---@param nGuildSerial integer
@@ -414,7 +414,7 @@ end
 function MainThread.CPlayer__Guild_Join_Accept_Complete(nGuildSerial, nApplierSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pPlayer CPlayer
@@ -423,7 +423,7 @@ function MainThread.CPlayer__pc_GuildSelfLeaveRequest(pPlayer)
 	-- Implementation of this function is optional
 	return true
 end
-]]--
+--]]
 
 --[[
 ---@param nGuildSerial integer
@@ -431,7 +431,7 @@ end
 function MainThread.CPlayer__Guild_Self_Leave_Complete(nGuildSerial, nApplierSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param pGuild CGuild
@@ -455,7 +455,7 @@ end
 function MainThread.CPlayer__Guild_Disjoint_Complete(nGuildSerial)
 	-- Implementation of this function is optional
 end
-]]--
+--]]
 
 --[[
 ---@param nGuildSerial integer
@@ -477,6 +477,14 @@ end
 ---@param pPlayer CPlayer
 ---@param wSelClassIndex integer
 function MainThread.CPlayer__SendMsg_SelectClassResult(pPlayer, wSelClassIndex)
+	-- Implementation of this function is optional
+end
+--]]
+
+--[[
+---@param pPlayer CPlayer
+---@param byNewLevel integer
+function MainThread.CPlayer__OnSetLevel(pPlayer, byNewLevel)
 	-- Implementation of this function is optional
 end
 --]]

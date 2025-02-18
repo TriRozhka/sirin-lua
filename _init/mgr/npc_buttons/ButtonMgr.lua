@@ -357,14 +357,21 @@ function CustomNpcButtons:loadScripts()
 	return bSucc
 end
 
+---@class (exact) invenList
+---@field pCon _STORAGE_LIST___db_con
+---@field nAlter integer
+local invenList = {}
+
 ---@param pPlayer CPlayer
 ---@param buffData table
 ---@return integer nErrCode
----@return table alterList
----@return table deleteList
+---@return table<integer, invenList> alterList
+---@return table<integer, invenList> deleteList
 function CustomNpcButtons:canUseBuff(pPlayer, buffData)
 	local nErrCode = 0
+	---@type table<integer, invenList>
 	local alterList = {}
+	---@type table<integer, invenList>
 	local deleteList = {}
 
 	repeat
@@ -398,16 +405,17 @@ function CustomNpcButtons:canUseBuff(pPlayer, buffData)
 					local _itemConsume = {}
 					_itemConsume.m_byTableCode = v.tableCode
 					_itemConsume.m_wItemIndex = v.tableIndex
-					_itemConsume.m_qwQuantity = v.quantity or 0
+					_itemConsume.m_qwQuantity = v.consumeNum or 0
 					table.insert(consumeList, _itemConsume)
 				end
 
+				---@type table<integer, _STORAGE_LIST___db_con>
 				local Inven = {}
 
 				for j = 0, pPlayer.m_Param.m_dbInven.m_nUsedNum - 1 do
 					local pCon = pPlayer.m_Param.m_dbInven:m_List_get(j)
 
-					if pCon.m_bLoad and not pCon.m_bLock then
+					if pCon.m_byLoad == 1 and not pCon.m_bLock then
 						table.insert(Inven, pCon)
 					end
 				end
@@ -419,7 +427,7 @@ function CustomNpcButtons:canUseBuff(pPlayer, buffData)
 						if item.m_byTableCode == consume.m_byTableCode and item.m_wItemIndex == consume.m_wItemIndex then
 							if consume.m_qwQuantity > 0 then
 								if Sirin.mainThread.IsOverLapItem(consume.m_byTableCode) then
-									if item.m_dwDur >= consume.m_qwQuantity then
+									if item.m_dwDur > consume.m_qwQuantity then
 										table.insert(alterList, { pCon = item, nAlter = -consume.m_qwQuantity })
 										consume.m_qwQuantity = 0
 									else
@@ -444,7 +452,7 @@ function CustomNpcButtons:canUseBuff(pPlayer, buffData)
 					break
 				end
 
-				if nErrCode ~- 0 then
+				if nErrCode ~= 0 then
 					break
 				end
 			end
@@ -607,6 +615,10 @@ function CustomNpcButtons:useBuffButton(pPlayer, dwButtonID, dwBuffIndex)
 				end
 			else
 				if nErrCode > 0 then
+					if nErrCode == 0xF3 then
+						nErrCode = 13
+					end
+
 					nErrCode = nErrCode * -1 - 4
 				end
 			end
