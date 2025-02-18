@@ -299,6 +299,19 @@ local t = {
 		return true
 	end
 },
+{
+	"push lobby", "111100", "111",
+	---@param pPlayer CPlayer
+	---@return boolean
+	function (pPlayer)
+		local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+		buf:Init()
+		buf:PushUInt8(0)
+		buf:SendBuffer(pPlayer, 81, 3)
+		pPlayer.m_pUserDB:Lobby_Char_Request()
+		return true
+	end
+},
 }
 
 return t
