@@ -174,7 +174,7 @@ function sirinCombineEx.MakeNewItems(pCombineMgr, pPlayerItemDB, pRecv, pSend)
 			end
 
 			if pCombineMgr.m_pMaster.m_Param.m_dbInven:GetIndexEmptyCon() == 255 then
-				Sirin.mainThread.createItemBoxForAutoLoot(Item, pCombineMgr.m_pMaster, 0xFFFFFFFF, false, nil, 3, pCombineMgr.m_pMaster.m_pCurMap, pCombineMgr.m_pMaster.m_wMapLayerIndex, { pCombineMgr.m_pMaster:m_fCurPos_x(), pCombineMgr.m_pMaster:m_fCurPos_y(), pCombineMgr.m_pMaster:m_fCurPos_z() }, false)
+				Sirin.mainThread.createItemBoxForAutoLoot(Item, pCombineMgr.m_pMaster, 0xFFFFFFFF, false, nil, 3, pCombineMgr.m_pMaster.m_pCurMap, pCombineMgr.m_pMaster.m_wMapLayerIndex, { pCombineMgr.m_pMaster.m_fCurPos_x, pCombineMgr.m_pMaster.m_fCurPos_y, pCombineMgr.m_pMaster.m_fCurPos_z }, false)
 				byRewardTypeList[j] = 2
 			else
 				Item.m_wSerial = pCombineMgr.m_pMaster.m_Param:GetNewItemSerial()
