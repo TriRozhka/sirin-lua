@@ -1,0 +1,1967 @@
+---@meta
+
+---@class (exact) _AmuletItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nItemGrade integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nClassGradeLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nEffState integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _AmuletItem_fld = {}
+
+---@class (exact) _AnimusItem_fld: _base_fld
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strCivil string
+---@field m_strName string
+---@field m_nAnimusClass integer
+---@field m_nAnimusType integer
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+local _AnimusItem_fld = {}
+
+---@class (exact) _BagItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _BagItem_fld = {}
+
+---@class (exact) _BatteryItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nDurUnit integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _BatteryItem_fld = {}
+
+---@class (exact) _BattleDungeonItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strMapCode string
+---@field m_strDummyName string
+---@field m_nGenMob integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bQualification integer
+---@field m_fMobAdd number
+---@field m_nTerminateTime integer
+---@field m_nEndIF integer
+---@field m_strMobID string
+---@field m_nMobCount integer
+---@field m_bItemLooting integer
+---@field m_nExp integer
+---@field m_nDalant integer
+---@field m_nGold integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_strMissionIndex string
+---@field m_bIsTime integer
+local _BattleDungeonItem_fld = {}
+
+---@class (exact) _BootyItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _BootyItem_fld = {}
+
+---@class (exact) _BoxItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nClassGradeLim integer
+---@field m_nUpLevelLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_nUsePCCash integer
+---@field m_bIsTime integer
+local _BoxItem_fld = {}
+
+---@class (exact) _BulletItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strBulletType string
+---@field m_strEffBulletType string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nDurUnit integer
+---@field m_fEquipSpeed number
+---@field m_nEffectGroup integer
+---@field m_nProperty integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_fGAAF number
+---@field m_strEffectIndex string
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_nUsePCCash integer
+---@field m_bIsTime integer
+local _BulletItem_fld = {}
+
+---@class (exact) _CheckPotion_fld: _base_fld
+---@field m_strKOR_name string
+---@field m_nContEffectType integer
+---@field m_nContAreaType integer
+local _CheckPotion_fld = {}
+---@param a1 integer
+---@return _CheckPotion_fld___CheckEffectCode
+function _CheckPotion_fld:m_CheckEffectCode_get(a1) end
+
+---@class (exact) _CheckPotion_fld___CheckEffectCode
+---@field m_nContParamCode integer
+---@field m_nContParamIndex integer
+---@field m_fContValue number
+---@field m_nContValSt integer
+local _CheckPotion_fld___CheckEffectCode = {}
+
+---@class (exact) _CloakItem_fld: _DfnEquipItem_fld
+---@field m_fBoosterSpeed number
+local _CloakItem_fld = {}
+
+---@class (exact) _CouponItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nCouponItemPart integer
+---@field m_nDiscount integer
+---@field m_nPoint integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nLV integer
+---@field m_nUpLevelLim integer
+---@field m_nStoragePart integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _CouponItem_fld = {}
+
+---@class (exact) _DfnEquipItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nItemGrade integer
+---@field m_nFixPart integer
+---@field m_nHelmetClass integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nClassGradeLim integer
+---@field m_nExpertID1 integer
+---@field m_nExpertLim1 integer
+---@field m_nExpertID2 integer
+---@field m_nExpertLim2 integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_fEquipSpeed number
+---@field m_bRepair integer
+---@field m_nRepPrice integer
+---@field m_nEffState integer
+---@field m_nGASpd integer
+---@field m_nProperty integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_fDefFc number
+---@field m_nDefence_DP integer
+---@field m_nMaxDP integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_nDuration integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_nUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nDefEffType integer
+---@field m_bIsTime integer
+local _DfnEquipItem_fld = {}
+
+---@class (exact) _EventItem_fld: _base_fld
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_strTooltipIndex string
+local _EventItem_fld = {}
+
+---@class (exact) _FIRECRACKER_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_fActDelay number
+---@field m_nLevelLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_fEquipSpeed number
+---@field m_nDuration integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+local _FIRECRACKER_fld = {}
+
+---@class (exact) _FaceItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModle string
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nDefEffType integer
+local _FaceItem_fld = {}
+
+---@class (exact) _ForceItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_strForce_Codekey string
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+local _ForceItem_fld = {}
+
+---@class (exact) _GuardTowerItem_fld: _base_fld
+---@field m_strModle string
+---@field m_strCharMeshID string
+---@field m_strName string
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nExpertLim integer
+---@field m_nExpTime integer
+---@field m_nEffectGroup integer
+---@field m_nIconIDX integer
+---@field m_nLevel integer
+---@field m_nHeight integer
+---@field m_nWidth integer
+---@field m_fAttGap number
+---@field m_nAttack_DP integer
+---@field m_nGADst integer
+---@field m_nGASpd integer
+---@field m_nAttSklUnit integer
+---@field m_nGAMinAF integer
+---@field m_nGAMaxAF integer
+---@field m_nGAMinSelProb integer
+---@field m_nGAMaxSelProb integer
+---@field m_nDefSklUnit integer
+---@field m_nDefFc integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_nProperty integer
+---@field m_nFireTol integer
+---@field m_nWaterTol integer
+---@field m_nSoilTol integer
+---@field m_nWindTol integer
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nDuration integer
+---@field m_nMaxHP integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nAttEffType integer
+---@field m_nDefEffType integer
+---@field m_bIsTime integer
+local _GuardTowerItem_fld = {}
+---@param a1 integer
+---@return _GuardTowerItem_fld____material
+function _GuardTowerItem_fld:m_Material_get(a1) end
+
+---@class (exact) _GuardTowerItem_fld____material
+---@field strMaterialCode string
+---@field nMaterialNum integer
+local _GuardTowerItem_fld____material = {}
+
+---@class (exact) _ItemLooting_fld: _base_fld
+---@field m_nLootRate integer
+---@field m_nLootTime integer
+---@field m_nOperationCount integer
+---@field m_nLootListCount integer
+local _ItemLooting_fld = {}
+---@param a1 integer
+---@return string
+function _ItemLooting_fld:m_itmLootCodeKey_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _ItemLooting_fld:m_itmLootCodeKey_set(a1, a2) end
+
+---@class (exact) _ItemMakeData_fld: _base_fld
+---@field m_nMakeMastery integer
+---@field m_strCivil string
+local _ItemMakeData_fld = {}
+---@param a1 integer
+---@return _ItemMakeData_fld___material_list
+function _ItemMakeData_fld:m_listMaterial_get(a1) end
+---@param a1 integer
+---@return _ItemMakeData_fld___output_list
+function _ItemMakeData_fld:m_listOutput_get(a1) end
+
+---@class (exact) _ItemMakeData_fld___material_list
+---@field m_itmPdMat string
+---@field m_nPdMatNum integer
+local _ItemMakeData_fld___material_list = {}
+
+---@class (exact) _ItemMakeData_fld___output_list
+---@field m_itmPdOutput string
+---@field m_dwPdProp integer
+local _ItemMakeData_fld___output_list = {}
+
+---@class (exact) _ItemUpgrade_fld: _base_fld
+---@field m_strName string
+---@field m_nJewelType integer
+---@field m_fJewelFieldValue number
+---@field m_nUpperUp integer
+---@field m_nLowerUp integer
+---@field m_nGauntletUp integer
+---@field m_nShoeUp integer
+---@field m_nHelmetUp integer
+---@field m_nShieldUp integer
+---@field m_nMeleeUp integer
+---@field m_nMissileUp integer
+---@field m_nUnitUp integer
+---@field m_nClockUp integer
+---@field m_nDataEffect integer
+---@field m_nEffectUnit integer
+---@field m_fUp1 number
+---@field m_fUp2 number
+---@field m_fUp3 number
+---@field m_fUp4 number
+---@field m_fUp5 number
+---@field m_fUp6 number
+---@field m_fUp7 number
+local _ItemUpgrade_fld = {}
+
+---@class (exact) _MakeToolItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_nToolClass integer
+---@field m_bRepair integer
+---@field m_nEffState integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _MakeToolItem_fld = {}
+
+---@class (exact) _MapItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strMapCode string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _MapItem_fld = {}
+
+---@class (exact) _NPCLink_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strStore_NPCcode string
+---@field m_nNpc_Class1 integer
+---@field m_nNpc_Class2 integer
+---@field m_nNpc_Class3 integer
+---@field m_nNpc_Class4 integer
+---@field m_nNpc_Class5 integer
+---@field m_nNpc_Class6 integer
+---@field m_nNpc_Class7 integer
+---@field m_nNpc_Class8 integer
+---@field m_nNpc_Class9 integer
+---@field m_nNpc_Class10 integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStoragePrice integer
+---@field m_nLV integer
+---@field m_nStdPoint integer
+---@field m_nStoragePart integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+local _NPCLink_fld = {}
+
+---@class (exact) _OreCutting_fld: _base_fld
+---@field m_strResource_Item string
+---@field m_nCutting_probability integer
+local _OreCutting_fld = {}
+
+---@class (exact) _OreItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nOre_List integer
+---@field m_nOre_Level integer
+---@field m_dwOreProbability integer
+---@field m_nKindClt integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nProcessPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_nmin_C_random integer
+---@field m_nmax_C_random integer
+---@field m_nProcessPrice integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _OreItem_fld = {}
+
+---@class (exact) _PotionItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strActTaget string
+---@field m_nPotionCheck integer
+---@field m_nUseState integer
+---@field m_strTargetEff string
+---@field m_fActDelay number
+---@field m_nDelayType integer
+---@field m_nUseRange integer
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nPotionLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_fEquipSpeed number
+---@field m_strEffCode string
+---@field m_nEffArea integer
+---@field m_nEffAreaVal integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_nUsePCCash integer
+---@field m_bIsTime integer
+local _PotionItem_fld = {}
+---@param a1 integer
+---@return integer
+function _PotionItem_fld:m_nMapCode_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _PotionItem_fld:m_nMapCode_set(a1, a2) end
+
+---@class (exact) _QuestHappenEvent_fld: _base_fld
+---@field m_nEevntNo integer
+local _QuestHappenEvent_fld = {}
+---@param a1 integer
+---@return _happen_event_node
+function _QuestHappenEvent_fld:m_Node_get(a1) end
+
+---@class (exact) _happen_event_cont
+---@field m_pEvent _happen_event_node
+---@field m_QtHpType QUEST_HAPPEN
+---@field m_nIndexInType integer
+---@field m_nRaceCode integer
+local _happen_event_cont = {}
+
+---@class (exact) _Quest_fld: _base_fld
+---@field m_nLimLv integer
+---@field m_nQuestType integer
+---@field m_bQuestRepeat integer
+---@field m_dRepeatTime number
+---@field m_nDifficultyLevel integer
+---@field m_n2 integer
+---@field m_bSelectQuestMenual integer
+---@field m_bCompQuestType integer
+---@field m_nMaxLevel integer
+---@field m_dConsExp number
+---@field m_nConsContribution integer
+---@field m_nConsDalant integer
+---@field m_nConspvppoint integer
+---@field m_nConsGold integer
+---@field m_bSelectConsITMenual integer
+---@field m_strConsSkillCode string
+---@field m_nConsSkillCnt integer
+---@field m_strConsForceCode string
+---@field m_nConsForceCnt integer
+---@field m_nLinkQuestGroupID integer
+---@field m_bFailCheck integer
+---@field m_strFailBriefCode string
+---@field m_nLinkDummyCond integer
+---@field m_strLinkDummyCode string
+---@field m_strFailLinkQuest string
+---@field m_nViewportType integer
+---@field m_strViewportCode string
+---@field m_nStore_trade integer
+---@field m_txtQTExp string
+local _Quest_fld = {}
+---@param a1 integer
+---@return _action_node
+function _Quest_fld:m_ActionNode_get(a1) end
+---@param a1 integer
+---@return _quest_reward_item
+function _Quest_fld:m_RewardItem_get(a1) end
+---@param a1 integer
+---@return _quest_reward_mastery
+function _Quest_fld:m_RewardMastery_get(a1) end
+---@param a1 integer
+---@return string
+function _Quest_fld:m_strLinkQuest_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _Quest_fld:m_strLinkQuest_set(a1, a2) end
+---@param a1 integer
+---@return _quest_fail_condition
+function _Quest_fld:m_QuestFailCond_get(a1) end
+
+---@class (exact) _RadarItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_fActDelay number
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_fEquipSpeed number
+---@field m_strEffSort string
+---@field m_nSucPro integer
+---@field m_nDuration integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _RadarItem_fld = {}
+---@param a1 integer
+---@return _consume_item_list
+function _RadarItem_fld:m_ConsumeItemList_get(a1) end
+
+---@class (exact) _RecoveryItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_bMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nMinRecoveryPro integer
+---@field m_nMaxRecoveryPro integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _RecoveryItem_fld = {}
+
+---@class (exact) _ResourceItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_nItemSerise integer
+---@field m_strCivil string
+---@field m_nMixNum integer
+---@field m_fNeedNum number
+---@field m_strLastItem string
+---@field m_nMoney integer
+---@field m_nAncStdPrice integer
+---@field m_nExStdPrice integer
+---@field m_nMecaStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nStartTime integer
+---@field m_nEffContTime integer
+---@field m_nEffType1 integer
+---@field m_nUIPrint integer
+---@field m_nItemUiTip integer
+---@field m_nEffectDataNum integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_nUsePCCash integer
+---@field m_bIsTime integer
+local _ResourceItem_fld = {}
+---@param a1 integer
+---@return EffectData
+function _ResourceItem_fld:m_EffectData_get(a1) end
+
+---@class (exact) _RingItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nItemGrade integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nClassGradeLim integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nEffState integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _RingItem_fld = {}
+
+---@class (exact) _SetItemEff_fld: _base_fld
+---@field m_strCivil string
+---@field m_strset_head string
+---@field m_strset_upper string
+---@field m_strset_lower string
+---@field m_strset_shoes string
+---@field m_strset_gauntlet string
+---@field m_strset_weapon string
+---@field m_strset_shield string
+---@field m_strset_amulet1 string
+---@field m_strset_amulet2 string
+---@field m_strset_ring1 string
+---@field m_strset_ring2 string
+---@field m_strset_cloak string
+---@field m_strEffrule string
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_nEff5Code integer
+---@field m_fEff5Unit number
+---@field m_nEff6Code integer
+---@field m_fEff6Unit number
+---@field m_nEff7Code integer
+---@field m_fEff7Unit number
+---@field m_nEff8Code integer
+---@field m_fEff8Unit number
+local _SetItemEff_fld = {}
+
+---@class (exact) _SiegeKitItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nItemGrade integer
+---@field m_nUsableTyoe integer
+---@field m_nSubType integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nExpertID1 integer
+---@field m_nExpertLim1 integer
+---@field m_nExpertID2 integer
+---@field m_nExpertLim2 integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_bRepair integer
+---@field m_nRepPrice integer
+---@field m_nEffState integer
+---@field m_fMinDst number
+---@field m_fMaxDst number
+---@field m_nGACorSpd integer
+---@field m_fGAAF number
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_nDuration integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_nUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nAttEffType integer
+---@field m_bIsTime integer
+local _SiegeKitItem_fld = {}
+
+---@class (exact) _StoreList_fld: _base_fld
+---@field m_strBinding_DummyName string
+---@field m_strStore_NPCcode string
+---@field m_strStore_NPCname string
+---@field m_strStore_MAPcode string
+---@field m_nStore_trade integer
+---@field m_bSet_NPCangle integer
+---@field m_nStore_NPCangle integer
+---@field m_nStore_LISTcount integer
+---@field m_nLimit_Listcount integer
+---@field m_nLimitItem_InitTime integer
+---@field m_nPriceSet integer
+---@field m_nItemUpCode integer
+local _StoreList_fld = {}
+---@param a1 integer
+---@return integer
+function _StoreList_fld:m_nNpc_Class_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _StoreList_fld:m_nNpc_Class_set(a1, a2) end
+---@param a1 integer
+---@return string
+function _StoreList_fld:m_strItemlist_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _StoreList_fld:m_strItemlist_set(a1, a2) end
+---@param a1 integer
+---@return sell_info
+function _StoreList_fld:m_sellLimitList_get(a1) end
+
+---@class (exact) _TOWNItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_strMapCode string
+---@field m_strDummyName string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nLV integer
+---@field m_nUpLevelLim integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsCash integer
+---@field m_nUsePCCash integer
+---@field m_bIsTime integer
+local _TOWNItem_fld = {}
+
+---@class (exact) _TicketItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nFixPart integer
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_strMapCode string
+---@field m_strDummyName string
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+---@field m_bIsTime integer
+local _TicketItem_fld = {}
+
+---@class (exact) _TimeItem_fld: _base_fld
+---@field m_strLendItemCode string
+---@field m_nCheckType integer
+---@field m_nUseTime integer
+local _TimeItem_fld = {}
+
+---@class (exact) _TrapItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_nType integer
+---@field m_strModel string
+---@field m_strCharMeshID string
+---@field m_strName string
+---@field m_strCivil string
+---@field m_nLevel integer
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nExpertLim integer
+---@field m_nExpTimeSec integer
+---@field m_bDisjointable integer
+---@field m_nUpkeepTimeMin integer
+---@field m_nIconIDX integer
+---@field m_fReactionDst number
+---@field m_fAttGap number
+---@field m_nAttack_DP integer
+---@field m_fGADst number
+---@field m_bSetTarget integer
+---@field m_nAttSklUnit integer
+---@field m_nGAMinAF integer
+---@field m_nGAMaxAF integer
+---@field m_nGAMinSelProb integer
+---@field m_nGAMaxSelProb integer
+---@field m_fMaxHP number
+---@field m_nDefSklUnit integer
+---@field m_nDefFc integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_strEffcode string
+---@field m_nProperty integer
+---@field m_nFireTol integer
+---@field m_nWaterTol integer
+---@field m_nSoilTol integer
+---@field m_nWindTol integer
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nDuration integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bDismantle integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nAttEffType integer
+---@field m_nDefEffType integer
+---@field m_bIsTime integer
+local _TrapItem_fld = {}
+
+---@class (exact) _UNmannedminer_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_strCharMeshID string
+---@field m_strName string
+---@field m_strCivil string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nExpTime integer
+---@field m_nIconIDX integer
+---@field m_nLevel integer
+---@field m_nHeight integer
+---@field m_nWidth integer
+---@field m_nDefSklUnit integer
+---@field m_nDefFc integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_nFireTol integer
+---@field m_nWaterTol integer
+---@field m_nSoilTol integer
+---@field m_nWindTol integer
+---@field m_nMaxHP integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_bUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nDefEffType integer
+---@field m_bIsCash integer
+---@field m_bIsTime integer
+local _UNmannedminer_fld = {}
+
+---@class (exact) _UnitBullet_fld: _base_fld
+---@field m_strModle string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nWPType integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_fGAAF number
+---@field m_strEffectIndex string
+---@field m_strTooltipIndex string
+local _UnitBullet_fld = {}
+
+---@class (exact) _UnitFrame_fld: _base_fld
+---@field m_nFRAType integer
+---@field m_nUnit_HP integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_fMoveRate_Seed number
+---@field m_fHeight number
+---@field m_fWidth number
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_nRepPrice integer
+---@field m_bDestroy integer
+---@field m_bRepair integer
+---@field m_strDFHead string
+---@field m_strDFUpper string
+---@field m_strDFLower string
+---@field m_strDFArms string
+---@field m_strDFShoulder string
+---@field m_strDFBack string
+---@field m_strDFBtA string
+---@field m_strDFBtS string
+local _UnitFrame_fld = {}
+
+---@class (exact) _UnitKeyItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_strCivil string
+---@field m_nFRAType integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_strTooltipIndex string
+local _UnitKeyItem_fld = {}
+
+---@class (exact) _UnitPart_fld: _base_fld
+---@field m_strModle string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nFixPart integer
+---@field m_strDefFrame string
+---@field m_nWPType integer
+---@field m_nEffectGroup integer
+---@field m_nNeedBt integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nExpertID1 integer
+---@field m_nExpertLim1 integer
+---@field m_nExpertID2 integer
+---@field m_nExpertLim2 integer
+---@field m_fAttGap number
+---@field m_nAttack_DP integer
+---@field m_fAttackRange number
+---@field m_nAttackDel integer
+---@field m_fMoveSpdRev number
+---@field m_nGAMinAF integer
+---@field m_nGAMaxAF integer
+---@field m_nAttMastery integer
+---@field m_nGAMinSelProb integer
+---@field m_nGAMaxSelProb integer
+---@field m_nDefFc integer
+---@field m_nDefMastery integer
+---@field m_nProperty integer
+---@field m_nFireTol integer
+---@field m_nWaterTol integer
+---@field m_nSoilTol integer
+---@field m_nWindTol integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nRepPrice integer
+---@field m_nDesrepPrice integer
+---@field m_nBstCha integer
+---@field m_fBstSpd number
+---@field m_nBackSlt integer
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_strTooltipIndex string
+---@field m_nAttEffType integer
+---@field m_nDefEffType integer
+local _UnitPart_fld = {}
+
+---@class (exact) _WeaponItem_fld: _base_fld
+---@field m_bExist integer
+---@field m_strModel string
+---@field m_nIconIDX integer
+---@field m_strName string
+---@field m_nKindClt integer
+---@field m_nItemGrade integer
+---@field m_nActiveType integer
+---@field m_strActiveCode_key string
+---@field m_nActiveEffLvl integer
+---@field m_fActiveProba number
+---@field m_nFixPart integer
+---@field m_strBulletType string
+---@field m_strEffBulletType string
+---@field m_nType integer
+---@field m_nSubType integer
+---@field m_strCivil string
+---@field m_strClassLim string
+---@field m_nLevelLim integer
+---@field m_nUpLevelLim integer
+---@field m_nClassGradeLim integer
+---@field m_nExpertID1 integer
+---@field m_nExpertLim1 integer
+---@field m_nExpertID2 integer
+---@field m_nExpertLim2 integer
+---@field m_nMoney integer
+---@field m_nStdPrice integer
+---@field m_nStdPoint integer
+---@field m_nGoldPoint integer
+---@field m_nKillPoint integer
+---@field m_nProcPoint integer
+---@field m_nStoragePrice integer
+---@field m_bAbr integer
+---@field m_nDurUnit integer
+---@field m_fEquipSpeed number
+---@field m_bRepair integer
+---@field m_nRepPrice integer
+---@field m_nEffState integer
+---@field m_nProperty integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_fAttGap number
+---@field m_nAttack_DP integer
+---@field m_fGADst number
+---@field m_nGASpd integer
+---@field m_nGAMinSelProb integer
+---@field m_fGAMinAF number
+---@field m_nGAMaxSelProb integer
+---@field m_fGAMaxAF number
+---@field m_nMADst integer
+---@field m_nMASpd integer
+---@field m_nMAMinSelProb integer
+---@field m_fMAMinAF number
+---@field m_nMAMaxSelProb integer
+---@field m_fMAMaxAF number
+---@field m_nEff1Code integer
+---@field m_fEff1Unit number
+---@field m_nEff2Code integer
+---@field m_fEff2Unit number
+---@field m_nEff3Code integer
+---@field m_fEff3Unit number
+---@field m_nEff4Code integer
+---@field m_fEff4Unit number
+---@field m_nDuration integer
+---@field m_bSell integer
+---@field m_bExchange integer
+---@field m_bGround integer
+---@field m_bStoragePossible integer
+---@field m_bUseableNormalAcc integer
+---@field m_nUpgrade integer
+---@field m_strTooltipIndex string
+---@field m_nAttEffType integer
+---@field m_bIsTime integer
+local _WeaponItem_fld = {}
+
+---@class (exact) _animus_fld: _base_fld
+---@field m_nLevel integer
+---@field m_nForLvUpExp integer
+---@field m_nUseFP integer
+---@field m_fPenalty number
+---@field m_fAttGap number
+---@field m_nAttack_DP integer
+---@field m_nAttFcStd integer
+---@field m_nMinAFSelProb integer
+---@field m_nMaxAFSelProb integer
+---@field m_nAttSklUnit integer
+---@field m_nDefSklUnit integer
+---@field m_fWeakPart number
+---@field m_nStdDefFc integer
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_nFireTol integer
+---@field m_nWaterTol integer
+---@field m_nSoilTol integer
+---@field m_nWindTol integer
+---@field m_nForceLevel integer
+---@field m_nForceMastery integer
+---@field m_nForceAttStd integer
+---@field m_strAttTechID1 string
+---@field m_nAttTech1UseProb integer
+---@field m_nAttTechID1MotionTime integer
+---@field m_strPSecTechID string
+---@field m_nPSecTechIDMotionTime integer
+---@field m_strMSecTechID string
+---@field m_nMSecTechIDMotionTime integer
+---@field m_nMaxHP integer
+---@field m_nHPRecDelay integer
+---@field m_nHPRecUnit integer
+---@field m_nMaxFP integer
+---@field m_nFPRecDelay integer
+---@field m_nFPRecUnit integer
+---@field m_nAttSpd integer
+---@field m_nAttMoTime1 integer
+---@field m_nAttMoTime2 integer
+---@field m_nCrtMoTime integer
+---@field m_nViewExt integer
+---@field m_nRefExt integer
+---@field m_nAttExt integer
+---@field m_nMovSpd integer
+---@field m_nScaleRate integer
+---@field m_nWidth integer
+---@field m_nAttEffType integer
+---@field m_nDefEffType integer
+local _animus_fld = {}
+
+---@class (exact) _base_fld
+---@field m_dwIndex integer
+---@field m_strCode string
+local _base_fld = {}
+
+---@class (exact) _class_fld: _base_fld
+---@field m_nRaceCode integer
+---@field m_nClass integer
+---@field m_nIconIDX integer
+---@field m_nGrade integer
+---@field m_nUpGradeLv integer
+---@field m_strTemp string
+---@field m_strKorName string
+---@field m_strEngName string
+---@field m_nConLim integer
+---@field m_bUnitUsable integer
+---@field m_bAnimusUsable integer
+---@field m_bLauncherUsable integer
+---@field m_bWMKToolUsable integer
+---@field m_bDMKToolUnitUsable integer
+---@field m_bBMKToolUnitUsable integer
+---@field m_nMakeTrapMaxNum integer
+---@field m_nBnsForHP integer
+---@field m_nBnsForFP integer
+---@field m_nBnsForSP integer
+---@field m_nUpValueDefMastery integer
+---@field m_MasteryLim _mastery_lim_data
+---@field m_bSelectRewardItem integer
+local _class_fld = {}
+---@param a1 integer
+---@return string
+function _class_fld:m_strCh_Class_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _class_fld:m_strCh_Class_set(a1, a2) end
+---@param a1 integer
+---@return string
+function _class_fld:m_strLinkClassSkill_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _class_fld:m_strLinkClassSkill_set(a1, a2) end
+---@param a1 integer
+---@return _class_fld___bns_item
+function _class_fld:m_DefaultItem_get(a1) end
+
+---@class (exact) _class_fld___bns_item
+---@field strDefaultItem string
+---@field nAmount integer
+local _class_fld___bns_item = {}
+
+---@class (exact) _consume_item_list
+---@field m_itmNeedItemCode string
+---@field m_nNeedItemCount integer
+local _consume_item_list = {}
+
+---@class (exact) _cont_param_list
+---@field m_nContParamCode integer
+---@field m_nContParamIndex integer
+local _cont_param_list = {}
+---@param a1 integer
+---@return number
+function _cont_param_list:m_fContValue_get(a1) end
+
+---@class (exact) _force_fld: _base_fld
+---@field m_nClass integer
+---@field m_nIconIDX integer
+---@field m_nMastIndex integer
+---@field m_strMastKorName string
+---@field m_strMastEngName string
+---@field m_strKorName string
+---@field m_strEngName string
+---@field m_nLv integer
+---@field m_bActivate integer
+---@field m_bEnable integer
+---@field m_strUsableRace string
+---@field m_strActableDst string
+---@field m_strGradeLimit string
+---@field m_nNeedMastIndex integer
+---@field m_strFixWeapon string
+---@field m_bFixshield integer
+---@field m_nSpecialType integer
+---@field m_nNeedSpecialType integer
+---@field m_nNeedHP integer
+---@field m_nNeedFP integer
+---@field m_nNeedSP integer
+---@field m_fActDelay number
+---@field m_bCumulType integer
+---@field m_nCumulCounter integer
+---@field m_nNewEffCount integer
+---@field m_strEffectCode string
+---@field m_bAttackable integer
+---@field m_nProperty integer
+---@field m_nEffectGroup integer
+---@field m_fAttFormulaConstant number
+---@field m_nActDistance integer
+---@field m_strRangeEffCode string
+---@field m_nTempEffectType integer
+---@field m_nTempParamCode integer
+---@field m_nContEffectType integer
+---@field m_nContAreaType integer
+---@field m_nEffectClass integer
+local _force_fld = {}
+---@param a1 integer
+---@return _consume_item_list
+function _force_fld:m_ConsumeItemList_get(a1) end
+---@param a1 integer
+---@return number
+function _force_fld:m_fTempValue_get(a1) end
+---@param a1 integer
+---@param a2 number
+function _force_fld:m_fTempValue_set(a1, a2) end
+---@param a1 integer
+---@return _cont_param_list
+function _force_fld:m_ContParamList_get(a1) end
+---@param a1 integer
+---@return integer
+function _force_fld:m_nContEffectSec_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _force_fld:m_nContEffectSec_set(a1, a2) end
+
+---@class (exact) _map_fld: _base_fld
+---@field m_strFileName string
+---@field m_nMapType integer
+---@field m_nLayerNum integer
+---@field m_nRaceVillageCode integer
+---@field m_nMonsterSetFileNum integer
+---@field m_nMapClass integer
+---@field m_nRadius integer
+---@field m_nLevelLimit integer
+---@field m_nUpLevelLim integer
+---@field m_nPotionLim integer
+local _map_fld = {}
+---@param a1 integer
+---@return integer
+function _map_fld:m_nRacePvpUsable_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _map_fld:m_nRacePvpUsable_set(a1, a2) end
+
+---@class (exact) _mon_active_fld: _base_fld
+---@field m_dwRegenTime integer
+---@field m_dwRegenLimNum integer
+---@field m_dwRegenProp integer
+---@field m_dwRegenMinNum integer
+---@field m_dwStdKill integer
+---@field m_dwRegenMaxNum integer
+local _mon_active_fld = {}
+
+---@class (exact) _mon_block_fld: _base_fld
+---@field m_dwDummyNum integer
+---@field m_nMin integer
+---@field m_nMob integer
+---@field m_nMax integer
+local _mon_block_fld = {}
+---@param a1 integer
+---@return _mon_block_fld___dummy_info
+function _mon_block_fld:m_DummyInfo_get(a1) end
+
+---@class (exact) _mon_block_fld___dummy_info
+---@field m_strDummyCode string
+---@field m_dwSelectProp integer
+local _mon_block_fld___dummy_info = {}
+
+---@class (exact) _monster_fld: _base_fld
+---@field m_strName string
+---@field m_strEffectCode string
+---@field m_nMobGrade integer
+---@field m_nRaceCode integer
+---@field m_nMobRace integer
+---@field m_nKillPoint integer
+---@field m_nToCombatTime integer
+---@field m_nPincerCnt integer
+---@field m_nPreAttRange integer
+---@field m_nMinMoveDistance integer
+---@field m_nMaxMoveDistance integer
+---@field m_nMobAlienation integer
+---@field m_nMinMoveArea integer
+---@field m_nMaxMoveArea integer
+---@field m_nGuardRecallTimeMS integer
+---@field m_nGuardingArea integer
+---@field m_fTarDecType number
+---@field m_nAPTime integer
+---@field m_nAPReset integer
+---@field m_nUglierType integer
+---@field m_fLevel number
+---@field m_bMonsterCondition integer
+---@field m_nCriticalTol integer
+---@field m_bExpDown integer
+---@field m_nUpLooting integer
+---@field m_nDnLooting integer
+---@field m_fExt number
+---@field m_fAttFcStd number
+---@field m_nAttack_DP integer
+---@field m_nProperty integer
+---@field m_fAttGap number
+---@field m_bAttRangeType integer
+---@field m_nAttType integer
+---@field m_fMinAFSelProb number
+---@field m_fMaxAFSelProb number
+---@field m_fAttSklUnit number
+---@field m_fDefSklUnit number
+---@field m_fWeakPart number
+---@field m_bUseDefence integer
+---@field m_fStdDefFc number
+---@field m_fDefGap number
+---@field m_fDefFacing number
+---@field m_nShieldBlock integer
+---@field m_nBlockPer integer
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_fForceLevel number
+---@field m_fForceMastery number
+---@field m_fForceAttStd number
+---@field m_strAttTechID1 string
+---@field m_fAttTech1UseProb number
+---@field m_fAttTechID1MotionTime number
+---@field m_strAttTechID2 string
+---@field m_fAttTech2UseProb number
+---@field m_fAttTechID2MotionTime number
+---@field m_strAttTechID3 string
+---@field m_fAttTech3UseProb number
+---@field m_fAttTechID3MotionTime number
+---@field m_strPSecTechID string
+---@field m_fPSecTechIDMotionTime number
+---@field m_strMSecTechID string
+---@field m_fMSecTechIDMotionTime number
+---@field m_nInjuryLimit integer
+---@field m_fMaxHP number
+---@field m_fHPRecDelay number
+---@field m_fHPRecUnit number
+---@field m_fAttSpd number
+---@field m_fAttMoTime1 number
+---@field m_fAttMoTime2 number
+---@field m_fCrtMoTime number
+---@field m_nViewAngle integer
+---@field m_nViewAngleCap integer
+---@field m_nCapacityValue integer
+---@field m_fViewExt number
+---@field m_fAttExt number
+---@field m_fMRefExt number
+---@field m_fCopTime number
+---@field m_fMovSpd number
+---@field m_fWarMovSpd number
+---@field m_fScaleRate number
+---@field m_bScaleChange integer
+---@field m_fWidth number
+---@field m_fWaitTime number
+---@field m_nAsitReqRate integer
+---@field m_nAsitAptRate integer
+---@field m_nAsitType integer
+---@field m_fEmoType number
+---@field m_fOffensiveRate number
+---@field m_nOffensiveType integer
+---@field m_fDamHPStd number
+---@field m_fEmoImpStdTime number
+---@field m_fGoodToOrdHPPer number
+---@field m_fOrdToBadHPPer number
+---@field m_fBadToWorseHPPer number
+---@field m_fEspTFProb number
+---@field m_fTypeCompTerms number
+---@field m_fPSecTechChat number
+---@field m_fPAttTechChat number
+---@field m_fEmo0Chat number
+---@field m_fEmo0ChatProb number
+---@field m_fEmo1Chat number
+---@field m_fEmo1ChatProb number
+---@field m_fEmo2Chat number
+---@field m_fEmo2ChatProb number
+---@field m_fEmo3Chat number
+---@field m_fEmo3ChatProb number
+---@field m_fEmo4Chat number
+---@field m_fEmo4ChatProb number
+---@field m_fAsitReqSteEspChat number
+---@field m_fAsitReqSteEspChatProb number
+---@field m_fAsitReqSteHelpChat number
+---@field m_fAsitReqSteHelpChatProb number
+---@field m_fAsitReqSteCopChat number
+---@field m_fAsitReqSteCopChatProb number
+---@field m_nAttEffType integer
+---@field m_nDefEffType integer
+local _monster_fld = {}
+---@param a1 integer
+---@return string
+function _monster_fld:m_strSPCode_get(a1) end
+---@param a1 integer
+---@param a2 string
+function _monster_fld:m_strSPCode_set(a1, a2) end
+---@param a1 integer
+---@return _monster_fld____child_mon
+function _monster_fld:m_Child_get(a1) end
+---@param a1 integer
+---@return _monster_fld___EmotionPresentation
+function _monster_fld:m_EmotionChecker_get(a1) end
+
+---@class (exact) _monster_fld___EmotionPresentation
+---@field m_nEmotionCon integer
+---@field m_nEmotionClass integer
+---@field m_strEmotionCode string
+local _monster_fld___EmotionPresentation = {}
+
+---@class (exact) _monster_fld____child_mon
+---@field strChildMon string
+---@field nChildMonNum integer
+local _monster_fld____child_mon = {}
+
+---@class (exact) _npc_fld: _base_fld
+---@field m_strName string
+---@field m_nRace integer
+---@field m_bWarType integer
+---@field m_fTarDecType number
+---@field m_fLevel number
+---@field m_fExt number
+---@field m_fAttFcStd number
+---@field m_fMinAFSelProb number
+---@field m_fMaxAFSelProb number
+---@field m_fAttSklUnit number
+---@field m_fDefSklUnit number
+---@field m_fWeakPart number
+---@field m_fStdDefFc number
+---@field m_fFireTol number
+---@field m_fWaterTol number
+---@field m_fSoilTol number
+---@field m_fWindTol number
+---@field m_fAttTechID1 number
+---@field m_fAttTech1UseProb number
+---@field m_fAttTechID2 number
+---@field m_fAttTech2UseProb number
+---@field m_fAttTechID3 number
+---@field m_fAttTech3UseProb number
+---@field m_fAttTechMinAFProb number
+---@field m_fAttTechMinAF number
+---@field m_fAttTechMaxAFProb number
+---@field m_fAttTechMaxAF number
+---@field m_fPSecTechID number
+---@field m_fMSecTechID number
+---@field m_fMaxHP number
+---@field m_fHPRecDelay number
+---@field m_fHPRecUnit number
+---@field m_fAttSpd number
+---@field m_fAttMoTime1 number
+---@field m_fAttMoTime2 number
+---@field m_fViewExt number
+---@field m_fAttExt number
+---@field m_fMRefExt number
+---@field m_fCopTime number
+---@field m_fMovSpd number
+---@field m_fWarMovSpd number
+---@field m_fScaleRate number
+---@field m_bScaleChange integer
+---@field m_fWidth number
+---@field m_fWaitTime number
+---@field m_nAsitReqRate integer
+---@field m_nAsitAptRate integer
+---@field m_strChildMon string
+---@field m_nChildMonNum integer
+---@field m_fEmoType number
+---@field m_fDamHPStd number
+---@field m_fEmoImpStdTime number
+---@field m_fGoodToOrdHPPer number
+---@field m_fOrdToBadHPPer number
+---@field m_fBadToWorseHPPer number
+---@field m_fEspTFProb number
+---@field m_fTypeCompTerms number
+---@field m_fPSecTechChat number
+---@field m_fPAttTechChat number
+---@field m_fEmo0Chat number
+---@field m_fEmo0ChatProb number
+---@field m_fEmo1Chat number
+---@field m_fEmo1ChatProb number
+---@field m_fEmo2Chat number
+---@field m_fEmo2ChatProb number
+---@field m_fEmo3Chat number
+---@field m_fEmo3ChatProb number
+---@field m_fEmo4Chat number
+---@field m_fEmo4ChatProb number
+---@field m_fAsitReqSteEspChat number
+---@field m_fAsitReqSteEspChatProb number
+---@field m_fAsitReqSteHelpChat number
+---@field m_fAsitReqSteHelpChatProb number
+---@field m_fAsitReqSteCopChat number
+---@field m_fAsitReqSteCopChatProb number
+local _npc_fld = {}
+
+---@class (exact) _player_fld: _base_fld
+---@field m_strName string
+---@field m_nRaceCode integer
+---@field m_nSexCode integer
+---@field m_fMoveWalkRate number
+---@field m_fMoveRunRate number
+---@field m_fHeight number
+---@field m_fWidth number
+---@field m_fAttackRange number
+---@field m_fDefGap number
+---@field m_fDefFacing number
+local _player_fld = {}
+
+---@class (exact) _portal_fld: _base_fld
+---@field m_strLinkMapCode string
+---@field m_strLinkPortalCode string
+---@field m_szMenu string
+---@field m_bNeedConCheck integer
+---@field m_nNeedChrLevel integer
+---@field m_nUpLevelLim integer
+---@field m_nKind integer
+---@field m_strUseRace string
+local _portal_fld = {}
+---@param a1 integer
+---@return _consume_item_list
+function _portal_fld:m_ConsumeItemList_get(a1) end
+
+---@class (exact) _skill_fld: _base_fld
+---@field m_nClass integer
+---@field m_nIconIDX integer
+---@field m_nMastIndex integer
+---@field m_strMastKorName string
+---@field m_strMastEngName string
+---@field m_strKorName string
+---@field m_strEngName string
+---@field m_nLv integer
+---@field m_bActivate integer
+---@field m_bEnable integer
+---@field m_strUsableRace string
+---@field m_strActableDst string
+---@field m_strGradeLimit string
+---@field m_nNeedMastIndex integer
+---@field m_strFixWeapon string
+---@field m_bFixshield integer
+---@field m_nSpecialType integer
+---@field m_nNeedSpecialType integer
+---@field m_nNeedHP integer
+---@field m_nNeedFP integer
+---@field m_nNeedSP integer
+---@field m_fActDelay number
+---@field m_bCumulType integer
+---@field m_nCumulCounter integer
+---@field m_nNewEffCount integer
+---@field m_strEffectCode string
+---@field m_nAttackable integer
+---@field m_fAttFormulaConstant number
+---@field m_nAttNeedBt integer
+---@field m_nBonusDistance integer
+---@field m_strRangeEffCode string
+---@field m_nTempEffectType integer
+---@field m_nTempParamCode integer
+---@field m_nContEffectType integer
+---@field m_nEffLimType integer
+---@field m_nEffLimType2 integer
+---@field m_nContAreaType integer
+---@field m_nEtc integer
+---@field m_f1_2speed number
+---@field m_f1_2distance number
+---@field m_f2_3speed number
+---@field m_f2_3distance number
+---@field m_nEffectClass integer
+local _skill_fld = {}
+---@param a1 integer
+---@return _consume_item_list
+function _skill_fld:m_ConsumeItemList_get(a1) end
+---@param a1 integer
+---@return integer
+function _skill_fld:m_nAttType_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _skill_fld:m_nAttType_set(a1, a2) end
+---@param a1 integer
+---@return integer
+function _skill_fld:m_nAttConstant_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _skill_fld:m_nAttConstant_set(a1, a2) end
+---@param a1 integer
+---@return number
+function _skill_fld:m_fTempValue_get(a1) end
+---@param a1 integer
+---@param a2 number
+function _skill_fld:m_fTempValue_set(a1, a2) end
+---@param a1 integer
+---@return _cont_param_list
+function _skill_fld:m_ContParamList_get(a1) end
+---@param a1 integer
+---@return integer
+function _skill_fld:m_nContEffectSec_get(a1) end
+---@param a1 integer
+---@param a2 integer
+function _skill_fld:m_nContEffectSec_set(a1, a2) end
+
+---@class (exact) _monster_sp_fld: _base_fld
+---@field m_nSpecialAttType integer
+---@field m_strSpecialAttCode string
+---@field m_nAttLv integer
+---@field m_fSpecialRange number
+---@field m_nMotiveCondition integer
+---@field m_nMotiveValue integer
+---@field m_nMotiveExceptionCondition integer
+---@field m_nMotiveExceptionValue integer
+---@field m_nMotiveTime integer
+---@field m_nDstType integer
+---@field m_nLimitCount integer
+---@field m_nProbability integer
+local _monster_sp_fld = {}

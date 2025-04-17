@@ -1,6 +1,5 @@
-require('_init.utility')
-require('_init.enum.RF_Globals')
-SRP = require('_init.serpent')
+require('_system.utility.utility')
+SRP = require('_system.utility.serpent')
 
 -- daylight saving time used
 USE_DST = false

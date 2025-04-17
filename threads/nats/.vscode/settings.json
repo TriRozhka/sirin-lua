@@ -1,0 +1,13 @@
+{
+	"Lua.workspace.library": [
+		"./../../"
+	],
+	"Lua.workspace.ignoreDir": [
+		".vscode",
+		"*/threads/account/_system/definitions/",
+		"*/threads/data/_system/definitions/",
+		"*/threads/userDB/_system/definitions/",
+		"*/threads/worldDB/_system/definitions/",
+		"*/threads/main/_system/definitions/"
+	]
+}
