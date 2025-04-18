@@ -18,14 +18,13 @@ function script.onThreadEnd()
 	-- your optional save state routine here
 end
 
--- hooks and thread routine must be declared above this line
-
 local function autoInit()
-	if not _G[moduleName] then -- one time initialization during Lua thread life
-		_G[moduleName] = script -- bind your script to a global variable. Variable name must be unique.
-
+	if not _G[moduleName] then
+		_G[moduleName] = script
 		table.insert(SirinLua.onThreadBegin, function() _G[moduleName].onThreadBegin() end)
 		table.insert(SirinLua.onThreadEnd, function() _G[moduleName].onThreadEnd() end)
+	else
+		_G[moduleName] = script
 	end
 
 	SirinLua.HookMgr.releaseHookByUID(script.m_strUUID)

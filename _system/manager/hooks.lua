@@ -30,30 +30,24 @@ function sirinHookMgr.addHook(func_name, pos, uid, func_handler)
 
 	repeat
 		if not func_handler then
-			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format(error_str_funcnil, func_name, hook_pos_str[pos], uid, sirinHookMgr.m_Hooks[pos][1]))
-			break
-		end
-
-		if (pos == HOOK_POS.original or pos == HOOK_POS.special ) and sirinHookMgr.m_Hooks[pos] and sirinHookMgr.m_Hooks[pos][func_name] then
-			Sirin.console.LogEx(ConsoleForeground.YELLOW, ConsoleBackground.BLACK, string.format(warning_str_hook_rewrite, func_name, hook_pos_str[pos], uid, sirinHookMgr.m_Hooks[pos][1]))
+			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format(error_str_funcnil, func_name, hook_pos_str[pos], uid))
 			break
 		end
 
 		local p = sirinHookMgr.m_Hooks[pos] or {}
+		local h = p[func_name] or {}
 
 		if pos == HOOK_POS.original or pos == HOOK_POS.special then
-			p[func_name] = { uid, func_handler }
-		else
-			local h = p[func_name] or {}
-
-			if h[uid] then
-				Sirin.console.LogEx(ConsoleForeground.YELLOW, ConsoleBackground.BLACK, string.format(warning_str_hook_rewrite, hook_pos_str[pos], uid))
+			if h[1] and h[1] ~= uid then
+				Sirin.console.LogEx(ConsoleForeground.YELLOW, ConsoleBackground.BLACK, string.format(warning_str_hook_rewrite, func_name, hook_pos_str[pos], uid, h[1]))
 			end
 
+			h = { uid, func_handler }
+		else
 			h[uid] = func_handler
-			p[func_name] = h
 		end
 
+		p[func_name] = h
 		sirinHookMgr.m_Hooks[pos] = p
 		bSucc = true
 
@@ -69,16 +63,15 @@ end
 function sirinHookMgr.removeHook(func_name, pos, uid)
 	local bSucc = false
 	local error_str = "Lua. sirinHookMgr.removeHook(%s, %s, %s) not found."
+	local p = sirinHookMgr.m_Hooks[pos] or {}
+	local h = p[func_name] or {}
 
 	if pos == HOOK_POS.original or pos == HOOK_POS.special then
-		if sirinHookMgr.m_Hooks[HOOK_POS.original] then
-			sirinHookMgr.m_Hooks[HOOK_POS.original] = nil
+		if h[1] and h[1] == uid then
+			h = nil
 			bSucc = true
 		end
 	else
-		local p = sirinHookMgr.m_Hooks[pos] or {}
-		local h = p[func_name] or {}
-
 		if h[uid] then
 			h[uid] = nil
 			bSucc = true
@@ -96,8 +89,10 @@ end
 function sirinHookMgr.releaseHookByUID(uid)
 	for k,p in pairs(sirinHookMgr.m_Hooks) do
 		if k == HOOK_POS.original or k == HOOK_POS.special then
-			if  p[1] == uid then
-				sirinHookMgr.m_Hooks[k] = nil
+			for _,h in pairs(p) do
+				if h[1] == uid then
+					h = nil
+				end
 			end
 		else
 			for _,h in pairs(p) do
