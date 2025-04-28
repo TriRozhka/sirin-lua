@@ -23,7 +23,7 @@
 ---@field m_fOldPos_y number
 ---@field m_fOldPos_z number
 ---@field m_pCurMap CMapData
----@field m_rtPer100 lightuserdata _100_per_random_table
+---@field m_rtPer100 _100_per_random_table
 ---@field m_nCirclePlayerNum integer
 ---@field m_wMapLayerIndex integer
 ---@field m_SectorPoint _object_list_point
@@ -91,15 +91,15 @@ function CGameObject:SetAttackPart(a1) end
 ---@param a3 boolean
 ---@return integer
 function CGameObject:GetGenAttackProb(a1, a2, a3) end
----@param a1 integer
----@param a2 CCharacter
----@param a3 integer
----@param a4 boolean
----@param a5 integer
----@param a6 integer
----@param a7 boolean
+---@param nDamage integer
+---@param pDst CCharacter
+---@param nDstLv integer
+---@param bCrt boolean
+---@param nAttackType integer
+---@param dwAttackSerial integer
+---@param bJadeReturn boolean
 ---@return integer
-function CGameObject:SetDamage(a1, a2, a3, a4, a5, a6, a7) end
+function CGameObject:SetDamage(nDamage, pDst, nDstLv, bCrt, nAttackType, dwAttackSerial, bJadeReturn) end
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter Attacker
 ---@return integer # result value
@@ -142,14 +142,13 @@ function CGameObject:GetAttackLevel() end
 function CGameObject:GetAttackDP() end
 ---@return integer
 function CGameObject:GetObjRace() end
----@param a1 CGameObject
 ---@return string
-function CGameObject:GetObjName(a1) end
+function CGameObject:GetObjName() end
 ---@return boolean
 function CGameObject:IsRecvableContEffect() end
----@param a1 boolean
+---@param bFirst boolean
 ---@return boolean
-function CGameObject:IsBeAttackedAble(a1) end
+function CGameObject:IsBeAttackedAble(bFirst) end
 ---@return boolean
 function CGameObject:IsRewardExp() end
 ---@param a1 CCharacter
@@ -469,6 +468,8 @@ function CCharacter:AssistSkill(pDstChar, nEffectCode, pSkillFld, nSkillLv) end
 ---@param a1 boolean
 ---@return boolean
 function CCharacter:GetStealth(a1) end
+function CCharacter:BreakStealth() end
+function CCharacter:Stop() end
 
 ---@class (exact) AutominePersonal: CCharacter
 ---@field m_bDBLoad boolean
@@ -503,6 +504,25 @@ function AutominePersonal:m_dwMineCount_get(a1) end
 ---@param a1 integer
 ---@param a2 integer
 function AutominePersonal:m_dwMineCount_set(a1, a2) end
+
+---@class (exact) SKILL
+---@field m_Type integer
+---@field m_Element integer
+---@field m_MinDmg integer
+---@field m_StdDmg integer
+---@field m_MaxDmg integer
+---@field m_CritDmg integer
+---@field m_MinProb integer
+---@field m_MaxProb integer
+---@field m_IsCritical integer
+---@field m_param _attack_param
+---@field m_Len integer
+---@field m_CastDelay integer
+---@field m_Delay integer
+---@field m_bLoad integer
+---@field m_Active integer
+---@field m_BefTime integer
+local SKILL = {}
 
 ---@class (exact) _animus_create_setdata : _character_create_setdata
 ---@field nHP integer
@@ -550,7 +570,7 @@ function CAnimus:m_DefPart_set(a1, a2) end
 ---@return lightuserdata CAITimer
 function CAnimus:m_AITimer_get(a1) end
 ---@param a1 integer
----@return lightuserdata SKILL
+---@return SKILL
 function CAnimus:m_Skill_get(a1) end
 ---@param a1 integer
 function CAnimus:AlterExp(a1) end
@@ -648,6 +668,17 @@ function CHolyStone:m_nDefPart_get(a1) end
 ---@param a2 integer
 function CHolyStone:m_nDefPart_set(a1, a2) end
 
+---@class (exact) CMonsterSkillPool
+---@field m_pMyMon CMonster
+---@field m_nSize integer
+local CMonsterSkillPool = {}
+---@param index integer
+---@return CMonsterSkill
+function CMonsterSkillPool:m_MonSkill_get(index) end
+---@param nKind integer
+---@return CMonsterSkill
+function CMonsterSkillPool:GetMonSkillKind(nKind) end
+
 ---@class (exact) _monster_create_setdata : _character_create_setdata
 ---@field pActiveRec lightuserdata _mon_active
 ---@field pDumPosition _dummy_position
@@ -693,7 +724,7 @@ local _monster_create_setdata = {}
 ---@field m_MonsterStateData lightuserdata MonsterStateData
 ---@field m_BeforeMonsterStateData lightuserdata MonsterStateData
 ---@field m_pTargetChar CCharacter
----@field m_MonsterSkillPool lightuserdata CMonsterSkillPool
+---@field m_MonsterSkillPool CMonsterSkillPool
 ---@field m_nEventItemNum integer
 ---@field m_pEventRespawn lightuserdata _event_respawn
 ---@field m_pEventSet lightuserdata _event_set
@@ -735,6 +766,10 @@ function CMonster:GetViewAngleCap(nCapKind) end
 ---@param pAttObj? CGameObject
 ---@return boolean
 function CMonster:Destroy(byDestroyCode, pAttObj) end
+---@param x number
+---@param y number
+---@param z number
+function CMonster:UpdateLookAtPos(x, y, z) end
 
 ---@class (exact) _nuclear_create_setdata : _character_create_setdata
 ---@field pMaster CPlayer

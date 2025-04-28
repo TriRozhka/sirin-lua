@@ -1,3 +1,16 @@
+local math = math
+
+local objectToCharacter = Sirin.mainThread.objectToCharacter
+local objectToPlayer = Sirin.mainThread.objectToPlayer
+local objectToMonster = Sirin.mainThread.objectToMonster
+local objectToAnimus = Sirin.mainThread.objectToAnimus
+local objectToTower = Sirin.mainThread.objectToTower
+local objectToTrap = Sirin.mainThread.objectToTrap
+local objectToAMP = Sirin.mainThread.objectToAMP
+local baseToGuardTowerItem = Sirin.mainThread.baseToGuardTowerItem
+
+local sendBuf = Sirin.mainThread.CLuaSendBuffer.Instance()
+
 ---@class (exact) sirinTowerMgr
 ---@field m_bSystemTowerAssist boolean
 ---@field m_bPlayerTowerAssist boolean
@@ -6,6 +19,8 @@
 ---@field initHooks fun()
 ---@field testTowerTarget fun(pTower: CGuardTower, pTarget: CCharacter): boolean
 ---@field searchNearEnemy fun(pTower:CGuardTower): CCharacter?
+---@field make_tower_attack_param fun(pTower: CGuardTower, pDst: CCharacter): sirinCAttack
+---@field Attack fun(pTower: CGuardTower, pTarget: CCharacter)
 local sirinTowerMgr = {
 	m_bSystemTowerAssist = true,
 	m_bPlayerTowerAssist = false,
@@ -60,7 +75,7 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 		end
 
 		local fDistToTarget = GetSqrt(pTower.m_fCurPos_x, pTower.m_fCurPos_z, pTarget.m_fCurPos_x, pTarget.m_fCurPos_z)
-		local fMaxDist = Sirin.mainThread.baseToGuardTowerItem(pTower.m_pRecordSet).m_nGADst + pTarget:GetWidth() / 2.0
+		local fMaxDist = baseToGuardTowerItem(pTower.m_pRecordSet).m_nGADst + pTarget:GetWidth() / 2.0
 
 		if fDistToTarget > fMaxDist then
 			break
@@ -84,16 +99,16 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 		local pTarPlayer
 
 		if pTarget.m_ObjID.m_byID == ID_CHAR.player then
-			pTarPlayer = Sirin.mainThread.objectToPlayer(pTarget)
+			pTarPlayer = objectToPlayer(pTarget)
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.animus then
-			pTarPlayer = Sirin.mainThread.objectToAnimus(pTarget).m_pMaster
+			pTarPlayer = objectToAnimus(pTarget).m_pMaster
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.tower then
-			pTarPlayer = Sirin.mainThread.objectToTower(pTarget).m_pMasterTwr
+			pTarPlayer = objectToTower(pTarget).m_pMasterTwr
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.trap then
-			-- pTarPlayer = Sirin.mainThread.objectToTrap(pTarget).m_pMaster
+			-- pTarPlayer = objectToTrap(pTarget).m_pMaster
 			break -- for now do not let towers hit traps.
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.amine_personal then
-			pTarPlayer = Sirin.mainThread.objectToAMP(pTarget).m_pOwner
+			pTarPlayer = objectToAMP(pTarget).m_pOwner
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.holy_stone then
 			break -- towers not deal damage to stones
 		end
@@ -116,7 +131,7 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 			end
 
 			if sirinTowerMgr.m_bPlayerTowerAssist and pTarget.m_ObjID.m_byID == ID_CHAR.monster then
-				local pMonTar = Sirin.mainThread.objectToMonster(pTarget).m_pTargetChar
+				local pMonTar = objectToMonster(pTarget).m_pTargetChar
 
 				if not pMonTar or not pMonTar.m_bLive or pMonTar.m_bCorpse then
 					break -- not allow attack monster with no target
@@ -136,7 +151,7 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 			end
 
 			if sirinTowerMgr.m_bSystemTowerAssist and pTarget.m_ObjID.m_byID == ID_CHAR.monster then
-				local pMonTar = Sirin.mainThread.objectToMonster(pTarget).m_pTargetChar
+				local pMonTar = objectToMonster(pTarget).m_pTargetChar
 
 				if not pMonTar or not pMonTar.m_bLive or pMonTar.m_bCorpse then
 					break -- not allow attack monster with no target
@@ -165,7 +180,7 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 		return pTower.m_pMasterSetTarget
 	end
 
-	local nAttackRadius = Sirin.mainThread.baseToGuardTowerItem(pTower.m_pRecordSet).m_nGADst
+	local nAttackRadius = baseToGuardTowerItem(pTower.m_pRecordSet).m_nGADst
 	local nRadius = math.floor(nAttackRadius / 100)
 	nRadius = nRadius + (nAttackRadius % 100 ~= 0 and 1 or 0)
 
@@ -205,7 +220,7 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 					break
 				end
 
-				local pTestChar = Sirin.mainThread.objectToCharacter(pTestObj)
+				local pTestChar = objectToCharacter(pTestObj)
 				local idChar = pTestObj.m_ObjID.m_byID
 
 				if idChar == ID_CHAR.animus
@@ -216,7 +231,7 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 						table.insert(aroundEnemyPlayerProperty, pTestChar)
 					end
 				elseif idChar == ID_CHAR.monster then
-					local pMonTar = Sirin.mainThread.objectToMonster(pTestObj).m_pTargetChar
+					local pMonTar = objectToMonster(pTestObj).m_pTargetChar
 
 					if pMonTar and (sirinTowerMgr.m_bTowerSelfDefense and IsSameObject(pTower, pMonTar) or ((sirinTowerMgr.m_bSystemTowerAssist and not pTower.m_pMasterTwr or sirinTowerMgr.m_bPlayerTowerAssist and pTower.m_pMasterTwr) and pMonTar:GetObjRace() == pTower:GetObjRace())) and sirinTowerMgr.testTowerTarget(pTower, pTestChar) then
 						table.insert(aroundEnemyMonsters, pTestChar)
@@ -240,6 +255,79 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 	end
 
 	return pRet
+end
+
+---@param pTower CGuardTower
+---@param pDst CCharacter
+---@return sirinCAttack
+function sirinTowerMgr.make_tower_attack_param(pTower, pDst)
+	local pAT = SirinCAttack:new()
+	pAT.m_pp = Sirin_attack_param:new()
+	local pAP = pAT.m_pp
+	pAP.pDst = pDst
+	pAP.nPart = CharacterMgr.GetAttackRandomPart(pDst and pDst or pTower)
+	local pTowerFld = baseToGuardTowerItem(pTower.m_pRecordSet)
+	pAP.nTol = pTowerFld.m_nProperty
+	pAP.nClass = 1
+	pAP.nMinAF = pTowerFld.m_nGAMinAF
+	pAP.nMaxAF = pTowerFld.m_nGAMaxAF
+	pAP.nMinSel = pTowerFld.m_nGAMinSelProb
+	pAP.nMaxSel = pTowerFld.m_nGAMaxSelProb
+
+	return pAT
+end
+
+---@param pTower CGuardTower
+---@param pTarget CCharacter
+function sirinTowerMgr.Attack(pTower, pTarget)
+	repeat
+		local nRet = pTower.m_pCurMap.m_Level.mBsp:CanYouGoThere(pTarget.m_fCurPos_x, pTarget.m_fCurPos_y, pTarget.m_fCurPos_z, pTower.m_fCurPos_x, pTower.m_fCurPos_y, pTower.m_fCurPos_z)
+
+		if nRet == 0 then
+			break
+		end
+
+		local pAT = sirinTowerMgr.make_tower_attack_param(pTower, pTarget)
+		pAT:AttackGen(false, false)
+
+		if #pAT.m_DamList == 0 then
+			break
+		end
+
+		--[[
+		struct _attack_tower_inform_zocl
+		{
+			unsigned int dwAtterSerial;
+			char byAttackPart;
+			bool bCritical;
+			char byDstID;
+			unsigned int dwDstSerial;
+			unsigned __int16 wDamage;
+		};
+		--]]
+
+		sendBuf:Init()
+		sendBuf:PushUInt32(pTower.m_dwObjSerial)
+		sendBuf:PushUInt8(pAT.m_pp.nPart)
+		sendBuf:PushUInt8(pAT.m_bIsCrtAtt and 1 or 0)
+		sendBuf:PushUInt8(pTarget.m_ObjID.m_byID)
+		sendBuf:PushUInt32(pTarget.m_dwObjSerial)
+
+		local d = pAT.m_DamList[1]
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
+
+		pTower:CircleReport(5, 15, sendBuf, false)
+
+		for _,d in ipairs(pAT.m_DamList) do
+			d.m_pChar:SetDamage(d.m_nDamage, pTower, pTower:GetLevel(), pAT.m_bIsCrtAtt, -1, 0, true)
+		end
+
+	until true
 end
 
 return sirinTowerMgr

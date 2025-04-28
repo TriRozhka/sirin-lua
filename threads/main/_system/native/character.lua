@@ -1,3 +1,5 @@
+local objectToPlayer = Sirin.mainThread.objectToPlayer
+
 ---@table
 local sirinCharacterMgr = {}
 
@@ -92,7 +94,7 @@ function sirinCharacterMgr.getAppliedEffectIndex(pCharacter, nEffectCode, dwScri
 		end
 
 		if Sirin.mainThread.modContEffect.isUse() and pCharacter.m_ObjID.m_byID == ID_CHAR.player and not (nEffectCode == EFF_CODE.skill and nEffectClass == 4) then
-			local pPlayer = Sirin.mainThread.objectToPlayer(pCharacter)
+			local pPlayer = objectToPlayer(pCharacter)
 			local EffNum = Sirin.mainThread.modContEffect.getMaxSFNum(nContType) - 1
 
 			for i = 0, EffNum do
@@ -292,6 +294,42 @@ function sirinCharacterMgr.GetAttackDamPoint(pAttacker, nAttPnt, nAttPart, nTolT
 	end
 
 	return nDamage
+end
+
+---@param pDst CCharacter
+---@param byActEffect integer
+---@param pSrc CCharacter
+function sirinCharacterMgr.SendMsg_AttackActEffect(pDst, byActEffect, pSrc)
+	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+	buf:Init()
+	buf:PushUInt8(byActEffect)
+	buf:PushUInt8(pDst.m_ObjID.m_byID)
+	buf:PushUInt32(pDst.m_dwObjSerial)
+	buf:PushUInt8(pSrc.m_ObjID.m_byID)
+	buf:PushUInt32(pSrc.m_dwObjSerial)
+	pDst:CircleReport(5, 24, buf, true)
+end
+
+---@param pChar CCharacter
+---@return integer
+function sirinCharacterMgr.GetAttackRandomPart(pChar)
+	if pChar.m_ObjID.m_byID == ID_CHAR.player and objectToPlayer(pChar).m_byDamagePart ~= 255 then
+		return objectToPlayer(pChar).m_byDamagePart
+	end
+
+	local r = math.random(0, 99)
+
+	if r < 20 then
+		return 0
+	elseif r <= 45 then
+		return 1
+	elseif r <= 63 then
+		return 2
+	elseif r <= 80 then
+		return 3
+	else
+		return 4
+	end
 end
 
 return sirinCharacterMgr

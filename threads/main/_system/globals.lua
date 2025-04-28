@@ -130,3 +130,24 @@ function IsValidMasteryCode(byCode, byIndex)
 
 	return true
 end
+
+local weaponClassTable = {
+	[0] = 0,
+	[1] = 0,
+	[2] = 0,
+	[3] = 0,
+	[4] = 0,
+	[5] = 1,
+	[6] = 1,
+	[7] = 1,
+	[8] = 1,
+	[9] = 0,
+	[10] = 0,
+	[11] = 1,
+}
+
+---@param pWeaponFld _WeaponItem_fld
+---@return integer
+function GetWeaponClass(pWeaponFld)
+	return weaponClassTable[pWeaponFld.m_nType] or 0
+end

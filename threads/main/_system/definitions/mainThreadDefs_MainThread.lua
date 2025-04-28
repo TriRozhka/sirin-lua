@@ -110,6 +110,7 @@ local console = {}
 ---@field Major_Scroll_Item integer
 ---@field Major_Cash_Item integer
 ---@field Major_Add_Character integer
+---@field _100_per_random_table _100_per_random_table
 ---@field processCheatCommand fun(pOne: CPlayer, strCmd: string): boolean
 ---@field processAsyncCheatCommand fun(pOne: CPlayer, strCmd: string): boolean
 ---@field processCheatCommandSilent fun(pOne: CPlayer, strCmd: string): boolean
@@ -253,6 +254,7 @@ local console = {}
 ---@field GuildPushMoney fun(pGuild: CGuild, dwAddDalant: integer, dwAddGold: integer, byIOType: integer, dwIOerSerial, pszIOerName): boolean
 ---@field GuildPopMoney fun(pGuild: CGuild, dwSubDalant: integer, dwSubGold: integer, byIOType: integer, dwIOerSerial, pszIOerName): boolean
 ---@field _QUEST_DB_BASE___START_NPC_QUEST_HISTORY fun(): _QUEST_DB_BASE___START_NPC_QUEST_HISTORY
+---@field _attack_param fun(): _attack_param
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -2151,6 +2153,8 @@ function CMgrAvatorItemHistory:cheat_make_item_no_material(pPlayer, byRetCode, p
 ---@class (exact) _100_per_random_table
 ---@field m_wCurTable integer
 ---@field m_wCurPoint integer
+---@field s_wRecord_get fun(x: integer, y: integer): integer
+---@field s_wRecord_set fun(x: integer, y: integer, val: integer)
 local _100_per_random_table = {}
 ---@return integer
 function _100_per_random_table:GetRand() end
@@ -2980,3 +2984,4 @@ Sirin.mainThread.cStaticMember_Player = cStaticMember_Player
 Sirin.mainThread.CPvpUserAndGuildRankingSystem = CPvpUserAndGuildRankingSystem
 Sirin.mainThread.CActionPointSystemMgr = CActionPointSystemMgr
 Sirin.mainThread.CNuclearBombMgr = CNuclearBombMgr
+Sirin.mainThread._100_per_random_table = _100_per_random_table

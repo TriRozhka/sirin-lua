@@ -90,11 +90,6 @@ local function AutominePersonal__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAtt
 ---@param pDier CCharacter
 local function CPlayer__RecvKillMessage(pPlayer, pDier) end
 
----Purpose: Nuclear bomb detonation notification.
----Hook positions: 'pre_event'.
----@param pBomb CNuclearBomb
-local function CNuclearBomb__NuclearDamege(pBomb) end
-
 ---Purpose: Animus attack process.
 ---Hook positions: 'original'.
 ---@param pAnimus CAnimus
@@ -107,6 +102,11 @@ local function CAnimus__Attack(pAnimus, skill) return false end
 ---@param pTower CGuardTower
 ---@param pTarget CCharacter
 local function CGuardTower__Attack(pTower, pTarget) end
+
+---Purpose: Nuclear bomb detonation notification.
+---Hook positions: 'pre_event, original'.
+---@param pBomb CNuclearBomb
+local function CNuclearBomb__NuclearDamege(pBomb) end
 
 ---Purpose: Nuclear Bomb attack process.
 ---Hook positions: 'original'.
