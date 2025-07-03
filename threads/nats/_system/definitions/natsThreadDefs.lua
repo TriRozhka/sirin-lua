@@ -145,15 +145,15 @@ function UUIDv4:str() end
 ---@class (exact) CAssetController
 ---@field instance fun(): CAssetController
 local CAssetController = {}
----@param a1 string
----@return lightuserdata IBaseAsset
-function CAssetController:getAsset(a1) end
----@param a1 string
----@param a2 lightuserdata IBaseAsset
-function CAssetController:addAsset(a1, a2) end
 ---@return boolean
-function CAssetController:makeAssetData() end
-function CAssetController:sendAssetData() end
+function CAssetController:makeAllAssetData() end
+function CAssetController:sendAllAssetData() end
+---@param strID string
+---@return boolean
+function CAssetController:makeAssetData(strID) end
+---@param strID string
+---@return boolean
+function CAssetController:sendAssetData(strID) end
 
 ---@class (exact) CLanguageAsset
 ---@field instance fun(): CLanguageAsset

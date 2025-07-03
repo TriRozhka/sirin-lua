@@ -1,6 +1,7 @@
-local _EFF_RATE = _EFF_RATE
+local _EFF_HAVE = _EFF_HAVE
 local _EFF_PLUS = _EFF_PLUS
-
+local _EFF_RATE = _EFF_RATE
+local _EFF_STATE = _EFF_STATE
 local math = math
 
 local baseToMonsterCharacter = Sirin.mainThread.baseToMonsterCharacter
@@ -201,6 +202,7 @@ end
 ---@return sirinCAttack
 function sirinAnimusMgr.make_gen_attack_param(pAnimus, pDst, byPart, nSkillIndex)
 	local pAT = SirinCAttack:new()
+	pAT.m_pAttChar = pAnimus
 	pAT.m_pp = Sirin_attack_param:new()
 	local pAP = pAT.m_pp
 	pAP.pDst = pDst
@@ -480,6 +482,41 @@ function sirinAnimusMgr.Heal(pAnimus, nSkill)
 	pAnimus.m_pTarget = pAnimus.m_pMaster
 
 	return false
+end
+
+---@param _this CAnimus
+---@param nPart integer
+---@return number
+function sirinAnimusMgr.GetDefGap(_this, nPart)
+	return _this.m_pRecord.m_fDefGap
+end
+
+---@param _this CAnimus
+---@param nPart integer
+---@return number
+function sirinAnimusMgr.GetDefFacing(_this, nPart)
+	return _this.m_pRecord.m_fDefFacing
+end
+
+---@param _this CAnimus
+---@param nAttactPart integer
+---@param pAttChar CCharacter
+---@return integer nDefFC
+---@return integer nConvertPart
+function sirinAnimusMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
+	local defFC = _this.m_pRecord.m_nStdDefFc
+
+	if _this.m_byRoleCode == 1 and _this.m_pMaster then
+		defFC = math.floor(defFC * _this.m_pMaster.m_EP:GetEff_Rate(_EFF_RATE.Fg_Def))
+	end
+
+	return defFC, 0
+end
+
+---@param _this CAnimus
+---@return number
+function sirinAnimusMgr.GetWeaponAdjust(_this)
+	return _this.m_pRecord.m_fAttGap
 end
 
 return sirinAnimusMgr

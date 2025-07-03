@@ -1,3 +1,5 @@
+local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+
 ---@type table
 local sirinBotMgr = {
 	m_strUUID = "sirin.lua.sirinBotMgr",
@@ -106,8 +108,11 @@ local presetsSkill = {
 
 function sirinBotMgr.init()
 	sirinBotMgr.startSerial = 4000000001
+	sirinBotMgr.startAnimusSerial = 1
 	sirinBotMgr.startIndex = 1
 	sirinBotMgr.loopIndex = 1
+	sirinBotMgr.startAnimusIndex = 1
+	sirinBotMgr.loopAnimusIndex = 1
 	sirinBotMgr.presetsArmor = {}
 	sirinBotMgr.presetsWeapon = {}
 
@@ -165,15 +170,15 @@ function sirinBotMgr.init()
 end
 
 function sirinBotMgr.onLoop()
-	if #sirinBotMgr.bots == 0 then
-		return
-	end
-
 	local time = Sirin.mainThread.GetLoopTime()
 	local i = 0
 	local maxPerLoop = math.floor(#sirinBotMgr.bots / 10) + 1
 
 	repeat
+		if #sirinBotMgr.bots == 0 then
+			break
+		end
+
 		if sirinBotMgr.loopIndex > #sirinBotMgr.bots then
 			sirinBotMgr.loopIndex = 1
 		end
@@ -201,7 +206,6 @@ struct _player_fixpositon_zocl
 	BYTE byColor;
 };
 ]]--
-			local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 			buf:Init()
 			buf:PushUInt16(MAX_PLAYERS + bot.index)
 			buf:PushUInt32(bot.objSerial)
@@ -213,7 +217,11 @@ struct _player_fixpositon_zocl
 			--print(string.format("Bot (%d) pos %.0f, %.0f, %.0f", bot.index, bot.pos[1], bot.pos[2], bot.pos[3]))
 			buf:PushUInt16(0xFFFF)
 			buf:PushInt64(sirinBotMgr.player.m_dwLastState)
-			buf:PushInt64(sirinBotMgr.player.m_dwLastStateEx)
+
+			if SERVER_AOP then
+				buf:PushInt64(sirinBotMgr.player.m_dwLastStateEx)
+			end
+
 			buf:PushUInt8(0xFF)
 			buf:SendBuffer(sirinBotMgr.player, 4, 9)
 		else
@@ -229,7 +237,6 @@ struct _object_real_fixpositon_zocl
 ]]--
 			if time - bot.lastSendTime > 4000 then
 				bot.lastSendTime = time
-				local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 				buf:Init()
 				buf:PushUInt8(0)
 				buf:PushUInt8(0)
@@ -266,7 +273,6 @@ struct _player_move_zocl
 	BYTE byDirect;
 };
 ]]--
-					local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 					buf:Init()
 					buf:PushUInt32(bot.objSerial)
 					buf:PushInt16(math.floor(bot.pos[1]))
@@ -324,7 +330,6 @@ struct _attack_skill_result_zocl
 	_attack_gen_result_zocl::_dam_list DamList[32];
 };
 ]]--
-					local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 					buf:Init()
 
 					if bot.byClass == 2 and bot.byRaceSexCode ~= 4 then -- attack force
@@ -381,9 +386,130 @@ struct _attack_skill_result_zocl
 		sirinBotMgr.loopIndex = sirinBotMgr.loopIndex + 1
 		i = i + 1
 	until i >= maxPerLoop
+
+	i = 0
+	maxPerLoop = math.floor(#sirinBotMgr.botsAnimus / 10) + 1
+
+	repeat
+		if #sirinBotMgr.botsAnimus == 0 then
+			break
+		end
+
+		if sirinBotMgr.loopAnimusIndex > #sirinBotMgr.botsAnimus then
+			sirinBotMgr.loopAnimusIndex = 1
+		end
+
+		local bot = sirinBotMgr.botsAnimus[sirinBotMgr.loopAnimusIndex]
+
+		if not bot.live then
+			bot.live = true
+			bot.actionType = 0 -- 0 - idle, 1 - move, 2 - attack
+			bot.actionStart = time
+			bot.actionTime = math.random(1, 20) * 50 + 1000
+			bot.lastSendTime = time
+--[[
+4, 13
+struct _animus_fixpositon_zocl
+{
+	WORD wRecIndex 
+	WORD wIndex;
+	DWORD dwSerial;
+	WORD zCur[3];
+	BYTE byLv;
+	WORD wLastEffectCode;
+	DWORD dwMasterSerial;
+};
+]]--
+			buf:Init()
+			buf:PushUInt16(bot.type)
+			buf:PushUInt16(500 + bot.index)
+			buf:PushUInt32(bot.objSerial)
+			buf:PushInt16(math.floor(bot.pos[1]))
+			buf:PushInt16(math.floor(bot.pos[2]))
+			buf:PushInt16(math.floor(bot.pos[3]))
+			--print(string.format("Bot Animus (%d) lv %d pos %.0f, %.0f, %.0f", bot.index, bot.lv, bot.pos[1], bot.pos[2], bot.pos[3]))
+			buf:PushUInt8(bot.lv)
+			buf:PushUInt16(0xFFFF)
+			buf:PushUInt32(0)
+			buf:SendBuffer(sirinBotMgr.player, 4, 13)
+--[[
+22, 12
+struct _animus_lvup_inform_zocl
+{
+	WORD wIndex;
+	DWORD dwSerial;
+	BYTE byLv;
+};
+]]--
+			buf:Init()
+			buf:PushUInt16(500 + bot.index)
+			buf:PushUInt32(bot.objSerial)
+			buf:PushUInt8(bot.lv)
+			buf:SendBuffer(sirinBotMgr.player, 22, 12)
+		else
+--[[
+4, 10
+struct _object_real_fixpositon_zocl
+{
+	BYTE byObjKind;
+	BYTE byObjID;
+	WORD wIndex;
+	DWORD dwSerial;
+};
+]]--
+			if time - bot.lastSendTime > 4000 then
+				bot.lastSendTime = time
+				buf:Init()
+				buf:PushUInt8(0)
+				buf:PushUInt8(3) -- ID_CHAR.animus
+				buf:PushUInt16(500 + bot.index)
+				buf:PushUInt32(bot.objSerial)
+				buf:SendBuffer(sirinBotMgr.player, 4, 10)
+				--print(string.format("Bot Animus (%d) real fix", bot.index))
+			end
+		end
+
+		sirinBotMgr.loopAnimusIndex = sirinBotMgr.loopAnimusIndex + 1
+		i = i + 1
+	until i >= maxPerLoop
 end
 
 sirinBotMgr.bots = {}
+sirinBotMgr.botsAnimus = {}
+
+---@param pPlayer CPlayer
+---@param nNum integer
+function sirinBotMgr.makeAnimusBot(pPlayer, nNum, byType, byLv)
+	sirinBotMgr.player = pPlayer
+	local pos = { pPlayer.m_fOldPos_x, pPlayer.m_fOldPos_z }
+	local lookAt = { pPlayer.m_fCurPos_x, pPlayer.m_fCurPos_z }
+	local pov = 75
+	local angle = math.atan(lookAt[2] - pos[2], lookAt[1] - pos[1])
+
+	for i = 1, nNum do
+		local rangle = math.rad(math.random(0, pov) - pov / 2)
+  		rangle = rangle + angle
+  		local rdist = math.sqrt(math.random(0, 25000) * 10)
+		local rpos = { rdist * math.cos(rangle) + pos[1], rdist * math.sin(rangle) + pos[2] }
+		local bot = {}
+		bot.live = false
+		bot.index = sirinBotMgr.startAnimusIndex
+		sirinBotMgr.startAnimusIndex = sirinBotMgr.startAnimusIndex + 1
+		bot.objSerial = sirinBotMgr.startAnimusSerial
+		sirinBotMgr.startAnimusSerial = sirinBotMgr.startAnimusSerial + 1
+
+		bot.type = byType or math.random(0, 7) -- animus item index
+		bot.lv = byLv or 55
+		bot.center = clone(rpos)
+		bot.center[3] = bot.center[2]
+		local pRet = 0
+		pRet, bot.center[2] = pPlayer.m_pCurMap.m_Level:GetNextYposForServerFar(pPlayer.m_fCurPos_x, pPlayer.m_fCurPos_y, pPlayer.m_fCurPos_z, bot.center[1], pPlayer.m_fCurPos_y, bot.center[3])
+		bot.pos = { bot.center[1] + math.random(0, 200) - 100, bot.center[2], bot.center[3] + math.random(0, 200) - 100 }
+		pRet, bot.pos[2] = pPlayer.m_pCurMap.m_Level:GetNextYposForServerFar(bot.center[1], bot.center[2], bot.center[3], bot.pos[1], bot.center[2], bot.pos[3])
+
+		table.insert(sirinBotMgr.botsAnimus, bot)
+	end
+end
 
 ---@param pPlayer CPlayer
 ---@param nNum integer
@@ -457,6 +583,9 @@ function sirinBotMgr.wipeBot()
 	sirinBotMgr.startIndex = 1
 	sirinBotMgr.loopIndex = 1
 	--sirinBot.startSerial = 4000000001
+	sirinBotMgr.botsAnimus = {}
+	sirinBotMgr.startAnimusIndex = 1
+	sirinBotMgr.loopAnimusIndex = 1
 end
 
 --[[
@@ -508,7 +637,6 @@ struct _other_shape_part_zocl
 ---@param byCashChangeStateFlag integer
 function sirinBotMgr.otherShapeRequest(pPlayer, wIndex, byType, byCashChangeStateFlag)
 	--print(string.format("otherShapeRequest %d %d", byType, wIndex))
-	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 	buf:Init()
 	local t1, t2 = 3, 31
 	local bot = sirinBotMgr.bots[wIndex - MAX_PLAYERS]

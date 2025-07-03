@@ -41,7 +41,7 @@ function script.onMonsterDestroy(pMonster, byDestroyCode, pAttObj)
 			1, -- 1 - msg destroy with killer name, 2 - msg destroy without killer name
 			pMonFld,
 			pMonster.m_pCurMap,
-			pAttObj and pAttObj.m_ObjID.m_byID == 0 and Sirin.mainThread.objectToPlayer(pAttObj) or nil
+			pAttObj and pAttObj.m_ObjID.m_byID == ID_CHAR.player and Sirin.mainThread.objectToPlayer(pAttObj) or nil
 		)
 	end
 end

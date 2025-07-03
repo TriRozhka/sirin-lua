@@ -13,9 +13,13 @@ local objectToAMP = Sirin.mainThread.objectToAMP
 local baseToSkill = Sirin.mainThread.baseToSkill
 local baseToForce = Sirin.mainThread.baseToForce
 
-local CONST_ChipBreakerBonus_Atk = 1.3
-local CONST_PatriarchBonus_Atk = 1.3
-local CONST_AttackCouncilBonus_Atk = 1.2
+local CONST_ChipBreakerBonus_Atk = CONST_ChipBreakerBonus_Atk
+local CONST_PatriarchBonus_Atk = CONST_PatriarchBonus_Atk
+local CONST_AttackCouncilBonus_Atk = CONST_AttackCouncilBonus_Atk
+
+local s_nLimitDist = CONST_nLimitDist
+local s_nLimitAngle = CONST_nLimitDist
+local s_nLimitRadius = CONST_nLimitRadius
 
 local s_nAddMstFc = {}
 
@@ -45,7 +49,7 @@ end
 
 ---@class (exact) sirin_attack_param
 ---@field __index table
----@field pDst CCharacter
+---@field pDst CCharacter?
 ---@field nPart integer
 ---@field nTol integer
 ---@field nClass integer
@@ -182,8 +186,9 @@ function sirinCAttack:_CalcGenAttPnt(bUseEffBullet)
 		local aboveAverage = self.m_pp.nMaxSel + self.m_pp.nMinSel - self.m_pAttChar.m_EP:GetEff_Plus(_EFF_PLUS.GE_CrtExt)
 
 		if self.m_pp.pDst and not IsSameObject(self.m_pAttChar, self.m_pp.pDst) then
-			belowAverage = belowAverage + self.m_pp.pDst.m_EP:GetEff_Plus(_EFF_PLUS.All_AvdCrt) + self:MonsterCritical_Exception_Rate(self.m_pp.pDst, self.m_pp.bBackAttack)
-			aboveAverage = aboveAverage + self.m_pp.pDst.m_EP:GetEff_Plus(_EFF_PLUS.All_AvdCrt) + self:MonsterCritical_Exception_Rate(self.m_pp.pDst, self.m_pp.bBackAttack)
+			local tmp = self.m_pp.pDst.m_EP:GetEff_Plus(_EFF_PLUS.All_AvdCrt) + self:MonsterCritical_Exception_Rate(self.m_pp.pDst, self.m_pp.bBackAttack)
+			belowAverage = belowAverage + tmp
+			aboveAverage = aboveAverage + tmp
 		end
 
 		if belowAverage < 0 then
@@ -279,13 +284,13 @@ end
 function sirinCAttack:CalcAvgDamage()
 	local dam = 1
 
-	if self.m_nDamagedObjNum == 1 then
+	if #self.m_DamList == 1 then
 		if self.m_DamList[1].m_nDamage == -2 then
 			dam = 2
 		else
 			dam = self.m_DamList[1].m_nDamage
 		end
-	elseif self.m_nDamagedObjNum > 1 then
+	elseif #self.m_DamList > 1 then
 		local damSum = 0
 
 		for _,d in ipairs(self.m_DamList) do
@@ -294,7 +299,7 @@ function sirinCAttack:CalcAvgDamage()
 			end
 		end
 
-		dam = damSum / self.m_nDamagedObjNum
+		dam = damSum / #self.m_DamList
 	end
 
 	if dam <= 1 then
@@ -403,10 +408,8 @@ function sirinCAttack:AttackGen(bMustMiss, bUseEffBullet)
 		else
 			local fCounterRate = pDst.m_EP:GetEff_Plus(_EFF_PLUS.Avoid_Con)
 
-			if fCounterRate > 0 then
-				if math.random(0,99) < fCounterRate then
-					bIsCounterAttack = true
-				end
+			if fCounterRate > 0 and math.random(0,99) < fCounterRate then
+				bIsCounterAttack = true
 			end
 		end
 
@@ -421,6 +424,12 @@ function sirinCAttack:AttackGen(bMustMiss, bUseEffBullet)
 					return
 				end
 
+				self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = 0 }
+				self.m_nDamagedObjNum = 1
+				return
+			end
+
+			if pDst.m_EP:GetEff_Plus(_EFF_PLUS.Avoid_Con) > 0 then
 				self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = 0 }
 				self.m_nDamagedObjNum = 1
 				return
@@ -456,15 +465,15 @@ function sirinCAttack:AttackGen(bMustMiss, bUseEffBullet)
 	local attPntEff = self:_CalcGenAttPnt(true)
 
 	if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.player then
-		local pSrcPlyer = objectToPlayer(self.m_pAttChar)
+		local pSrcPlayer = objectToPlayer(self.m_pAttChar)
 
-		if Sirin.mainThread.g_HolySys:GetDestroyerSerial() == self.m_pAttChar.m_dwObjSerial or pSrcPlyer.m_Param.m_bLastAttBuff then
+		if Sirin.mainThread.g_HolySys:GetDestroyerSerial() == self.m_pAttChar.m_dwObjSerial or pSrcPlayer.m_Param.m_bLastAttBuff then
 			attPnt = attPnt * CONST_ChipBreakerBonus_Atk
 			attPntEff = attPntEff * CONST_ChipBreakerBonus_Atk
 		end
 
-		if not pSrcPlyer.m_bInGuildBattle then
-			local byBossType = Sirin.mainThread.CPvpUserAndGuildRankingSystem.Instance():GetBossType(pSrcPlyer:GetObjRace(), pSrcPlyer.m_dwObjSerial)
+		if not pSrcPlayer.m_bInGuildBattle then
+			local byBossType = Sirin.mainThread.CPvpUserAndGuildRankingSystem.Instance():GetBossType(pSrcPlayer:GetObjRace(), pSrcPlayer.m_dwObjSerial)
 
 			if byBossType == 0 then
 				attPnt = attPnt * CONST_PatriarchBonus_Atk
@@ -526,7 +535,7 @@ function sirinCAttack:AttackGen(bMustMiss, bUseEffBullet)
 		attPntEff = attPntEff * bns
 	end
 
-	if self.m_pp.nAttactType == 0 or self.m_pp.nAttactType == 1 or self.m_pp.nAttactType == 2 then
+	if pDst and (self.m_pp.nAttactType == 0 or self.m_pp.nAttactType == 1 or self.m_pp.nAttactType == 2) then
 		self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and math.floor(attPntEff) or math.floor(attPnt), self.m_pp.nPart, self.m_pp.nTol, pDst, self.m_pp.bBackAttack) }
 		self.m_nDamagedObjNum = 1
 	elseif self.m_pp.nAttactType == 5 and self.m_pp.nExtentRange > 0 then
@@ -548,11 +557,11 @@ end
 ---@param bUseEffBullet boolean
 function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower, bUseEffBullet)
 	repeat
-		if not self.m_pp.pDst then
+		local pDst = self.m_pp.pDst
+
+		if not pDst then
 			break
 		end
-
-		local pDst = self.m_pp.pDst
 
 		if self.m_pp.bMatchless then
 			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
@@ -758,11 +767,11 @@ end
 ---@param bUseEffBullet boolean
 function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPower, bUseEffBullet)
 	repeat
-		if not self.m_pp.pDst then
+		local pDst = self.m_pp.pDst
+
+		if not pDst then
 			break
 		end
-
-		local pDst = self.m_pp.pDst
 
 		if self.m_pp.bMatchless then
 			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
@@ -968,11 +977,11 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 	local nMinRange = math.floor(nWeaponRange / 4)
 
 	repeat
-		if not self.m_pp.pDst then
+		local pDst = self.m_pp.pDst
+
+		if not pDst then
 			break
 		end
-
-		local pDst = self.m_pp.pDst
 
 		if self.m_pp.bMatchless then
 			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
@@ -1255,6 +1264,81 @@ function sirinCAttack:_CalcForceAttPnt(bUseEffBullet)
 	end
 end
 
+---@param bUseEffBullet boolean
+function sirinCAttack:AttackForce(bUseEffBullet)
+	local bSucc = true
+	self.m_pAttChar:BreakStealth()
+	local pDst = self.m_pp.pDst
+
+	if pDst then
+		if pDst.m_EP:GetEff_State(_EFF_STATE.Abs_Avd) then
+			bSucc = false
+		else
+			local nSuccRate = self.m_pAttChar.m_EP:GetEff_Plus(_EFF_PLUS.FC_HitRate) + 100 - pDst:GetAvoidRate()
+
+			if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.player then
+				nSuccRate = nSuccRate + self.m_pAttChar.m_EP:GetEff_Plus(_EFF_PLUS.Potion_Inc_All_Hit)
+			end
+
+			if nSuccRate < 0 then
+				nSuccRate = 0
+			elseif nSuccRate > 100 then
+				nSuccRate = 100
+			end
+
+			if math.floor(nSuccRate) <= math.random(0, 99) then
+				bSucc = false
+			end
+		end
+
+		if not bSucc then
+			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = 0 }
+			self.m_nDamagedObjNum = 1
+			return
+		end
+	end
+
+	local attPnt = self.m_pp.nAddAttPnt + self:_CalcForceAttPnt(false)
+	local attPntEff = self.m_pp.nAddAttPnt + self:_CalcForceAttPnt(true)
+
+	if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.player then
+		local pSrcPlyer = objectToPlayer(self.m_pAttChar)
+
+		if Sirin.mainThread.g_HolySys:GetDestroyerSerial() == self.m_pAttChar.m_dwObjSerial or pSrcPlyer.m_Param.m_bLastAttBuff then
+			attPnt = attPnt * CONST_ChipBreakerBonus_Atk
+			attPntEff = attPntEff * CONST_ChipBreakerBonus_Atk
+		end
+
+		if not pSrcPlyer.m_bInGuildBattle then
+			local byBossType = Sirin.mainThread.CPvpUserAndGuildRankingSystem.Instance():GetBossType(pSrcPlyer:GetObjRace(), pSrcPlyer.m_dwObjSerial)
+
+			if byBossType == 0 then
+				attPnt = attPnt * CONST_PatriarchBonus_Atk
+				attPntEff = attPntEff * CONST_PatriarchBonus_Atk
+			elseif byBossType == 2 or byBossType == 6 then
+				attPnt = attPnt * CONST_AttackCouncilBonus_Atk
+				attPntEff = attPntEff * CONST_AttackCouncilBonus_Atk
+			end
+		end
+	end
+
+	local pForceFld= baseToForce(self.m_pp.pFld)
+	local nAttType = pForceFld.m_nEffectGroup
+
+	if pDst and nAttType >= 0 and nAttType <=2 then
+		self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and math.floor(attPntEff) or math.floor(attPnt), self.m_pp.nPart, self.m_pp.nTol, pDst, self.m_pp.bBackAttack) }
+		self.m_nDamagedObjNum = 1
+	elseif nAttType == 4 or nAttType == 6 then
+		self:AreaDamageProc(s_nLimitRadius[pForceFld.m_nLv + 1], math.floor(attPnt), self.m_pp.fArea_x, self.m_pp.fArea_y, self.m_pp.fArea_z, math.floor(attPntEff), bUseEffBullet)
+	elseif nAttType == 5 then
+		self:FlashDamageProc(s_nLimitDist[pForceFld.m_nLv + 1], math.floor(attPnt), s_nLimitAngle[2][pForceFld.m_nLv + 1], math.floor(attPntEff), bUseEffBullet)
+	else
+		return
+	end
+
+	self:CalcAvgDamage()
+end
+
 ---@type table<integer, integer>
 local s_Mon_nLimitDist = { 42, 56, 70, 84 }
 ---@type table<integer, integer>
@@ -1352,7 +1436,7 @@ function sirinCMonsterAttack:AttackMonsterGen(bMustMiss)
 	local attPnt = self:_CalcGenAttPnt(false) + self.m_pp.nAddAttPnt
 	attPnt = attPnt * self:ModifyMonsterAttFc(self.m_pAttChar.m_EP:GetEff_Rate(self.m_pp.nWpType == 7 and _EFF_RATE.Fg_Lcr or self.m_pp.nClass))
 
-	if self.m_pp.nAttactType == 0 or self.m_pp.nAttactType == 1 or self.m_pp.nAttactType == 2 then
+	if pDst and (self.m_pp.nAttactType == 0 or self.m_pp.nAttactType == 1 or self.m_pp.nAttactType == 2) then
 		self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, math.floor(attPnt), self.m_pp.nPart, self.m_pp.nTol, pDst, self.m_pp.bBackAttack) }
 		self.m_nDamagedObjNum = 1
 	elseif self.m_pp.nAttactType == 5 and self.m_pp.nExtentRange > 0 then

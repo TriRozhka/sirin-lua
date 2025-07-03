@@ -1,6 +1,8 @@
 local math = math
 local _EFF_PLUS = _EFF_PLUS
+local _EFF_RATE = _EFF_RATE
 
+local baseToMonsterCharacter = Sirin.mainThread.baseToMonsterCharacter
 local sendBuf = Sirin.mainThread.CLuaSendBuffer.Instance()
 
 local sirinMonsterMgr = {}
@@ -362,6 +364,53 @@ function sirinMonsterMgr.Attack(pMonster, pDst, pSkill)
 	end
 
 	return 1
+end
+
+---@param _this CMonster
+---@param nPart integer
+---@return number
+function sirinMonsterMgr.GetDefGap(_this, nPart)
+	return baseToMonsterCharacter(_this.m_pRecordSet).m_fDefGap
+end
+
+---@param _this CMonster
+---@param nPart integer
+---@return number
+function sirinMonsterMgr.GetDefFacing(_this, nPart)
+	return baseToMonsterCharacter(_this.m_pRecordSet).m_fDefFacing
+end
+
+---@param _this CMonster
+---@param nAttactPart integer
+---@param pAttChar CCharacter
+---@return integer nDefFC
+---@return integer nConvertPart
+function sirinMonsterMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
+	if _this.m_pMonRec then
+		if pAttChar and _this.m_pMonRec.m_nShieldBlock == 1 and math.random(0, 99) < _this.m_pMonRec.m_nBlockPer then
+			return -2, 0
+		end
+
+		local defFC = 0
+
+		if nAttactPart == -1 then
+			defFC =  _this:m_DefPart_get(math.random(0, 4))
+		else
+			defFC =  _this:m_DefPart_get(nAttactPart)
+		end
+
+		defFC = math.floor(defFC * _this.m_EP:GetEff_Rate(_EFF_RATE.DefFc))
+
+		return defFC, 0
+	else
+		return 0, 0
+	end
+end
+
+---@param _this CMonster
+---@return number
+function sirinMonsterMgr.GetWeaponAdjust(_this)
+	return baseToMonsterCharacter(_this.m_pRecordSet).m_fAttGap
 end
 
 return sirinMonsterMgr

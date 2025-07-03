@@ -298,6 +298,7 @@ function CGameObject:Create(a1) end
 function CGameObject:CircleReport(byType, bySubType, buffer, bToSelf, dwPassObjSerial) end
 ---@return integer
 function CGameObject:GetCurSecNum() end
+function CGameObject:SendMsg_BreakStop() end
 
 ---@class (exact) CItemBox: CGameObject
 ---@field m_dwOwnerSerial integer
@@ -445,31 +446,57 @@ function CCharacter:m_SFContAura_get(a1, a2) end
 ---@return boolean # Is mastery can grow 
 function CCharacter:InsertSFContEffect(byContCode, byEffectCode, dwEffectIndex, wDurSec, byLv, pActChar) end
 function CCharacter:UpdateSFCont() end
----@param a1 integer
----@param a2 integer
----@param a3 boolean
----@param a4 boolean
-function CCharacter:RemoveSFContEffect(a1, a2, a3, a4) end
----@param pDstChar CCharacter Who applied effect
+---@param byContCode integer
+---@param wListIndex integer
+---@param bInit boolean
+---@param bAura boolean
+function CCharacter:RemoveSFContEffect(byContCode, wListIndex, bInit, bAura) end
+---@param nContParamCode integer
+---@param nContParamIndex integer
+function CCharacter:RemoveSFContHelpByEffect(nContParamCode, nContParamIndex) end
+---@param pDstChar CCharacter
 ---@param pForceFld _force_fld
 ---@param nForceLv integer
 ---@return boolean
 ---@return integer # Error code
 ---@return boolean # Is mastery can grow 
 function CCharacter:AssistForce(pDstChar, pForceFld, nForceLv) end
----@param pDstChar CCharacter Who applied effect
----@param nEffectCode integer:eff_code
+---@param pDstChar CCharacter
+---@param pForceFld _force_fld
+---@param nForceLv integer
+---@return boolean
+function CCharacter:AssistForceToOne(pDstChar, pForceFld, nForceLv) end
+---@param pDstChar CCharacter
+---@param nEffectCode integer|EFF_CODE skill class or bullet
 ---@param pSkillFld _skill_fld
 ---@param nSkillLv integer
 ---@return boolean
 ---@return integer # Error code
 ---@return boolean # Is mastery can grow 
 function CCharacter:AssistSkill(pDstChar, nEffectCode, pSkillFld, nSkillLv) end
+---@param pDstChar CCharacter
+---@param nEffectCode integer|EFF_CODE skill class or bullet
+---@param pSkillFld _skill_fld
+---@param nSkillLv integer
+---@return boolean
+function CCharacter:AssistSkillToOne(pDstChar, nEffectCode, pSkillFld, nSkillLv) end
 ---@param a1 boolean
 ---@return boolean
 function CCharacter:GetStealth(a1) end
 function CCharacter:BreakStealth() end
 function CCharacter:Stop() end
+---@param nEffectCode integer
+---@param nAreaType integer
+---@param nLv integer
+---@param bBenefit boolean
+---@param pOriDst CCharacter
+---@param strActableDst string
+---@return table<integer, CCharacter>
+function CCharacter:FindEffectDst(nEffectCode, nAreaType, nLv, bBenefit, pOriDst, strActableDst) end
+---@param strActableDst string
+---@param pDst CCharacter
+---@return boolean
+function CCharacter:IsEffectableDst(strActableDst, pDst) end
 
 ---@class (exact) AutominePersonal: CCharacter
 ---@field m_bDBLoad boolean
@@ -770,6 +797,9 @@ function CMonster:Destroy(byDestroyCode, pAttObj) end
 ---@param y number
 ---@param z number
 function CMonster:UpdateLookAtPos(x, y, z) end
+---@param pTarget CCharacter
+---@return boolean
+function CMonster:IsViewArea(pTarget) end
 
 ---@class (exact) _nuclear_create_setdata : _character_create_setdata
 ---@field pMaster CPlayer
@@ -805,6 +835,37 @@ function CNuclearBomb:m_DamList_get(a1) end
 ---@param a1 integer
 ---@return _be_damaged_char
 function CNuclearBomb:m_EffList_get(a1) end
+
+---@class (exact) _ATTACK_DELAY_CHECKER___eff_list
+---@field byEffectCode integer
+---@field wEffectIndex integer
+---@field dwNextTime integer
+local _ATTACK_DELAY_CHECKER___eff_list = {}
+
+---@class (exact) _ATTACK_DELAY_CHECKER___mas_list
+---@field byEffectCode integer
+---@field byMastery integer
+---@field dwNextTime integer
+local _ATTACK_DELAY_CHECKER___mas_list = {}
+
+---@class (exact) _ATTACK_DELAY_CHECKER
+---@field dwNextEffTime integer
+---@field dwNextGenTime integer
+---@field dwLastGnAttackTime integer
+---@field dwLastSFAttackTime integer
+---@field nFailCount integer
+---@field m_nNextAddTime integer
+---@field byTemp_EffectCode integer
+---@field wTemp_EffectIndex integer
+---@field byTemp_EffectMastery integer
+local _ATTACK_DELAY_CHECKER = {}
+---@param nDelay integer
+function _ATTACK_DELAY_CHECKER:SetDelay(nDelay) end
+---@param dwCode integer
+---@param dwIndex integer
+---@param dwMastery integer
+---@return boolean
+function _ATTACK_DELAY_CHECKER:IsDelay(dwCode, dwIndex, dwMastery) end
 
 ---@class (exact) CPlayer: CCharacter
 ---@field m_bLoad boolean
@@ -976,7 +1037,7 @@ function CNuclearBomb:m_EffList_get(a1) end
 ---@field m_byDelaySec integer
 ---@field m_zMinePos_x integer
 ---@field m_zMinePos_y integer
----@field m_AttDelayChker lightuserdata _ATTACK_DELAY_CHECKER
+---@field m_AttDelayChker _ATTACK_DELAY_CHECKER
 ---@field m_fUnitPv_AttFc number
 ---@field m_fUnitPv_DefFc number
 ---@field m_fUnitPv_RepPr number
@@ -1124,27 +1185,27 @@ function CPlayer:Emb_AddStorage(a1, a2, a3, a4) end
 ---@param a1 integer
 ---@param a2 _STORAGE_LIST___db_con
 function CPlayer:SendMsg_TakeNewResult(a1, a2) end
----@param a1 integer
----@param a2 integer
----@param a3 boolean
----@param a4 boolean
----@param a5 string
+---@param byStorageCode integer
+---@param byStorageIndex integer
+---@param bEquipChange boolean
+---@param bDelete boolean
+---@param strErrorCodePos string
 ---@return boolean
-function CPlayer:Emb_DelStorage(a1, a2, a3, a4, a5) end
+function CPlayer:Emb_DelStorage(byStorageCode, byStorageIndex, bEquipChange, bDelete, strErrorCodePos) end
 ---@param a1 integer
 ---@param a2 integer
 function CPlayer:SendMsg_DeleteStorageInform(a1, a2) end
----@param a1 integer
----@param a2 integer
----@param a3 integer
----@param a4 boolean
----@param a5 boolean
+---@param byStorageCode integer
+---@param byStorageIndex integer
+---@param nAlter integer
+---@param bUpdate boolean
+---@param bSend boolean
 ---@return integer
-function CPlayer:Emb_AlterDurPoint(a1, a2, a3, a4, a5) end
----@param a1 integer
----@param a2 integer
----@param a3 integer
-function CPlayer:SendMsg_AdjustAmountInform(a1, a2, a3) end
+function CPlayer:Emb_AlterDurPoint(byStorageCode, byStorageIndex, nAlter, bUpdate, bSend) end
+---@param byStorageCode integer
+---@param wSerial integer
+---@param dwDur integer
+function CPlayer:SendMsg_AdjustAmountInform(byStorageCode, wSerial, dwDur) end
 ---@param a1 number
 function CPlayer:AlterDalant(a1) end
 ---@param a1 number
@@ -1287,6 +1348,77 @@ function CPlayer:SendMsg_ExchangeItemResult(byErrCode, pDummmyCon) end
 ---@param byErrCode integer 0xFE empty box, 0xFD need slots. dwDur of dummy con is how many slots needed,  0xFC success with custom result
 ---@param pDummmyCon _STORAGE_LIST___db_con
 function CPlayer:SendMsg_ExchangeLendItemResult(byErrCode, pDummmyCon) end
+---@param pDst CCharacter
+---@param bCounter boolean
+---@param wBulletSerial integer
+---@param wEffBtSerial integer
+---@return integer nErrCode
+---@return _STORAGE_LIST___db_con pBulletCon
+---@return _BulletItem_fld pBulletFld
+---@return _STORAGE_LIST___db_con pEffBulletCon
+---@return _BulletItem_fld pEffBulletFld
+function CPlayer:_pre_check_normal_attack(pDst, bCounter, wBulletSerial, wEffBtSerial) end
+---@param pDst? CCharacter
+---@param x number
+---@param y number
+---@param z number
+---@param byEffectCode integer
+---@param pSkillFld _skill_fld
+---@param wBulletSerial integer
+---@param nEffectGroup integer
+---@param wEffBtSerial integer
+---@return integer nErrCode
+---@return _STORAGE_LIST___db_con pBulletCon
+---@return _BulletItem_fld pBulletFld
+---@return _STORAGE_LIST___db_con pEffBulletCon
+---@return _BulletItem_fld pEffBulletFld
+---@return integer wCosnumeHP
+---@return integer wCosnumeFP
+---@return integer wCosnumeSP
+function CPlayer:_pre_check_skill_attack(pDst, x, y, z, byEffectCode, pSkillFld, wBulletSerial, nEffectGroup, wEffBtSerial) end
+---@param pDst? CCharacter
+---@param x number
+---@param y number
+---@param z number
+---@param wForceSerial integer
+---@param wEffBtSerial integer
+---@return integer nErrCode
+---@return _STORAGE_LIST___db_con pForceCon
+---@return _force_fld pForceFld
+---@return _STORAGE_LIST___db_con pEffBulletCon
+---@return _BulletItem_fld pEffBulletFld
+---@return integer wCosnumeHP
+---@return integer wCosnumeFP
+---@return integer wCosnumeSP
+function CPlayer:_pre_check_force_attack(pDst, x, y, z, wForceSerial, wEffBtSerial) end
+---@param pDst CCharacter
+---@param byPart integer
+---@return integer nErrCode
+---@return _UnitPart_fld pUnitPartFld
+---@return _UnitBullet_fld pUnitBulletFld
+---@return integer wLeftNum
+function CPlayer:_pre_check_unit_attack(pDst, byPart) end
+---@param pDst? CCharacter
+---@param x number
+---@param y number
+---@param z number
+---@param wBulletSerial integer
+---@param wEffBtSerial integer
+---@return integer nErrCode
+---@return _STORAGE_LIST___db_con pBulletCon
+---@return _BulletItem_fld pBulletFld
+---@return _STORAGE_LIST___db_con pEffBulletCon
+---@return _BulletItem_fld pEffBulletFld
+function CPlayer:_pre_check_siege_attack(pDst, x, y, z, wBulletSerial, wEffBtSerial) end
+---@param nValue integer
+---@param bOver boolean
+---@return boolean
+function CPlayer:SetFP(nValue, bOver) end
+---@param nValue integer
+---@param bOver boolean
+---@return boolean
+function CPlayer:SetSP(nValue, bOver) end
+function CPlayer:SenseState() end
 
 ---@class (exact) _trap_create_setdata : _character_create_setdata
 ---@field nHP integer

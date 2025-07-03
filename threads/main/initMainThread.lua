@@ -32,6 +32,7 @@ SirinLua.BoxOpenMgr = require('threads.main._system.manager.boxItemOut')
 SirinLua.ButtonMgr = require('threads.main._system.manager.npcButtons')
 SirinLua.PotionMgr = require('threads.main._system.manager.potionEffect')
 SirinLua.GmCommMgr = require('threads.main._system.manager.gmCommands')
+SirinLua.ClientWindowMgr = require('threads.main._system.manager.customWindow')
 
 
 -- Custom logic implementations
@@ -56,6 +57,7 @@ SirinLua.onThreadBegin = {
 	function() SirinLua.ButtonMgr.loadScripts() end,
 	function() SirinLua.PotionMgr.loadScripts() end,
 	function() SirinLua.GmCommMgr.loadScripts() end,
+	function() SirinLua.ClientWindowMgr.initHooks(); SirinLua.ClientWindowMgr.loadScripts() end,
 	function() PlayerMgr.initHooks(); PlayerMgr.init() end,
 	function() AutoLootMgr.initHooks() end,
 	function() TowerMgr.initHooks() end,

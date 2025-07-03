@@ -89,6 +89,10 @@ function GetSqrt(ax, az, bx, bz)
 	return math.sqrt((ax - bx) ^ 2 + (az - bz) ^ 2)
 end
 
+function Get3DSqrt(ax, ay, az, bx, by, bz)
+	return math.sqrt((ax - bx) ^ 2 + (ay - by) ^ 2 + (az - bz) ^ 2)
+end
+
 ---@param a CGameObject
 ---@param b CGameObject
 ---@return boolean
@@ -151,3 +155,22 @@ local weaponClassTable = {
 function GetWeaponClass(pWeaponFld)
 	return weaponClassTable[pWeaponFld.m_nType] or 0
 end
+
+---@param nTempEffectType integer
+---@return boolean
+function IsUsableTempEffectAtStoneState(nTempEffectType)
+	return (nTempEffectType >= 0 and (nTempEffectType == 5 or (nTempEffectType > 4 and (nTempEffectType <= 14 or nTempEffectType == 28))))
+end
+
+CONST_ChipBreakerBonus_Atk = 1.3
+CONST_PatriarchBonus_Atk = 1.3
+CONST_AttackCouncilBonus_Atk = 1.2
+CONST_ChipBreakerBonus_Def = 1.3
+CONST_PatriarchBonus_Def = 1.3
+CONST_ArchonBonus_Def = 1.5
+CONST_DefenseCouncilBonus_Def = 1.2
+
+CONST_nLimitDist = { 42, 56, 70, 84 }
+CONST_nLimitAngle = { { 180, 180, 180, 180 }, { 180, 180, 180, 180 }, { 180, 180, 180, 180 }, { 180, 180, 180, 180 } }
+CONST_nLimitRadius = { 42, 56, 70, 84 }
+CONST_s_fPartGravity = { 0.2, 0,23, 0.22, 0.18, 0.17 }

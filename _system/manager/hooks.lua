@@ -14,6 +14,7 @@ local hook_pos_str = { 'filter', 'pre_event', 'original', 'after_event', 'specia
 ---@field addHook fun(func_name: string, pos: HOOK_POS, uid: string, func_handler: fun(...):...?): boolean
 ---@field removeHook fun(func_name: string, pos: HOOK_POS, uid: string): boolean
 ---@field releaseHookByUID fun(uid: string)
+---@field callHook fun(pos: HOOK_POS, func_name: string, default: any, ...?): any?
 local sirinHookMgr = {
 	m_Hooks = { {}, {}, {}, {}, {} },
 }
@@ -102,6 +103,42 @@ function sirinHookMgr.releaseHookByUID(uid)
 			end
 		end
 	end
+end
+
+---@param pos HOOK_POS
+---@param func_name string
+---@param default any
+---@param ...? any
+---@return any?
+function sirinHookMgr.callHook(pos, func_name, default, ...)
+	local p = sirinHookMgr.m_Hooks[pos] or {}
+	local h = p[func_name] or {}
+
+	if pos == HOOK_POS.original or pos == HOOK_POS.special then
+		if h[2] then
+			return h[2](...)
+		end
+	elseif pos == HOOK_POS.filter then
+		local n = 0
+
+		for u,f in pairs(h) do
+			n = n + 1
+
+			if not f(...) then
+				return false
+			end
+		end
+
+		if n > 0 then
+			return true
+		end
+	else
+		for u,f in pairs(h) do
+			f(...)
+		end
+	end
+
+	return default
 end
 
 return sirinHookMgr

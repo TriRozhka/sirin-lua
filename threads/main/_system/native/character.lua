@@ -1,4 +1,5 @@
 local objectToPlayer = Sirin.mainThread.objectToPlayer
+local objectToMonster = Sirin.mainThread.objectToMonster
 
 ---@table
 local sirinCharacterMgr = {}
@@ -299,15 +300,15 @@ end
 ---@param pDst CCharacter
 ---@param byActEffect integer
 ---@param pSrc CCharacter
-function sirinCharacterMgr.SendMsg_AttackActEffect(pDst, byActEffect, pSrc)
+function sirinCharacterMgr.SendMsg_AttackActEffect(pSrc, byActEffect, pDst)
 	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 	buf:Init()
 	buf:PushUInt8(byActEffect)
-	buf:PushUInt8(pDst.m_ObjID.m_byID)
-	buf:PushUInt32(pDst.m_dwObjSerial)
 	buf:PushUInt8(pSrc.m_ObjID.m_byID)
 	buf:PushUInt32(pSrc.m_dwObjSerial)
-	pDst:CircleReport(5, 24, buf, true)
+	buf:PushUInt8(pDst.m_ObjID.m_byID)
+	buf:PushUInt32(pDst.m_dwObjSerial)
+	pSrc:CircleReport(5, 24, buf, true)
 end
 
 ---@param pChar CCharacter

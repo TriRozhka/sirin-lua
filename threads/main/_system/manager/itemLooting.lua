@@ -361,6 +361,7 @@ function sirinLootingMgr.onLoop()
 					b.m_dwPartyBossSerial = v.dwPartyBossSerial
 					b.m_bPartyShare = v.bPartyShare
 					b.m_bCompDgr = v.byOwnerUserDgr ~= 0
+					b.m_bBossMob = v.pMonRecFld and v.pMonRecFld.m_bMonsterCondition == 1 or false
 					v.dwNextDropIndex = v.dwNextDropIndex + 1
 				end
 			end

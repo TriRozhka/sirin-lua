@@ -141,6 +141,8 @@ local console = {}
 ---@field objectToReturnGate fun(this: CGameObject): CReturnGate
 ---@field objectToTrap fun(this: CGameObject): CTrap
 ---@field g_UserDB_get fun(nIndex: integer): CUserDB
+---@field getAccountBySerial fun(integer): CUserDB
+---@field getActiveAccounts fun(): table<integer, CUserDB>
 ---@field g_ItemBox_get fun(nIndex: integer): CItemBox
 ---@field getEmptyItemBoxList fun(num: integer): table<integer, CItemBox>
 ---@field objectToItemBox fun(this: CGameObject): CItemBox
@@ -245,7 +247,7 @@ local console = {}
 ---@field _ContPotionData fun(): _ContPotionData
 ---@field attackToPlayerAttack fun(pAT: CAttack): CPlayerAttack
 ---@field attackToMonsterAttack fun(pAt: CAttack): CMonsterAttack
----@field AlterCashAsync fun(dwAccountSerial: integer, nAlterValue: integer, strParam: string)
+---@field AlterCashAsync fun(dwAccountSerial: integer, nAlterValue: integer, strParam: string): boolean
 ---@field g_Guild_get fun(nIndex: integer): CGuild
 ---@field _happen_event_cont fun(): _happen_event_cont
 ---@field TimeItem__FindTimeRec fun(nTblCode: integer, nIndex: integer): _TimeItem_fld
@@ -269,6 +271,7 @@ local console = {}
 ---@field modInfinitePotion modInfinitePotion
 ---@field modRaceSexClassChange modRaceSexClassChange
 ---@field modForceLogoutAfterUsePotion modForceLogoutAfterUsePotion
+---@field modWindowExt modWindowExt
 ---@field g_pAttack CAttack
 ---@field g_dwAttType integer
 ---@field g_HolySys CHolyStoneSystem
@@ -283,6 +286,7 @@ local console = {}
 ---@field CPvpUserAndGuildRankingSystem CPvpUserAndGuildRankingSystem
 ---@field CActionPointSystemMgr CActionPointSystemMgr
 ---@field CNuclearBombMgr CNuclearBombMgr
+---@field CGuildRoomSystem CGuildRoomSystem
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -324,6 +328,7 @@ local modPotionEffect = {}
 ---@field RegisterButtons fun()
 ---@field IsBeNearExchangeButton fun(pOne: CPlayer, dwButtonID: integer): boolean
 ---@field IsBeNearButton fun(pOne: CPlayer, dwButtonID: integer): boolean
+---@field RegisterAsset fun(): boolean
 local modButtonExt = {}
 
 ---@class (exact) modStackExt
@@ -366,18 +371,22 @@ local modRaceSexClassChange = {}
 ---@field s_bNeedForceLogout boolean
 local modForceLogoutAfterUsePotion = {}
 
+---@class (exact) modWindowExt
+---@field RegisterAsset fun(): boolean
+local modWindowExt = {}
+
 ---@class (exact) CAssetController
 ---@field instance fun(): CAssetController
 local CAssetController = {}
----@param a1 string
----@return lightuserdata IBaseAsset
-function CAssetController:getAsset(a1) end
----@param a1 string
----@param a2 lightuserdata IBaseAsset
-function CAssetController:addAsset(a1, a2) end
 ---@return boolean
-function CAssetController:makeAssetData() end
-function CAssetController:sendAssetData() end
+function CAssetController:makeAllAssetData() end
+function CAssetController:sendAllAssetData() end
+---@param strID string
+---@return boolean
+function CAssetController:makeAssetData(strID) end
+---@param strID string
+---@return boolean
+function CAssetController:sendAssetData(strID) end
 
 ---@class (exact) CLanguageAsset
 ---@field instance fun(): CLanguageAsset
@@ -2951,6 +2960,19 @@ local CNuclearBombMgr = {}
 ---@return CNuclearBomb
 function CNuclearBombMgr:m_Missile_get(i, j) end
 
+---@class (exact) CGuildRoomSystem
+---@field GetInstance fun(): CGuildRoomSystem
+local CGuildRoomSystem = {}
+---@param dwGuildSerial integer
+---@param n integer
+---@param dwCharSerial integer
+---@return boolean
+function CGuildRoomSystem:IsGuildRoomMemberIn(dwGuildSerial, n, dwCharSerial) end
+---@param byRace integer
+---@param byMapType integer
+---@return CMapData
+function CGuildRoomSystem:GetMapData(byRace, byMapType) end
+
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4
 Sirin.CAssetController = CAssetController
@@ -2972,6 +2994,7 @@ Sirin.mainThread.modBoxOpen = modBoxOpen
 Sirin.mainThread.modInfinitePotion = modInfinitePotion
 Sirin.mainThread.modRaceSexClassChange = modRaceSexClassChange
 Sirin.mainThread.modForceLogoutAfterUsePotion = modForceLogoutAfterUsePotion
+Sirin.mainThread.modWindowExt = modWindowExt
 Sirin.mainThread.g_pAttack = CAttack
 Sirin.mainThread.g_HolySys = CHolyStoneSystem
 Sirin.mainThread.g_Main = CMainThread
@@ -2985,3 +3008,4 @@ Sirin.mainThread.CPvpUserAndGuildRankingSystem = CPvpUserAndGuildRankingSystem
 Sirin.mainThread.CActionPointSystemMgr = CActionPointSystemMgr
 Sirin.mainThread.CNuclearBombMgr = CNuclearBombMgr
 Sirin.mainThread._100_per_random_table = _100_per_random_table
+Sirin.mainThread.CGuildRoomSystem = CGuildRoomSystem

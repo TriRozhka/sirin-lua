@@ -93,7 +93,7 @@ rift = { -- You may put any unique name. Only letters and underscore allowed in 
 		--costPvPCash = 0,
 	},
 
-	onCheckUseConditions = function (pLuaRift, pPlayer) -- must return true or false if player allowed or not allowed to use this rift
+	onCheckUseConditions = function (pLuaRift, pPlayer) -- must return integer error code. 0 - no error.
 		return RiftMgr.canUseRift(pLuaRift, pPlayer) -- return error code. 0 - no error. 1-254 specific error codes which shown user automatically. 255 silent error code with no error display, suitable for cutom error messages.
 	end,
 

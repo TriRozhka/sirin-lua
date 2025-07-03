@@ -76,39 +76,6 @@ function sirinAutoLootMgr.canUseAutoLoot(pKiller, pMonster)
 		return false
 	end
 
---[[
-	if bHaveItem then -- check for item. This method is slow and should not be used. Code provided as item search example.
-		local szItemCode = "iyyyy01"
-		local byTblCode = Sirin.mainThread.GetItemTableCode(szItemCode)
-
-		if byTblCode == -1 then
-			return false
-		end
-
-		local pFld = Sirin.mainThread.g_Main:m_tblItemData_get(byTblCode):GetRecordByHash(szItemCode, 2, 5)
-
-		if not pFld then
-			return false
-		end
-
-		local bItemFound = false
-		local invenSize = pOwner.m_Param.m_dbInven.m_nUsedNum - 1
-
-		for i = 0, invenSize do
-			local pCon = pOwner.m_Param.m_dbInven:m_List_get(i)
-
-			if pCon.m_bLoad and not pCon.m_bLock and pCon.m_byTableCode == byTblCode and pCon.m_wItemIndex == pFld.m_dwIndex then
-				bItemFound = true
-				break
-			end
-		end
-
-		if not bItemFound then
-			return false
-		end
-	end
---]]
-
 	if bHaveItem then
 		local bEffectFound = false
 		local dwEffID = 0

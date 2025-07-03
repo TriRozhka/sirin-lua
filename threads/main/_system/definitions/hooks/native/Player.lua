@@ -201,3 +201,20 @@ local function CPvpOrderView__Update_PvpTempCash(pOrderView, wIndex, dTempPvpCas
 ---@param dAlter number
 ---@param IOCode PVP_MONEY_ALTER_TYPE
 local function CPlayer__AlterPvPCashBag(pPlayer, dAlter, IOCode) end
+
+---Purpose: Overrides HQ map
+---Hook positions: 'original'
+---@param pMapOper CMapOperation
+---@param byRaceCode number
+---@return CMapData?
+local function CMapOperation__GetStartMap(pMapOper, byRaceCode) end
+
+---Purpose: Update state flags event.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+local function CPlayer__SetStateFlag(pPlayer) end
+
+---Purpose: Update state Ex flags event. AoP Only.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+local function CPlayer__SetStateFlagEx(pPlayer) end

@@ -21,6 +21,6 @@ local function ItemCombineMgr__RequestCombineAcceptProcess(pPlayer, Selected) en
 ---@param pCombineMgr ItemCombineMgr
 ---@param pPlayerItemDB _ITEMCOMBINE_DB_BASE
 ---@param pRecv _combine_ex_item_accept_request_clzo
----@param Ret? integer Error code provided in after_event hooks
----@return integer? #return required for original hook only
+---@param Ret integer Error code provided in after_event hooks
+---@return integer #return required for original hook only
 local function ItemCombineMgr__MakeNewItems(pCombineMgr, pPlayerItemDB, pRecv, Ret) return 0 end

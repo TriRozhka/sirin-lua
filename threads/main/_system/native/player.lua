@@ -1,3 +1,20 @@
+local _EFF_HAVE = _EFF_HAVE
+local _EFF_PLUS = _EFF_PLUS
+local _EFF_RATE = _EFF_RATE
+local _EFF_STATE = _EFF_STATE
+local baseToUnitFrame = Sirin.mainThread.baseToUnitFrame
+local baseToItemUpgrade = Sirin.mainThread.baseToItemUpgrade
+local baseToDfnEquipItem = Sirin.mainThread.baseToDfnEquipItem
+local baseToWeaponItem = Sirin.mainThread.baseToWeaponItem
+local g_Main = Sirin.mainThread.g_Main
+local CONST_ChipBreakerBonus_Def = CONST_ChipBreakerBonus_Def
+local CONST_PatriarchBonus_Def = CONST_PatriarchBonus_Def
+local CONST_ArchonBonus_Def = CONST_ArchonBonus_Def
+local CONST_DefenseCouncilBonus_Def = CONST_DefenseCouncilBonus_Def
+local CONST_s_fPartGravity = CONST_s_fPartGravity
+local math = math
+local sendBuf = Sirin.mainThread.CLuaSendBuffer.Instance()
+
 ---@class sirinPlayerMgr
 local sirinPlayerMgr = {
 	m_strUUID = 'sirin.lua.sirinPlayerMgr',
@@ -478,7 +495,7 @@ end
 function sirinPlayerMgr.alterSkillMastery(pPlayer, byMastIndex, nDeltaPt)
 	local byMastCode = 3
 
-	local pFld = Sirin.mainThread.g_Main:m_tblEffectData_get(EFF_CODE.skill):GetRecord(byMastIndex)
+	local pFld = g_Main:m_tblEffectData_get(EFF_CODE.skill):GetRecord(byMastIndex)
 
 	if not pFld then
 		return false
@@ -619,7 +636,7 @@ function sirinPlayerMgr.addUpgradeProtectionPotion(type, code)
 			break
 		end
 
-		local pFld = Sirin.mainThread.g_Main:m_tblItemData_get(TBL_CODE.potion):GetRecordByHash(code, 2, 5)
+		local pFld = g_Main:m_tblItemData_get(TBL_CODE.potion):GetRecordByHash(code, 2, 5)
 
 		if not pFld then
 			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.addUpgradeProtectionPotion(...): Potion item not exists: %s\n", code))
@@ -694,8 +711,6 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 	---@type __ITEM
 	local pTalikCon = nil
 	---@type __ITEM
-	local pToolCon = nil
-	---@type __ITEM
 	local pUpgItemCon = nil
 	---@type table<integer, __ITEM>
 	local pJewelCon = {}
@@ -764,7 +779,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 			break
 		end
 
-		pTalikUpgFld = Sirin.mainThread.g_Main.m_tblItemUpgrade:GetRecordFromRes(pTalikCon.m_wItemIndex)
+		pTalikUpgFld = g_Main.m_tblItemUpgrade:GetRecordFromRes(pTalikCon.m_wItemIndex)
 
 		if not pTalikUpgFld then
 			byErrCode = 2
@@ -776,22 +791,24 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 			break
 		end
 
-		pToolCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pposToolItem.wItemSerial)
+		if not SirinLua.HookMgr.callHook(HOOK_POS.filter, "canUseWithNoTool", false, pPlayer, 3) then
+			local pToolCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pposToolItem.wItemSerial)
 
-		if not pToolCon then
-			pPlayer:SendMsg_AdjustAmountInform(0, pposToolItem.wItemSerial, 0)
-			byErrCode = 3
-			break
-		end
+			if not pToolCon then
+				pPlayer:SendMsg_AdjustAmountInform(0, pposToolItem.wItemSerial, 0)
+				byErrCode = 3
+				break
+			end
 
-		if pToolCon.m_byTableCode ~= TBL_CODE.maketool then
-			byErrCode = 4
-			break
-		end
+			if pToolCon.m_byTableCode ~= TBL_CODE.maketool then
+				byErrCode = 4
+				break
+			end
 
-		if pToolCon.m_bLock then
-			byErrCode = 13
-			break
+			if pToolCon.m_bLock then
+				byErrCode = 13
+				break
+			end
 		end
 
 		if #pposUpgJewel > 4 then
@@ -818,7 +835,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 				break
 			end
 
-			pJewelUpgFld[i] = Sirin.mainThread.g_Main.m_tblItemUpgrade:GetRecordFromRes(pJewelCon[i].m_wItemIndex)
+			pJewelUpgFld[i] = g_Main.m_tblItemUpgrade:GetRecordFromRes(pJewelCon[i].m_wItemIndex)
 
 			if not pJewelUpgFld[i] then
 				byErrCode = 7
@@ -881,7 +898,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 
 		local bStatUpdate = true
 
-		if Sirin.mainThread.g_Main.m_bReleaseServiceMode and pPlayer.m_byUserDgr ~= 0 then
+		if g_Main.m_bReleaseServiceMode and pPlayer.m_byUserDgr ~= 0 then
 			bStatUpdate = false
 		end
 
@@ -914,7 +931,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 			-- upgrade success
 			pPlayer:Emb_ItemUpgrade(0, pUpgItemStorage.m_nListCode, pUpgItemCon.m_byStorageIndex, Sirin.mainThread.GetBitAfterUpgrade(pUpgItemCon.m_dwLv, pTalikUpgFld.m_dwIndex, _byUpgedLv))
 			pPlayer:SendMsg_FanfareItem(0, pUpgItemCon, nil)
-			local pItemFld = Sirin.mainThread.g_Main:m_tblItemData_get(pUpgItemCon.m_byTableCode):GetRecord(pUpgItemCon.m_wItemIndex)
+			local pItemFld = g_Main:m_tblItemData_get(pUpgItemCon.m_byTableCode):GetRecord(pUpgItemCon.m_wItemIndex)
 			pPlayer:Emb_CheckActForQuest(10, pItemFld.m_strCode, 1, false)
 
 			if bStatUpdate then
@@ -1036,7 +1053,7 @@ end
 function sirinPlayerMgr.pc_MakeItem(pPlayer, pipMakeTool, wManualIndex, materials)
 	local byErrCode = 0
 	local byMaterialNum = pPlayer.m_bCheat_makeitem_no_use_matrial and 0 or #materials
-	local pMakeItemFld = Sirin.mainThread.baseToItemMakeData(Sirin.mainThread.g_Main.m_tblItemMakeData:GetRecord(wManualIndex))
+	local pMakeItemFld = Sirin.mainThread.baseToItemMakeData(g_Main.m_tblItemMakeData:GetRecord(wManualIndex))
 	local byMasteryType = 1 -- 0 weapon, 1 armor, 2 bullet
 	local byMasteryValue = 0
 	local bPureCraftsman = false
@@ -1124,21 +1141,23 @@ function sirinPlayerMgr.pc_MakeItem(pPlayer, pipMakeTool, wManualIndex, material
 			end
 		end
 
-		local pMakeToolItemCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pipMakeTool.wItemSerial)
+		if not SirinLua.HookMgr.callHook(HOOK_POS.filter, "canUseWithNoTool", false, pPlayer, byMasteryType) then
+			local pMakeToolItemCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pipMakeTool.wItemSerial)
 
-		if not pMakeToolItemCon then
-			byErrCode = 1
-			break
-		end
+			if not pMakeToolItemCon then
+				byErrCode = 1
+				break
+			end
 
-		if pMakeToolItemCon.m_byTableCode ~= 11 then
-			byErrCode = 2
-			break
-		end
+			if pMakeToolItemCon.m_byTableCode ~= 11 then
+				byErrCode = 2
+				break
+			end
 
-		if pMakeToolItemCon.m_bLock then
-			byErrCode = 10
-			break
+			if pMakeToolItemCon.m_bLock then
+				byErrCode = 10
+				break
+			end
 		end
 
 		if pPlayer.m_Param.m_dbInven:GetIndexEmptyCon() == 255 then
@@ -1163,14 +1182,14 @@ function sirinPlayerMgr.pc_MakeItem(pPlayer, pipMakeTool, wManualIndex, material
 					nTableCode = Sirin.mainThread.GetItemTableCode(pOutput.m_itmPdOutput)
 
 					if nTableCode ~= -1 then
-						pNewItemFld = Sirin.mainThread.g_Main:m_tblItemData_get(nTableCode):GetRecordByHash(pOutput.m_itmPdOutput, 2, 5)
+						pNewItemFld = g_Main:m_tblItemData_get(nTableCode):GetRecordByHash(pOutput.m_itmPdOutput, 2, 5)
 					end
 
 					break
 				end
 			end
 		else
-			pNewItemFld = Sirin.mainThread.g_Main:m_tblItemData_get(nTableCode):GetRecordByHash(pMakeItemFld.m_strCode, 2, 5)
+			pNewItemFld = g_Main:m_tblItemData_get(nTableCode):GetRecordByHash(pMakeItemFld.m_strCode, 2, 5)
 		end
 
 		if not pNewItemFld then
@@ -1223,7 +1242,7 @@ function sirinPlayerMgr.pc_MakeItem(pPlayer, pipMakeTool, wManualIndex, material
 				end
 
 				local bValidMaterial = false
-				local pMatFld = Sirin.mainThread.g_Main:m_tblItemData_get(pMatCon.m_byTableCode):GetRecord(pMatCon.m_wItemIndex)
+				local pMatFld = g_Main:m_tblItemData_get(pMatCon.m_byTableCode):GetRecord(pMatCon.m_wItemIndex)
 
 				for i = 1, 5 do
 					if consumeList[i].m_itmPdMat == pMatFld.m_strCode then
@@ -1763,7 +1782,7 @@ function sirinPlayerMgr.apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip)
 				end
 
 				if byEffLv >= 0 then
-					local pUpgFld = Sirin.mainThread.baseToItemUpgrade(Sirin.mainThread.g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(0))
+					local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(0))
 
 					if byEffLv == 0 then
 						fApplyEff = pUpgFld.m_fUp1
@@ -1798,7 +1817,7 @@ function sirinPlayerMgr.apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip)
 			end
 
 			if byEffLv >= 0 then
-				local pUpgFld = Sirin.mainThread.baseToItemUpgrade(Sirin.mainThread.g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(5))
+				local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(5))
 
 				if byEffLv == 0 then
 					fApplyEff = pUpgFld.m_fUp1
@@ -1843,7 +1862,7 @@ function sirinPlayerMgr.apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip)
 					end
 				end
 
-				local pUpgFld = Sirin.mainThread.baseToItemUpgrade(Sirin.mainThread.g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(talik_index))
+				local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(talik_index))
 
 				if not pUpgFld then
 					break
@@ -2003,7 +2022,7 @@ end
 ---@param pPlayer CPlayer
 ---@param pDst CCharacter
 ---@param nDam integer
----@param kPartyExpNotify CPartyModeKillMonsterExpNotify
+---@param kPartyExpNotify CPartyModeKillMonsterExpNotify|sirin_CPartyModeKillMonsterExpNotify
 function sirinPlayerMgr.calcExp(pPlayer, pDst, nDam, kPartyExpNotify)
 	if not (pDst.m_ObjID.m_byID == ID_CHAR.monster and nDam > 0 and not pPlayer:IsInTown()) then
 		return
@@ -2234,6 +2253,355 @@ function sirinPlayerMgr.calcMaxSP(pPlayer)
 	tmp = tmp + pPlayer:m_nAddPointByClass_get(2)				-- Class bonus
 
 	return math.floor(math.sqrt((tmp ^ 2) * pPlayer:GetLevel()) * 2.5 + 160)
+end
+
+---@param pPlayer CPlayer
+---@param nIndex integer
+---@return integer
+function sirinPlayerMgr.GetGauge(pPlayer, nIndex)
+	if nIndex == 1 then
+		return pPlayer:GetHP()
+	elseif nIndex == 2 then
+		return pPlayer:GetFP()
+	elseif nIndex == 3 then
+		return pPlayer:GetSP()
+	end
+
+	return 0
+end
+
+---@param pPlayer CPlayer
+---@param nIndex integer
+---@param nValue integer
+---@param bOver boolean
+function sirinPlayerMgr.SetGauge(pPlayer, nIndex, nValue, bOver)
+	if nIndex == 1 then
+		pPlayer:SetHP(nValue, bOver)
+	elseif nIndex == 2 then
+		pPlayer:SetFP(nValue, bOver)
+	elseif nIndex == 3 then
+		pPlayer:SetSP(nValue, bOver)
+	end
+end
+
+---@param pPlayer CPlayer
+---@param consumeList table<integer, sirin_consume_item>
+function sirinPlayerMgr.DeleteUseConsumeItem(pPlayer, consumeList)
+	for k,v in ipairs(consumeList) do
+		if v.dwDur > 0 then
+			if v.bOverlap then
+				local durLeft = pPlayer:Emb_AlterDurPoint(v.pCon.m_pInList.m_nListCode, v.pCon.m_byStorageIndex, -(v.dwDur), false, false)
+
+				if durLeft > 0 then
+					pPlayer:SendMsg_AdjustAmountInform(v.pCon.m_pInList.m_nListCode, v.pCon.m_wSerial, durLeft)
+				else
+					local pFld = g_Main:m_tblItemData_get(v.pCon.m_byTableCode):GetRecord(v.pCon.m_wItemIndex)
+
+					Sirin.WriteA(pPlayer.m_szItemHistoryFileName, string.format("CONSUM: %s [%d] [%s]", pFld.m_strCode, v.pCon.m_lnUID, os.date(_, os.time())), false, false)
+				end
+			else
+				pPlayer:Emb_DelStorage(v.pCon.m_pInList.m_nListCode, v.pCon.m_byStorageIndex, false, true, "sirinPlayerMgr.DeleteUseConsumeItem()")
+
+				local pFld = g_Main:m_tblItemData_get(v.pCon.m_byTableCode):GetRecord(v.pCon.m_wItemIndex)
+
+				Sirin.WriteA(pPlayer.m_szItemHistoryFileName, string.format("CONSUM: %s [%d] [%s]", pFld.m_strCode, v.pCon.m_lnUID, os.date(_, os.time())), false, false)
+			end
+		end
+	end
+end
+
+---@param pPlayer CPlayer
+---@return number
+function sirinPlayerMgr.CalcDPRate(pPlayer)
+	local fDPRate = 2 * pPlayer.m_Param.m_dbChar.m_dwDP / pPlayer.m_nMaxDP - 0.4
+
+	if fDPRate < 0 then
+		return 0
+	end
+
+	if fDPRate > 1 then
+		fDPRate = 1
+	end
+
+	return fDPRate
+end
+
+---For other objects (monster, animus, trap, tower, etc) GetAvoidRate() returns 0
+---@param pPlayer CPlayer
+---@return integer
+function sirinPlayerMgr.GetAvoidRate(pPlayer)
+	if pPlayer.m_fTalik_AvoidPoint > 0 then
+		return math.floor(pPlayer.m_EP:GetEff_Plus(_EFF_PLUS.GE_Avd) - pPlayer.m_fTalik_AvoidPoint * (1 - sirinPlayerMgr.CalcDPRate(pPlayer)))
+	else
+		return math.floor(pPlayer.m_EP:GetEff_Plus(_EFF_PLUS.GE_Avd))
+	end
+end
+
+---@param pPlayer CPlayer
+---@param byStorageCode integer
+---@param bySlotIndex integer
+---@return integer
+function sirinPlayerMgr.GetEffectEquipCode(pPlayer, byStorageCode, bySlotIndex)
+	if byStorageCode == STORAGE_POS.equip then
+		return pPlayer:m_byEffectEquipCode_get(bySlotIndex)
+	else
+		return pPlayer:m_byEffectEquipCode_get(bySlotIndex + 8)
+	end
+end
+
+---@param pPlayer CPlayer
+---@param nPart integer
+---@return number
+function sirinPlayerMgr.GetDefGap(pPlayer, nPart)
+	if pPlayer:IsRidingUnit() then
+		return baseToUnitFrame(g_Main.m_tblUnitFrame:GetRecord(pPlayer.m_pUsingUnit.byFrame)).m_fDefGap
+	else
+		if nPart >= 8 or nPart < 0 then
+			return 0.5
+		else
+			local wItemIndex = pPlayer.m_Param.m_dbChar:m_byDftPart_get(nPart)
+			local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(nPart)
+
+			if pCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, nPart) == 1 then
+				wItemIndex = pCon.m_wItemIndex
+			end
+
+			local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(nPart):GetRecord(wItemIndex))
+
+			if pFld then
+				return pFld.m_fDefGap
+			end
+		end
+	end
+
+	return 0.5
+end
+
+---@param pPlayer CPlayer
+---@param nPart integer
+---@return number
+function sirinPlayerMgr.GetDefFacing(pPlayer, nPart)
+	if pPlayer:IsRidingUnit() then
+		return baseToUnitFrame(g_Main.m_tblUnitFrame:GetRecord(pPlayer.m_pUsingUnit.byFrame)).m_fDefFacing
+	else
+		if nPart >= 8 or nPart < 0 then
+			return 0.5
+		else
+			local wItemIndex = pPlayer.m_Param.m_dbChar:m_byDftPart_get(nPart)
+			local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(nPart)
+
+			if pCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, nPart) == 1 then
+				wItemIndex = pCon.m_wItemIndex
+			end
+
+			local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(nPart):GetRecord(wItemIndex))
+
+			if pFld then
+				return pFld.m_fDefFacing
+			end
+		end
+	end
+
+	return 0.5
+end
+
+---@param pPlayer CPlayer
+---@return number
+function sirinPlayerMgr.GetWeaponAdjust(pPlayer)
+	if pPlayer:IsRidingUnit() then
+		return 1.0
+	else
+		local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(6)
+
+		if pCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, 6) == 1 then
+			return baseToWeaponItem(g_Main:m_tblItemData_get(6):GetRecord(pCon.m_wItemIndex)).m_fAttGap
+		end
+
+		return 0
+	end
+end
+
+---@param pPlayer CPlayer
+---@param nAttactPart integer
+---@param pAttChar CCharacter
+---@return integer nDefFC
+---@return integer nConvertPart
+function sirinPlayerMgr.CPlayer__GetDefFC(pPlayer, nAttactPart, pAttChar)
+	local defFC = 0
+	local nConvertPart = nAttactPart
+	pPlayer.m_nLastBeatenPart = nAttactPart
+
+	if pPlayer:IsRidingUnit() then
+		defFC = pPlayer.m_nUnitDefFc * pPlayer.m_fUnitPv_DefFc
+
+		if SERVER_AOP and pPlayer.m_bGeneratorDefense then
+			local fAvgEquipDefFC = 1
+
+			if pAttChar.m_ObjID.m_byID == ID_CHAR.player then
+				for i = 0, 4 do
+					local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(i)
+
+					if pCon.m_byLoad == 1 then
+						fAvgEquipDefFC = fAvgEquipDefFC + baseToDfnEquipItem(g_Main:m_tblItemData_get(i):GetRecord(pCon.m_wItemIndex))
+					end
+				end
+			end
+
+			pPlayer.m_EP.m_bLock = false
+			-- Original calculation was unclear so i fixed it according to attack bonus logic.
+			local bnsDef = pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Potion_Dec_Def)
+
+			if pPlayer.m_EP:GetEff_Have(_EFF_HAVE.Def_Enchant_Unit) > 0 then
+				bnsDef = bnsDef + pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc) - 1
+				bnsDef = bnsDef + pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Unit_Enchant_AttFc_byMst_Def_Fc) - 1
+			end
+
+			bnsDef = bnsDef + pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Unit_AttFc_byMst_Def_Fc) - 1
+			defFC = defFC + fAvgEquipDefFC / 5 * bnsDef
+
+			-- original logic
+			--[[
+			defFC = defFC + fAvgEquipDefFC / 5
+			defFC = defFC + pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Potion_Dec_Def) - 1
+
+			if pPlayer.m_EP:GetEff_Have(_EFF_HAVE.Def_Enchant_Unit) > 0 then
+				defFC = defFC + fAvgEquipDefFC * (pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc) - 1)
+				defFC = defFC + pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Unit_Enchant_AttFc_byMst_Def_Fc) - 1
+			end
+
+			defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Unit_AttFc_byMst_Def_Fc)
+			--]]
+			--
+
+			pPlayer.m_EP.m_bLock = true
+		end
+	else
+		local bPierceShield = false
+
+		if pAttChar and pAttChar.m_ObjID.m_byID == ID_CHAR.player then
+			bPierceShield = pAttChar.m_EP:GetEff_State(_EFF_STATE.Dst_No_Shd)
+
+			if not bPierceShield then
+				local fAntiShield = pAttChar.m_EP:GetEff_Plus(_EFF_PLUS.Dst_Shd)
+
+				if fAntiShield > 0 then
+					fAntiShield = fAntiShield + pAttChar.m_EP:GetEff_Plus(_EFF_PLUS.Potion_Inc_Ignore_Sheild)
+
+					if math.random(0, 99) <= fAntiShield then
+						bPierceShield = true
+					end
+				end
+			end
+		end
+
+		if bPierceShield then
+			CharacterMgr.SendMsg_AttackActEffect(pAttChar, 1, pPlayer)
+		end
+
+		local bEquipShield = false
+		local pShieldCon = pPlayer.m_Param.m_dbEquip:m_List_get(5)
+
+		if pShieldCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, 5) == 1 then
+			bEquipShield = true
+		end
+
+		if bEquipShield then
+			local pWeaponCon = pPlayer.m_Param.m_dbEquip:m_List_get(6)
+
+			if pWeaponCon.m_byLoad == 1 then
+				local pWeaponFld = baseToWeaponItem(g_Main:m_tblItemData_get(TBL_CODE.weapon):GetRecord(pWeaponCon.m_wItemIndex))
+
+				if pWeaponFld.m_nFixPart == 100 then
+					bEquipShield = false
+				end
+			end
+		end
+
+		if pAttChar and bEquipShield and not bPierceShield then
+			local blockRate = pPlayer.m_pmMst:GetMasteryPerMast(2, 0) / 99 * 20 + 5 + pPlayer.m_EP:GetEff_Plus(_EFF_PLUS.DEF_ShdDefRate)
+
+			if blockRate > 100 then
+				blockRate = 100
+			end
+
+			if math.random(0, 99) < blockRate then
+				pPlayer.m_nLastBeatenPart = 5
+				return -2, nConvertPart
+			end
+		end
+
+		if bEquipShield then
+			for i = 0, 4 do
+				local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(i)
+
+				if pCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, i) == 1 then
+					local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(i):GetRecord(pCon.m_wItemIndex))
+
+					if pFld then
+						defFC = defFC + pFld.m_fDefFc * CONST_s_fPartGravity[i + 1]
+					end
+				else
+					local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(i):GetRecord(pPlayer.m_Param.m_dbChar:m_byDftPart_get(i)))
+
+					if pFld then
+						defFC = defFC + pFld.m_fDefFc * CONST_s_fPartGravity[i + 1]
+					end
+				end
+			end
+
+			defFC = defFC + baseToDfnEquipItem(g_Main:m_tblItemData_get(5):GetRecord(pShieldCon.m_wItemIndex)).m_fDefFc
+			defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Shield_Def)
+		else
+			local pCon = pPlayer.m_Param.m_dbEquip:m_List_get(pPlayer.m_nLastBeatenPart)
+
+			if pCon.m_byLoad == 1 and sirinPlayerMgr.GetEffectEquipCode(pPlayer, STORAGE_POS.equip, pPlayer.m_nLastBeatenPart) == 1 then
+				local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(pPlayer.m_nLastBeatenPart):GetRecord(pCon.m_wItemIndex))
+
+				if pFld then
+					defFC = pFld.m_fDefFc
+				end
+			else
+				local pFld = baseToDfnEquipItem(g_Main:m_tblItemData_get(pPlayer.m_nLastBeatenPart):GetRecord(pPlayer.m_Param.m_dbChar:m_byDftPart_get(pPlayer.m_nLastBeatenPart)))
+
+				if pFld then
+					defFC = pFld.m_fDefFc
+				end
+			end
+		end
+
+		nConvertPart = pPlayer.m_nLastBeatenPart
+		defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.Potion_Dec_Def)
+
+		if pPlayer:IsSiegeMode() then
+			defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DEF_SiegeMode)
+		end
+	end
+
+	if not pPlayer.m_bInGuildBattle then
+		local byBossType = Sirin.mainThread.CPvpUserAndGuildRankingSystem.Instance():GetBossType(pPlayer:GetObjRace(), pPlayer.m_dwObjSerial)
+
+		if byBossType == 0 then
+			defFC = defFC * CONST_PatriarchBonus_Def
+		elseif byBossType == 1 or byBossType == 5 then
+			defFC = defFC * CONST_ArchonBonus_Def
+		elseif byBossType == 3 or byBossType == 7 then
+			defFC = defFC * CONST_DefenseCouncilBonus_Def
+		end
+	end
+
+	if Sirin.mainThread.g_HolySys:GetDestroyerSerial() == pPlayer.m_dwObjSerial or pPlayer.m_Param.m_bLastAttBuff then
+		defFC = defFC * CONST_ChipBreakerBonus_Def
+	end
+
+	if not pPlayer:IsRidingUnit() then
+		if pPlayer.m_fTalik_DefencePoint > 0 then
+			defFC = defFC * (pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc) - pPlayer.m_fTalik_AvoidPoint * (1 - sirinPlayerMgr.CalcDPRate(pPlayer)))
+		else
+			defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc)
+		end
+	end
+
+	return math.floor(defFC), nConvertPart
 end
 
 return sirinPlayerMgr

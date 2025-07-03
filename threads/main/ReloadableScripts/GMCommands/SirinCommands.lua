@@ -112,6 +112,30 @@ local t = {
 	end
 },
 {
+	"botanimus add", "111100", "111",
+	---@param pPlayer CPlayer
+	---@return boolean
+	function (pPlayer)
+		if Sirin.mainThread.getCheatWordNum() < 1 then
+			return false
+		end
+
+		local type = nil
+		local lv = nil
+
+		if Sirin.mainThread.getCheatWordNum() > 1 then
+			type = math.floor(tonumber(Sirin.mainThread.getCheatWord(1)) or 3)
+		end
+
+		if Sirin.mainThread.getCheatWordNum() > 2 then
+			lv = math.floor(tonumber(Sirin.mainThread.getCheatWord(2)) or 1)
+		end
+
+		BotMgr.makeAnimusBot(pPlayer, math.floor(tonumber(Sirin.mainThread.getCheatWord(0)) or 0), type, lv)
+		return true
+	end
+},
+{
 	"bot wipe", "111100", "111",
 	---@param pPlayer CPlayer
 	---@return boolean

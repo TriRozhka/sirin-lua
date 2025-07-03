@@ -11,7 +11,7 @@ local baseToGuardTowerItem = Sirin.mainThread.baseToGuardTowerItem
 
 local sendBuf = Sirin.mainThread.CLuaSendBuffer.Instance()
 
----@class (exact) sirinTowerMgr
+---@class sirinTowerMgr
 ---@field m_bSystemTowerAssist boolean
 ---@field m_bPlayerTowerAssist boolean
 ---@field m_bTowerSelfDefense boolean
@@ -262,6 +262,7 @@ end
 ---@return sirinCAttack
 function sirinTowerMgr.make_tower_attack_param(pTower, pDst)
 	local pAT = SirinCAttack:new()
+	pAT.m_pAttChar = pTower
 	pAT.m_pp = Sirin_attack_param:new()
 	local pAP = pAT.m_pp
 	pAP.pDst = pDst
@@ -328,6 +329,35 @@ function sirinTowerMgr.Attack(pTower, pTarget)
 		end
 
 	until true
+end
+
+---@param _this CGuardTower
+---@param nPart integer
+---@return number
+function sirinTowerMgr.GetDefGap(_this, nPart)
+	return baseToGuardTowerItem(_this.m_pRecordSet).m_fDefGap
+end
+
+---@param _this CGuardTower
+---@param nPart integer
+---@return number
+function sirinTowerMgr.GetDefFacing(_this, nPart)
+	return baseToGuardTowerItem(_this.m_pRecordSet).m_fDefFacing
+end
+
+---@param _this CGuardTower
+---@param nAttactPart integer
+---@param pAttChar CCharacter
+---@return integer nDefFC
+---@return integer nConvertPart
+function sirinTowerMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
+	return baseToGuardTowerItem(_this.m_pRecordSet).m_nDefFc, 0
+end
+
+---@param _this CGuardTower
+---@return number
+function sirinTowerMgr.GetWeaponAdjust(_this)
+	return baseToGuardTowerItem(_this.m_pRecordSet).m_fAttGap
 end
 
 return sirinTowerMgr

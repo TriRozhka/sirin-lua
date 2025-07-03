@@ -373,9 +373,10 @@ function sirinCustomNpcButtons.loadScripts()
 			SirinScript_CustomNPCButtons = SirinTmp_CustomNPCButtons
 			SirinTmp_CustomNPCButtons = nil
 			Sirin.mainThread.modButtonExt.RegisterButtons()
+			Sirin.mainThread.modButtonExt.RegisterAsset()
 
-			if Sirin.CAssetController.instance():makeAssetData() then
-				Sirin.CAssetController.instance():sendAssetData()
+			if Sirin.CAssetController.instance():makeAssetData("sirin.asset.npc_buttons") then
+				Sirin.CAssetController.instance():sendAssetData("sirin.asset.npc_buttons")
 			else
 				local fmt = "CustomNpcButtons:loadScripts: makeAssetData() == false!\n"
 				Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
@@ -603,7 +604,7 @@ function sirinCustomNpcButtons.useBuffButton(pPlayer, dwButtonID, dwBuffIndex)
 			local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
 			buf:Init()
 			buf:PushInt32(0)
-			buf:PushUInt8(#resultList)
+			buf:PushUInt32(#resultList)
 
 			for _,v in ipairs(resultList) do
 				if v == -14 then
@@ -618,6 +619,12 @@ function sirinCustomNpcButtons.useBuffButton(pPlayer, dwButtonID, dwBuffIndex)
 			buf:SendBuffer(pPlayer, 80, 5)
 		else
 			local buffData = button["data"][dwBuffIndex]
+
+			if not buffData then
+				nErrCode = -1
+				break
+			end
+
 			local byRet, alterList, deleteList = sirinCustomNpcButtons.canUseBuff(pPlayer, buffData)
 
 			if byRet ~= 0 then

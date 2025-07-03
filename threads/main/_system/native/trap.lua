@@ -11,6 +11,7 @@ local sirinTrapMgr = {}
 ---@return sirinCAttack
 function sirinTrapMgr.make_trap_attack_param(pTrap, pDst)
 	local pAT = SirinCAttack:new()
+	pAT.m_pAttChar = pTrap
 	pAT.m_pp = Sirin_attack_param:new()
 	local pAP = pAT.m_pp
 	pAP.pDst = pDst
@@ -79,6 +80,35 @@ function sirinTrapMgr.CTrap__Attack(pTrap, pTarget)
 		end
 
 	until true
+end
+
+---@param _this CTrap
+---@param nPart integer
+---@return number
+function sirinTrapMgr.GetDefGap(_this, nPart)
+	return baseToTrapItem(_this.m_pRecordSet).m_fDefGap
+end
+
+---@param _this CTrap
+---@param nPart integer
+---@return number
+function sirinTrapMgr.GetDefFacing(_this, nPart)
+	return baseToTrapItem(_this.m_pRecordSet).m_fDefFacing
+end
+
+---@param _this CTrap
+---@param nAttactPart integer
+---@param pAttChar CCharacter
+---@return integer nDefFC
+---@return integer nConvertPart
+function sirinTrapMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
+	return baseToTrapItem(_this.m_pRecordSet).m_nDefFc, 0
+end
+
+---@param _this CTrap
+---@return number
+function sirinTrapMgr.GetWeaponAdjust(_this)
+	return 1.0
 end
 
 return sirinTrapMgr

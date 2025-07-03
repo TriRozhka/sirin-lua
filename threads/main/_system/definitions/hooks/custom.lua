@@ -5,13 +5,13 @@ New functions, added in Sirin guard, and never existed in native RF Online code.
 --]]
 
 ---Purpose: player session closed
----Hook positions: 'after_event'
+---Hook positions: 'pre_event'
 ---@param uuid string
 ---@param serial integer
 local function exitAccountReport(uuid, serial) end
 
 ---Purpose: player session started
----Hook positions: 'after_event'
+---Hook positions: 'pre_event'
 ---@param uuid string
 ---@param serial integer
 local function enterAccountReport(uuid, serial) end
@@ -53,6 +53,15 @@ local function canDeleteCharacter(pUserDB, bySlotIndex) return true end
 ---@param pMonster CMonster
 ---@return boolean
 local function canUseAutoLoot(pPlayer, pMonster) return false end
+
+---Purpose: additional conditions check for nuclear bomb drop.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param x number
+---@param y number
+---@param z number
+---@return boolean
+local function canDropNuclearBomb(pPlayer, x, y, z) return true end
 
 ---Purpose: rift based object create notification.
 ---Hook positions: 'after_event'
@@ -225,3 +234,74 @@ local function SirinWorldDB_UserLobby_Complete(bError, bActive, dwAvatorSerial) 
 ---@param byErrCode integer
 ---@param dwAvatorSerial integer
 local function SirinWorldDB_UserUpdate_Complete(byErrCode, dwAvatorSerial) end
+
+---Purpose: Custom chat commands handler
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param dwID integer
+---@param strData string
+local function customChatHandler(pPlayer, dwID, strData) end
+
+---Purpose: Custom window button press.
+---Hook positions: 'pre_event, original, after_event'
+---@param pPlayer CPlayer
+---@param dwActWindowID integer
+---@param dwActButtonID integer
+---@param dwParentWindowID integer
+---@param dwSelectedID integer
+local function onPressCustomWindowButton(pPlayer, dwActWindowID, dwActButtonID, dwParentWindowID, dwSelectedID) end
+
+---Purpose: Check for store operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param dwStoreIndex integer
+---@return boolean
+local function canUseNPCStoreWithNoBeeper(pPlayer, dwStoreIndex) return false end
+
+---Purpose: Check for trunk operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@return boolean
+local function canUseTrunkWithNoBeeper(pPlayer) return false end
+
+---Purpose: Check for AH operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param byOperation integer 0 - register/unregister, 1 - search/buy
+---@return boolean
+local function canUseAuctionWithNoBeeper(pPlayer, byOperation) return false end
+
+---Purpose: Check for MAU operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param byOperation integer 0 - buy, 1 - sell, 2 - pull, 3 - repair, 4 - parts tune, 5 - ammo load, 6 - backpack fill
+---@param byFrameCode? integer buy opertaion only
+---@return boolean
+local function canUseMAUVendorWithNoBeeper(pPlayer, byOperation, byFrameCode) return false end
+
+---Purpose: Check for hero combine operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@return boolean
+local function canUseHeroCombineWithNoBeeper(pPlayer) return false end
+
+---Purpose: Check for exchange button request constructed using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param wButtonID integer
+---@return boolean
+local function canUseButtonWithNoNPC(pPlayer, wButtonID) return false end
+
+---Purpose: Check for exchange button request constructed using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param wExchangeID integer
+---@return boolean
+local function canUseExchangeBtnWithNoNPC(pPlayer, wExchangeID) return false end
+
+---Purpose: Check for talic upgrade operation request using mod custom windows.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param byType integer 0 - weapon/shield, 1 - armor, 2 - bullet, 3 - upgrade
+---@return boolean
+local function canUseWithNoTool(pPlayer, byType) return false end
