@@ -353,6 +353,8 @@ function sirinLootingMgr.onLoop()
 						print(emsg)
 					end
 
+					b.m_bBossMob = v.pMonRecFld and v.pMonRecFld.m_bMonsterCondition == 1 or false
+
 					if not Sirin.mainThread.createItemBox_Monster(b, lootItem[1], lootItem[2], 0, 0, v.pMap, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3], sirinLootingMgr.m_nBbossDropRange, false, v.dwOwnerObjSerial, v.wOwnerObjIndex, v.dwThrowerObjSerial, v.wThrowerObjIndex, v.pMonRecFld) then
 						break
 					end
@@ -361,7 +363,6 @@ function sirinLootingMgr.onLoop()
 					b.m_dwPartyBossSerial = v.dwPartyBossSerial
 					b.m_bPartyShare = v.bPartyShare
 					b.m_bCompDgr = v.byOwnerUserDgr ~= 0
-					b.m_bBossMob = v.pMonRecFld and v.pMonRecFld.m_bMonsterCondition == 1 or false
 					v.dwNextDropIndex = v.dwNextDropIndex + 1
 				end
 			end
