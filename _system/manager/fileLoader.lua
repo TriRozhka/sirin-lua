@@ -31,6 +31,8 @@ end
 function FileLoader.LoadChunkedTable(folder, bMerge)
 	local src = Sirin.getFileList(folder)
 	local t = {}
+	local tmp = {}
+	local bSequence = true
 	local bSucc = true
 
 	for _,v in ipairs(src) do
@@ -50,12 +52,24 @@ function FileLoader.LoadChunkedTable(folder, bMerge)
 			break
 		end
 
-		if is_sequence(ret) then
-			for _,tv in pairs(ret) do
-				table.insert(t, tv)
+		table.insert(tmp, ret)
+
+		if bSequence then
+			bSequence = is_sequence(ret)
+		end
+	end
+
+	for _,v in ipairs(tmp) do
+		if bSequence then
+			if #t == 0 then
+				t = v
+			else
+				for _,tv in pairs(v) do
+					table.insert(t, tv)
+				end
 			end
 		else
-			for tk,tv in pairs(ret) do
+			for tk,tv in pairs(v) do
 				if bMerge and type(tv) == "table" then
 					if not t[tk] then
 						t[tk] = {}
