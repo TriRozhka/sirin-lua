@@ -4,22 +4,41 @@ New functions, added in Sirin guard, and never existed in native RF Online code.
 
 --]]
 
----Purpose: Prepare avator load notification.
----Hook positions: 'after_event'
----@param dwAvatorSerial integer
-local function SirinWorldDB_UserLoad(dwAvatorSerial) end
+---Purpose: Operations with database on server startup.
+---Hook positions: 'filter'
+---@return boolean
+local function checkDatabase() return true end
 
----Purpose: Prepare avator logout notification.
+---Purpose: Post insert avator routine notification.
 ---Hook positions: 'after_event'
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserLogout(dwAvatorSerial) end
+local function SirinWorldDB_PlayerInsert(dwAvatorSerial)  end
 
----Purpose: Prepare avator move lobby notification.
+---Purpose: Post delete avator routine notification.
 ---Hook positions: 'after_event'
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserLobby(dwAvatorSerial) end
+local function SirinWorldDB_PlayerDelete(dwAvatorSerial) end
 
----Purpose: Prepare avator update notification.
+---Purpose: Post load avator routine notification.
 ---Hook positions: 'after_event'
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserUpdate(dwAvatorSerial) end
+---@param multiSQLResultSet CMultiSQLResultSet
+local function SirinWorldDB_PlayerLoad(dwAvatorSerial, multiSQLResultSet) end
+
+---Purpose: Post logout avator routine notification.
+---Hook positions: 'after_event'
+---@param dwAvatorSerial integer
+---@param multiBinaryData CMultiBinaryData
+local function SirinWorldDB_PlayerLogout(dwAvatorSerial, multiBinaryData) end
+
+---Purpose: Post lobby move avator routine notification.
+---Hook positions: 'after_event'
+---@param dwAvatorSerial integer
+---@param multiBinaryData CMultiBinaryData
+local function SirinWorldDB_PlayerLobby(dwAvatorSerial, multiBinaryData) end
+
+---Purpose: Post update avator routine notification.
+---Hook positions: 'after_event'
+---@param dwAvatorSerial integer
+---@param multiBinaryData CMultiBinaryData
+local function SirinWorldDB_PlayerUpdate(dwAvatorSerial, multiBinaryData) end

@@ -16,14 +16,14 @@ function combineData.init()
 		local byTableCode = Sirin.mainThread.GetItemTableCode(v[1])
 
 		if byTableCode == -1 then
-			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid material item type: combineData.combineFormula[%d][1] = '%s'", k, v[1]))
+			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid material item type: combineData.combineFormula[%d][1] = '%s'\n", k, v[1]))
 			return
 		end
 
 		local pFld = Sirin.mainThread.g_Main:m_tblItemData_get(byTableCode):GetRecordByHash(v[1], 2, 5)
 
 		if not pFld then
-			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid material item code: combineData.combineFormula[%d][1] = '%s'", k, v[1]))
+			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid material item code: combineData.combineFormula[%d][1] = '%s'\n", k, v[1]))
 			return
 		end
 
@@ -35,14 +35,14 @@ function combineData.init()
 		local byTableCode = Sirin.mainThread.GetItemTableCode(v[1])
 
 		if byTableCode == -1 then
-			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid reward item type: combineData.combineReward[%d][1] = '%s'", k, v[1]))
+			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid reward item type: combineData.combineReward[%d][1] = '%s'\n", k, v[1]))
 			return
 		end
 
 		local pFld = Sirin.mainThread.g_Main:m_tblItemData_get(byTableCode):GetRecordByHash(v[1], 2, 5)
 
 		if not pFld then
-			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid reward item code: combineData.combineReward[%d][1] = '%s'", k, v[1]))
+			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. Combine Ex. Invalid reward item code: combineData.combineReward[%d][1] = '%s'\n", k, v[1]))
 			return
 		end
 

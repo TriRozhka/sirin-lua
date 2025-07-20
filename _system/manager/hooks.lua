@@ -26,8 +26,8 @@ local sirinHookMgr = {
 ---@return boolean
 function sirinHookMgr.addHook(func_name, pos, uid, func_handler)
 	local bSucc = false
-	local error_str_funcnil = "Lua. sirinHookMgr.addHook(%s, %s, %s, func) func is nil."
-	local warning_str_hook_rewrite = "Lua. sirinHookMgr.addHook(%s, %s, %s, func) already hooked by '%s'. Hook was overwritten."
+	local error_str_funcnil = "Lua. sirinHookMgr.addHook(%s, %s, %s, func) func is nil.\n"
+	local warning_str_hook_rewrite = "Lua. sirinHookMgr.addHook(%s, %s, %s, func) already hooked by '%s'. Hook was overwritten.\n"
 
 	repeat
 		if not func_handler then
@@ -63,7 +63,7 @@ end
 ---@return boolean
 function sirinHookMgr.removeHook(func_name, pos, uid)
 	local bSucc = false
-	local error_str = "Lua. sirinHookMgr.removeHook(%s, %s, %s) not found."
+	local error_str = "Lua. sirinHookMgr.removeHook(%s, %s, %s) not found.\n"
 	local p = sirinHookMgr.m_Hooks[pos] or {}
 	local h = p[func_name] or {}
 

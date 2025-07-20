@@ -159,19 +159,19 @@ local function CPlayer__SetLevelD(pPlayer, byNewLevel) end
 ---Hook positions: 'original'
 ---@param pPlayer CPlayer
 ---@return integer
-local function CPlayer___CalcMaxHP(pPlayer, byNewLevel) return 1 end
+local function CPlayer___CalcMaxHP(pPlayer) return 1 end
 
 ---Purpose: Max FP calculation.
 ---Hook positions: 'original'
 ---@param pPlayer CPlayer
 ---@return integer
-local function CPlayer___CalcMaxFP(pPlayer, byNewLevel) return 0 end
+local function CPlayer___CalcMaxFP(pPlayer) return 0 end
 
 ---Purpose: Max SP calculation.
 ---Hook positions: 'original'
 ---@param pPlayer CPlayer
 ---@return integer
-local function CPlayer___CalcMaxSP(pPlayer, byNewLevel) return 0 end
+local function CPlayer___CalcMaxSP(pPlayer) return 0 end
 
 ---Purpose: Action point change notification.
 ---Hook positions: 'pre_event'
@@ -218,3 +218,61 @@ local function CPlayer__SetStateFlag(pPlayer) end
 ---Hook positions: 'after_event'
 ---@param pPlayer CPlayer
 local function CPlayer__SetStateFlagEx(pPlayer) end
+
+---Purpose: Dodge rate calculation.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@return integer
+local function CPlayer__GetAvoidRate(pPlayer) return 0 end
+
+---Purpose: DefGap script value return.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param nPart integer
+---@return number
+local function CPlayer__GetDefGap(pPlayer, nPart) return 0.5 end
+
+---Purpose: DefFacing script value return.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param nPart integer
+---@return number
+local function CPlayer__GetDefFacing(pPlayer, nPart) return 0.5 end
+
+---Purpose: DefGap script value return.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param nAttactPart integer
+---@param pAttackerChar CCharacter
+---@return integer #Err code
+---@return integer #Def point
+local function CPlayer__GetDefFC(pPlayer, nAttactPart, pAttackerChar) return 0, 0 end
+
+---Purpose: AttGap script value return.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@return integer
+local function CPlayer__GetWeaponAdjust(pPlayer) return 0.5 end
+
+---Purpose: DefGap script value return.
+---Hook positions: 'original'
+---@param pAMP AutominePersonal
+---@param nPart integer
+---@return number
+local function AutominePersonal__GetDefGap(pAMP, nPart) return 0.5 end
+
+---Purpose: DefFacing script value return.
+---Hook positions: 'original'
+---@param pAMP AutominePersonal
+---@param nPart integer
+---@return number
+local function AutominePersonal__GetDefFacing(pAMP, nPart) return 0.5 end
+
+---Purpose: DefGap script value return.
+---Hook positions: 'original'
+---@param pAMP AutominePersonal
+---@param nAttactPart integer
+---@param pAttackerChar CCharacter
+---@return integer #Err code
+---@return integer #Def point
+local function AutominePersonal__GetDefFC(pAMP, nAttactPart, pAttackerChar) return 0, 0 end

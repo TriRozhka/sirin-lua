@@ -28,10 +28,8 @@ SERVER_2232 = false
 ---@field getFileList fun(strFolderPath: string): table<integer, string>
 ---@field CBinaryData fun(size: integer): CBinaryData
 ---@field CSQLResultSet fun(size: integer): CSQLResultSet
----@field voidToSQLResultSet fun(ptr: lightuserdata): CSQLResultSet
----@field sqlResultSetToVoid fun(ptr: CSQLResultSet): lightuserdata
----@field voidToBinaryData fun(ptr: lightuserdata): CBinaryData
----@field binaryDataToVoid fun(ptr: CBinaryData): lightuserdata
+---@field CMultiBinaryData fun(): CMultiBinaryData
+---@field CMultiSQLResultSet fun(): CMultiSQLResultSet
 Sirin = {}
 
 ---@class (exact) NATS
@@ -257,6 +255,9 @@ local console = {}
 ---@field GuildPopMoney fun(pGuild: CGuild, dwSubDalant: integer, dwSubGold: integer, byIOType: integer, dwIOerSerial, pszIOerName): boolean
 ---@field _QUEST_DB_BASE___START_NPC_QUEST_HISTORY fun(): _QUEST_DB_BASE___START_NPC_QUEST_HISTORY
 ---@field _attack_param fun(): _attack_param
+---@field _guild_honor_set_request_clzo fun(): _guild_honor_set_request_clzo
+---@field CProtoDataObject fun(): CProtoDataObject
+---@field CloseConnect fun(dwSocket: integer, strReason?: string)
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -287,6 +288,7 @@ local console = {}
 ---@field CActionPointSystemMgr CActionPointSystemMgr
 ---@field CNuclearBombMgr CNuclearBombMgr
 ---@field CGuildRoomSystem CGuildRoomSystem
+---@field CHonorGuild CHonorGuild
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -339,6 +341,7 @@ local modStackExt = {}
 ---@field createGuardTower fun(pMap: CMapData, wLayer: integer, x: number, y: number, z: number, pItem: _STORAGE_LIST___db_con, pMaster: CPlayer, byRace: integer, bQuick: boolean): CGuardTower
 ---@field createSystemTower fun(pMap: CMapData, wLayer: integer, x: number, y: number, z: number, nTowerIndex: integer, byRace: integer, nINIindex: integer): CGuardTower
 ---@field getTowerByIndex fun(nIndex: integer): CGuardTower
+---@field getAllTowers fun(): table<integer, CGuardTower>
 local modGuardTowerController = {}
 
 ---@class (exact) modQuestHistory
@@ -378,6 +381,10 @@ local modWindowExt = {}
 ---@class (exact) CAssetController
 ---@field instance fun(): CAssetController
 local CAssetController = {}
+---@param strName string
+function CAssetController:addAsset(strName) end
+---@param ID string|integer
+function CAssetController:removeAsset(ID) end
 ---@return boolean
 function CAssetController:makeAllAssetData() end
 function CAssetController:sendAllAssetData() end
@@ -398,6 +405,8 @@ local CLanguageAsset = {}
 function CLanguageAsset:addLanguage(a1, a2, a3, a4) end
 ---@param a1 integer
 function CLanguageAsset:setDefaultLanguage(a1) end
+---@return integer
+function CLanguageAsset:getDefaultLanguage() end
 ---@param a1 integer
 ---@return integer
 function CLanguageAsset:getPlayerLanguage(a1) end
@@ -460,26 +469,37 @@ function CSQLResultSet:GetList() end
 local CBinaryData = {}
 ---@param str string
 ---@param len integer
+---@return boolean
 function CBinaryData:PushString(str, len) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt64(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt64(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushFloat(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushDouble(a1) end
 ---@param len integer
 ---@return boolean
@@ -537,6 +557,28 @@ function CBinaryData:PushSQLTimeStampStruct(year, month, day, hour, minute, seco
 ---@return boolean
 ---@return TIMESTAMP_STRUCT?
 function CBinaryData:PopSQLTimeStampStruct() end
+
+---@class (exact) CMultiSQLResultSet
+local CMultiSQLResultSet = {}
+---@param key integer
+---@param data CSQLResultSet
+function CMultiSQLResultSet:PushData(key, data) end
+---@param key integer
+---@return CSQLResultSet?
+function CMultiSQLResultSet:GetData(key) end
+---@return table<integer, CSQLResultSet>
+function CMultiSQLResultSet:GetList() end
+
+---@class (exact) CMultiBinaryData
+local CMultiBinaryData = {}
+---@param key integer
+---@param data CBinaryData
+function CMultiBinaryData:PushData(key, data) end
+---@param key integer
+---@return CBinaryData?
+function CMultiBinaryData:GetData(key) end
+---@return table<integer, CBinaryData>
+function CMultiBinaryData:GetList() end
 
 ---@class (exact) CMainThread
 ---@field m_Rand lightuserdata _SRAND
@@ -2245,6 +2287,26 @@ local _guild_applier_info = {}
 ---@field m_dwEndPotionTime integer
 local CExtPotionBuf = {}
 
+---@class (exact) _guild_member_download_zocl
+---@field byDownType integer
+---@field dwGuildSerial integer
+---@field byGuildGrade integer
+---@field dwEmblemBack integer
+---@field dwEmblemMark integer
+---@field dDalant number
+---@field dGold number
+---@field byGuildRoomType integer
+---@field GuildRoomRestTime integer
+---@field byCurTax integer
+---@field dwTotWin integer
+---@field dwTotDraw integer
+---@field dwTotLose integer
+---@field bPossibleElectMaster boolean
+---@field wDataSize integer
+local _guild_member_download_zocl = {}
+---@return table<integer, _guild_member_info>
+function _guild_member_download_zocl:GetGuildMemberList() end
+
 ---@class (exact) CGuild
 ---@field m_nIndex integer
 ---@field m_dwSerial integer
@@ -2269,7 +2331,7 @@ local CExtPotionBuf = {}
 ---@field m_dwGuildBattleTotWin integer
 ---@field m_dwGuildBattleTotDraw integer
 ---@field m_dwGuildBattleTotLose integer
----@field m_DownPacket_Member lightuserdata
+---@field m_DownPacket_Member _guild_member_download_zocl
 ---@field m_DownPacket_Applier lightuserdata
 ---@field m_QueryPacket_Info lightuserdata
 ---@field m_MoneyIO_List lightuserdata
@@ -2973,6 +3035,102 @@ function CGuildRoomSystem:IsGuildRoomMemberIn(dwGuildSerial, n, dwCharSerial) en
 ---@return CMapData
 function CGuildRoomSystem:GetMapData(byRace, byMapType) end
 
+---@class (exact) _guild_honor_list_result_zocl____list
+---@field dwGuildSerial integer
+---@field dwEmblemBack integer
+---@field dwEmblemMark integer
+---@field wszGuildName string
+---@field wszMasterName string
+---@field byTaxRate integer
+local _guild_honor_list_result_zocl____list = {}
+
+---@class (exact) _guild_honor_list_result_zocl
+---@field byListNum integer
+---@field byUI integer
+local _guild_honor_list_result_zocl = {}
+---@param index integer
+---@return _guild_honor_list_result_zocl____list
+function _guild_honor_list_result_zocl:GuildList_get(index) end
+
+---@class (exact) _guild_honor_set_request_clzo____list
+---@field wszGuildName string
+---@field byTaxRate integer
+local _guild_honor_set_request_clzo____list = {}
+
+---@class (exact) _guild_honor_set_request_clzo
+---@field byListNum integer
+local _guild_honor_set_request_clzo = {}
+---@param index integer
+---@return _guild_honor_set_request_clzo____list
+function _guild_honor_set_request_clzo:GuildList_get(index) end
+
+---@class (exact) CHonorGuild
+---@field Instance fun(): CHonorGuild
+local CHonorGuild = {}
+---@param index integer
+---@return boolean
+function CHonorGuild:m_bNext_get(index) end
+---@param index integer
+---@param val boolean
+function CHonorGuild:m_bNext_set(index, val) end
+---@param index integer
+---@return boolean
+function CHonorGuild:m_bSendInform_get(index) end
+---@param index integer
+---@param val boolean
+function CHonorGuild:m_bSendInform_set(index, val) end
+---@param index integer
+---@return _guild_honor_list_result_zocl
+function CHonorGuild:m_pCurrHonorGuild_get(index) end
+---@param index integer
+---@return _guild_honor_list_result_zocl
+function CHonorGuild:m_pNextHonorGuild_get(index) end
+---@param index integer
+---@return boolean
+function CHonorGuild:m_bChageInform_get(index) end
+---@param index integer
+---@param val boolean
+function CHonorGuild:m_bChageInform_set(index, val) end
+---@param index integer
+---@return integer
+function CHonorGuild:m_uiProccessIndex_get(index) end
+---@param index integer
+---@param val integer
+function CHonorGuild:m_uiProccessIndex_set(index, val) end
+---@param byRace integer
+---@param pReq _guild_honor_set_request_clzo
+---@return integer
+function CHonorGuild:SetNextHonorGuild(byRace, pReq) end
+---@param byRace integer
+function CHonorGuild:ChangeHonorGuild(byRace) end
+
+---@class CProtoDataObject
+local CProtoDataObject = {}
+---@param dwBufSize integer
+function CProtoDataObject:Init(dwBufSize) end
+---@param strData string
+function CProtoDataObject:PackString(strData) end
+---@param u32Var integer
+function CProtoDataObject:PackUInt32(u32Var) end
+---@param u64Var integer
+function CProtoDataObject:PackUInt64(u64Var) end
+---@param i32Var integer
+function CProtoDataObject:PackSInt32(i32Var) end
+---@param i64Var integer
+function CProtoDataObject:PackSInt64(i64Var) end
+---@param fVar number
+function CProtoDataObject:PackFloat(fVar) end
+---@param dVar number
+function CProtoDataObject:PackDouble(dVar) end
+---@param dwSize integer
+---@param dwIndex integer
+function CProtoDataObject:PacketBufInsert(dwSize, dwIndex) end
+---@return integer
+function CProtoDataObject:GetWritePacketSize() end
+---@param dwSocket integer
+---@param pszID string
+function CProtoDataObject:Send(dwSocket, pszID) end
+
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4
 Sirin.CAssetController = CAssetController
@@ -3009,3 +3167,4 @@ Sirin.mainThread.CActionPointSystemMgr = CActionPointSystemMgr
 Sirin.mainThread.CNuclearBombMgr = CNuclearBombMgr
 Sirin.mainThread._100_per_random_table = _100_per_random_table
 Sirin.mainThread.CGuildRoomSystem = CGuildRoomSystem
+Sirin.mainThread.CHonorGuild = CHonorGuild

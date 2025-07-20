@@ -28,10 +28,6 @@ SERVER_2232 = false
 ---@field getFileList fun(strFolderPath: string): table<integer, string>
 ---@field CBinaryData fun(size: integer): CBinaryData
 ---@field CSQLResultSet fun(size: integer): CSQLResultSet
----@field voidToSQLResultSet fun(ptr: lightuserdata): CSQLResultSet
----@field sqlResultSetToVoid fun(ptr: CSQLResultSet): lightuserdata
----@field voidToBinaryData fun(ptr: lightuserdata): CBinaryData
----@field binaryDataToVoid fun(ptr: CBinaryData): lightuserdata
 Sirin = {}
 
 ---@class (exact) NATS
@@ -119,26 +115,37 @@ function CSQLResultSet:GetList() end
 local CBinaryData = {}
 ---@param str string
 ---@param len integer
+---@return boolean
 function CBinaryData:PushString(str, len) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt64(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt64(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushFloat(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushDouble(a1) end
 ---@param len integer
 ---@return boolean
@@ -197,6 +204,28 @@ function CBinaryData:PushSQLTimeStampStruct(year, month, day, hour, minute, seco
 ---@return TIMESTAMP_STRUCT?
 function CBinaryData:PopSQLTimeStampStruct() end
 
+---@class (exact) CMultiSQLResultSet
+local CMultiSQLResultSet = {}
+---@param key integer
+---@param data CSQLResultSet
+function CMultiSQLResultSet:PushData(key, data) end
+---@param key integer
+---@return CSQLResultSet?
+function CMultiSQLResultSet:GetData(key) end
+---@return table<integer, CSQLResultSet>
+function CMultiSQLResultSet:GetList() end
+
+---@class (exact) CMultiBinaryData
+local CMultiBinaryData = {}
+---@param key integer
+---@param data CBinaryData
+function CMultiBinaryData:PushData(key, data) end
+---@param key integer
+---@return CBinaryData?
+function CMultiBinaryData:GetData(key) end
+---@return table<integer, CBinaryData>
+function CMultiBinaryData:GetList() end
+
 ---@class UUIDv4
 ---@field fromStrFactory fun(str: string): UUIDv4
 local UUIDv4 = {}
@@ -227,6 +256,8 @@ local CLanguageAsset = {}
 function CLanguageAsset:addLanguage(a1, a2, a3, a4) end
 ---@param a1 integer
 function CLanguageAsset:setDefaultLanguage(a1) end
+---@return integer
+function CLanguageAsset:getDefaultLanguage() end
 ---@param a1 integer
 ---@return integer
 function CLanguageAsset:getPlayerLanguage(a1) end
@@ -284,6 +315,83 @@ local luaThreadManager = {}
 ---@field LogEx fun(fore: ConsoleForeground, back: ConsoleBackground, fmt: string)
 ---@field LogEx_NoFile fun(fore: ConsoleForeground, back: ConsoleBackground, fmt: string)
 local console = {}
+
+---@class (exact) CLogFile
+---@field m_szFileName string
+---@field m_dwLogCount integer
+---@field m_nWriteAble integer m_bWriteAble
+---@field m_bAddCount boolean
+---@field m_bDate boolean
+---@field m_bTrace boolean
+---@field m_bInit boolean
+local CLogFile = {}
+---@param str string
+function CLogFile:Write(str) end
+---@param file_name string
+---@param nIsWritable integer
+---@param bTrace boolean
+---@param bDate boolean
+---@param bAddCount boolean
+function CLogFile:SetWriteLogFile(file_name, nIsWritable, bTrace, bDate, bAddCount) end
+
+---@class (exact) CRFNewDatabase
+---@field m_bConectionActive boolean
+---@field m_bSaveDBLog boolean
+---@field m_ProcessLogW CLogFile
+---@field m_ErrorLogW CLogFile
+---@field m_ProcessLogA CLogFile
+---@field m_ErrorLogA CLogFile
+---@field m_byLogFileHour integer
+---@field m_szOdbcName string
+---@field m_szAccountName string
+---@field m_szPassword string
+---@field m_bReconnectFailExit boolean
+---@field m_szLogUpperPath string
+local CRFNewDatabase = {}
+
+---@class (exact) CRFWorldDatabase : CRFNewDatabase
+local CRFWorldDatabase = {}
+
+---@class (exact) _worlddb_guild_member_info____guild_member_info
+---@field dwSerial integer
+---@field wszName string
+---@field byClassInGuild integer
+---@field byLv integer
+---@field dwPvpPoint integer
+---@field wRank integer
+local _worlddb_guild_member_info____guild_member_info = {}
+
+---@class (exact) _worlddb_guild_member_info
+---@field wMemberCount integer
+local _worlddb_guild_member_info = {}
+---@param index integer
+---@return _worlddb_guild_member_info____guild_member_info
+function _worlddb_guild_member_info:MemberData_get(index) end
+
+---@class (exact) _weeklyguildrank_owner_info___list
+---@field dwSerial integer
+---@field wszGuildName string
+---@field byRace integer
+---@field wRank integer
+---@field byGrade integer
+---@field dKillPvpPoint number
+---@field dGuildBattlePvpPoint number
+---@field dwSumLv integer
+---@field dwSumRankScore integer
+local _weeklyguildrank_owner_info___list = {}
+
+---@class (exact) _weeklyguildrank_owner_info
+---@field wCount integer
+local _weeklyguildrank_owner_info = {}
+---@param index integer
+---@return integer
+function _weeklyguildrank_owner_info:wRaceCnt_get(index) end
+---@param index integer
+---@param val integer
+function _weeklyguildrank_owner_info:wRaceCnt_set(index, val) end
+---@param index integer
+---@return _weeklyguildrank_owner_info___list
+function _weeklyguildrank_owner_info:list_get(index) end
 
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4

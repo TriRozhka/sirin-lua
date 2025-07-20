@@ -97,6 +97,13 @@ local function CPlayer__RecvKillMessage(pPlayer, pDier) end
 ---@return boolean
 local function CAnimus__Attack(pAnimus, skill) return false end
 
+---Purpose: Animus heal process.
+---Hook positions: 'original'.
+---@param pAnimus CAnimus
+---@param skill integer
+---@return boolean
+local function CAnimus__Heal(pAnimus, skill) return false end
+
 ---Purpose: Tower attack process.
 ---Hook positions: 'original'.
 ---@param pTower CGuardTower

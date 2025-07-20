@@ -358,3 +358,134 @@ function _param_cash_update:dwBillingID_set(index, val) end
 function _param_cash_update:in_item_get(index) end
 ---@return table<integer, _param_cash_update____item>
 function _param_cash_update:GetItemList() end
+
+---@class (exact) CNormalGuildBattleLogger
+---@field m_pkLogger CLogFile
+local CNormalGuildBattleLogger = {}
+
+---@class (exact) CNormalGuildBattleGuildMember
+---@field m_dwSerial integer
+---@field m_bRestart boolean
+---@field m_pOldBindMapData CMapData
+---@field m_pOldBindDummyData _dummy_position
+---@field m_szOldBindMapCode string
+---@field m_szOldBindDummy string
+---@field m_usGoalCnt integer
+---@field m_usKillCnt integer
+---@field m_dPvpPoint number
+---@field m_pkMember _guild_member_info
+local CNormalGuildBattleGuildMember = {}
+---@return boolean
+function CNormalGuildBattleGuildMember:IsEmpty() end
+
+---@class (exact) CNormalGuildBattleGuild
+---@field m_byID integer
+---@field m_byColorInx integer
+---@field m_dwGoalCnt integer
+---@field m_dwScore integer
+---@field m_dwKillPoint integer
+---@field m_pkGuild CGuild
+---@field m_byNotifyPositionMemberCnt integer
+---@field m_dwKillCountSum integer
+---@field m_dwMaxJoinMemberCnt integer
+---@field m_dwCurJoinMember integer
+local CNormalGuildBattleGuild = {}
+---@param index integer
+---@return CNormalGuildBattleGuildMember
+function CNormalGuildBattleGuild:m_pkNotifyPositionMember_get(index) end
+---@param index integer
+---@return CNormalGuildBattleGuildMember
+function CNormalGuildBattleGuild:m_kMember_get(index) end
+---@return table<integer, CNormalGuildBattleGuildMember>
+function CNormalGuildBattleGuild:GetMemberList() end
+
+---@class (exact) CGuildBattle
+local CGuildBattle = {}
+
+---@class (exact) _dh_player_mgr___pos
+---@field pMap CMapData
+---@field wLayer integer
+---@field fPos_x number
+---@field fPos_y number
+---@field fPos_z number
+local _dh_player_mgr___pos = {}
+
+---@class (exact) _dh_player_mgr
+---@field pOne CPlayer
+---@field dwSerial integer
+---@field LastPos _dh_player_mgr___pos
+---@field nEnterOrder integer
+local _dh_player_mgr = {}
+
+---@class (exact) CDarkHoleChannel
+---@field m_wChannelIndex integer
+---@field m_dwChannelSerial integer
+---@field m_pHoleObj lightuserdata CDarkHole
+---@field m_dwHoleSerial integer
+---@field m_dwQuestStartTime integer
+---@field m_pQuestSetup lightuserdata _dh_quest_setup
+---@field m_wLayerIndex integer
+---@field m_pLayerSet _LAYER_SET
+---@field m_MissionMgr lightuserdata _dh_mission_mgr
+---@field m_wszOpenerName string
+---@field m_aszOpenerName string
+---@field m_dwOpenerSerial integer
+---@field m_nOpenerDegree integer
+---@field m_nOpenerSubDegree integer
+---@field m_bCheckMemberClose boolean
+---@field m_pPartyMng CPartyPlayer
+---@field m_pLeaderPtr lightuserdata _dh_player_mgr
+---@field m_dwEnterOrderCounter integer
+---@field m_dwNextCloseTime integer
+---@field m_dwSendNewMissionMsgNextTime integer
+---@field m_listEnterMember lightuserdata CIndexList
+---@field m_bMoveNextMission boolean
+local CDarkHoleChannel = {}
+---@return _dh_player_mgr
+function CDarkHoleChannel:m_Quester_get(index) end
+---@return table<integer, _dh_player_mgr>
+function CDarkHoleChannel:GetActiveMemberList() end
+
+---@class (exact) CNormalGuildBattle: CGuildBattle
+---@field m_dwID integer
+---@field m_bInit boolean
+---@field m_kLogger CNormalGuildBattleLogger
+---@field m_byGuildBattleNumber integer
+---@field m_k1P CNormalGuildBattleGuild
+---@field m_k2P CNormalGuildBattleGuild
+---@field m_pkField lightuserdata
+---@field m_byWinResult integer
+---@field m_pkWin CNormalGuildBattleGuild
+---@field m_pkLose CNormalGuildBattleGuild
+---@field m_pkRed CNormalGuildBattleGuild
+---@field m_pkBlue CNormalGuildBattleGuild
+---@field m_pkStateList lightuserdata
+local CNormalGuildBattle = {}
+
+---@class (exact) _total_guild_rank_info___list
+---@field wRank integer
+---@field dwSerial integer
+---@field dPowerPoint number
+---@field wszGuildName string
+---@field byRace integer
+---@field byGrade integer
+---@field dwMasterSerial integer
+---@field wszMasterName string
+local _total_guild_rank_info___list = {}
+
+---@class (exact) _total_guild_rank_info
+---@field wCount integer
+local _total_guild_rank_info = {}
+---@param index integer
+---@return integer
+function _total_guild_rank_info:wRaceCnt_get(index) end
+---@param index integer
+---@param val integer
+---@return integer
+function _total_guild_rank_info:wRaceCnt_set(index, val) end
+---@param index integer
+---@return _total_guild_rank_info___list
+function _total_guild_rank_info:list_get(index) end
+---@param byRace integer
+---@return table<integer, _total_guild_rank_info___list>
+function _total_guild_rank_info:GetListByRace(byRace) end

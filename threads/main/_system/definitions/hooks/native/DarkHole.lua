@@ -12,6 +12,12 @@ Functions, which exists in native RF Online code. Darkhole dungeon related hooks
 ---@param uuid string
 local function CPlayer__pc_DarkHoleOpenRequest(pPlayer, bOpen, pFld, uuid) end
 
+---Purpose: Pass dungeon notification.
+---Hook positions: 'pre_event'.
+---@param pDarkHoleChannel CDarkHoleChannel
+---@param strKeyCode string
+local function CDarkHoleChannel__SendMsg_QuestPass(pDarkHoleChannel, strKeyCode) end
+
 ---Purpose: Close darkhole result notification.
 ---Hook positions: 'after_event'.
 ---@param uuid string

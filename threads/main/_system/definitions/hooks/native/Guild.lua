@@ -78,3 +78,9 @@ local function CPlayer__Guild_Disjoint_Complete(dwGuildSerial) end
 ---@param dwNewMasterSerial integer
 ---@param dwOldMasterSerial integer
 local function CPlayer__Guild_Update_GuildMater_Complete(dwGuildSerial, dwNewMasterSerial, dwOldMasterSerial) end
+
+---Purpose: Guild battle result notification.
+---Hook positions: 'after_event'.
+---@param pGuildBattle CNormalGuildBattle
+---@param byRet integer
+local function CNormalGuildBattle__JudgeBattle(pGuildBattle, byRet) end

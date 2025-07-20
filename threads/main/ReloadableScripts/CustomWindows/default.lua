@@ -67,6 +67,10 @@ local t = {
 				raceBoss = { 0, 1, 5 },
 			},
 			{
+				icon = { 8, 0, 7, 1 },
+				clientWindow = 49, -- REMAIN ORE
+			},
+			{
 				-- VISIBLE TO GM ONLY
 				icon = { 4, 13, 3, 0 },
 				customWindow = 2,
@@ -92,9 +96,9 @@ local t = {
 		strModal_Text = { -- optional.
 			default = "Are you sure? ",
 		},
-		overlayIcons = { -- optional. max 26
+		overlayIcons = { -- optional. max 32
 			{ 8, 0, 19, 295 },
-			{ 0, 0, 0, 0 },
+			{ 23, 3, 9, 0 },
 			{ 0, 0, 0, 0 },
 			{ 0, 0, 0, 0 },
 		},
@@ -112,7 +116,6 @@ local t = {
 						},
 						color = 0xFF00FF00,
 					},
-
 					info = {
 						default = {
 							{ "Left 1", "Right 1" },

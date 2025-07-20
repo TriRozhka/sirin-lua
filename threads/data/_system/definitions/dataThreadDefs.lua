@@ -27,10 +27,6 @@ SERVER_2232 = false
 ---@field getFileList fun(strFolderPath: string): table<integer, string>
 ---@field CBinaryData fun(size: integer): CBinaryData
 ---@field CSQLResultSet fun(size: integer): CSQLResultSet
----@field voidToSQLResultSet fun(ptr: lightuserdata): CSQLResultSet
----@field sqlResultSetToVoid fun(ptr: CSQLResultSet): lightuserdata
----@field voidToBinaryData fun(ptr: lightuserdata): CBinaryData
----@field binaryDataToVoid fun(ptr: CBinaryData): lightuserdata
 Sirin = {}
 
 ---@class (exact) NATS
@@ -57,26 +53,37 @@ function CSQLResultSet:GetList() end
 local CBinaryData = {}
 ---@param str string
 ---@param len integer
+---@return boolean
 function CBinaryData:PushString(str, len) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushInt64(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt8(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt16(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt32(a1) end
 ---@param a1 integer
+---@return boolean
 function CBinaryData:PushUInt64(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushFloat(a1) end
 ---@param a1 number
+---@return boolean
 function CBinaryData:PushDouble(a1) end
 ---@param len integer
 ---@return boolean
@@ -135,6 +142,28 @@ function CBinaryData:PushSQLTimeStampStruct(year, month, day, hour, minute, seco
 ---@return TIMESTAMP_STRUCT?
 function CBinaryData:PopSQLTimeStampStruct() end
 
+---@class (exact) CMultiSQLResultSet
+local CMultiSQLResultSet = {}
+---@param key integer
+---@param data CSQLResultSet
+function CMultiSQLResultSet:PushData(key, data) end
+---@param key integer
+---@return CSQLResultSet?
+function CMultiSQLResultSet:GetData(key) end
+---@return table<integer, CSQLResultSet>
+function CMultiSQLResultSet:GetList() end
+
+---@class (exact) CMultiBinaryData
+local CMultiBinaryData = {}
+---@param key integer
+---@param data CBinaryData
+function CMultiBinaryData:PushData(key, data) end
+---@param key integer
+---@return CBinaryData?
+function CMultiBinaryData:GetData(key) end
+---@return table<integer, CBinaryData>
+function CMultiBinaryData:GetList() end
+
 ---@class UUIDv4
 ---@field fromStrFactory fun(str: string): UUIDv4
 local UUIDv4 = {}
@@ -165,6 +194,8 @@ local CLanguageAsset = {}
 function CLanguageAsset:addLanguage(a1, a2, a3, a4) end
 ---@param a1 integer
 function CLanguageAsset:setDefaultLanguage(a1) end
+---@return integer
+function CLanguageAsset:getDefaultLanguage() end
 ---@param a1 integer
 ---@return integer
 function CLanguageAsset:getPlayerLanguage(a1) end

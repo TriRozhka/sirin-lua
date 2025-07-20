@@ -188,52 +188,58 @@ local function CPlayer__IsHaveEmptyTower(pPlayer) return false end
 ---@param byCashChangeStateFlag integer
 local function CNetworkEX__OtherShapeRequest(pPlayer, wIndex, byReqType, byCashChangeStateFlag) end
 
----Purpose: Prepare avator load notification.
----Hook positions: 'after_event'
----@param dwAvatorSerial integer
-local function SirinWorldDB_UserLoad_Prepare(dwAvatorSerial) end
-
----Purpose: Prepare avator logout notification.
----Hook positions: 'after_event'
----@param dwAvatorSerial integer
-local function SirinWorldDB_UserLogout_Prepare(dwAvatorSerial) end
-
----Purpose: Prepare avator move lobby notification.
----Hook positions: 'after_event'
----@param dwAvatorSerial integer
-local function SirinWorldDB_UserLobby_Prepare(dwAvatorSerial) end
-
 ---Purpose: Prepare avator update notification.
----Hook positions: 'after_event'
+---Hook positions: 'pre_event'
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserUpdate_Prepare(dwAvatorSerial) end
+---@param wClientIndex integer
+---@param byQryCase integer
+---@param multiBinaryData CMultiBinaryData
+local function SirinWorldDB_PlayerSave_Prepare(dwAvatorSerial, wClientIndex, byQryCase, multiBinaryData) end
+
+---Purpose: Complete avator insert notification.
+---Hook positions: 'after_event'
+---@param byErrCode integer
+---@param dwAvatorSerial integer
+local function SirinWorldDB_PlayerInsert_Complete(byErrCode, dwAvatorSerial) end
+
+---Purpose: Complete avator delete notification.
+---Hook positions: 'after_event'
+---@param byErrCode integer
+---@param dwAvatorSerial integer
+local function SirinWorldDB_PlayerDelete_Complete(byErrCode, dwAvatorSerial) end
 
 ---Purpose: Complete avator load notification.
 ---Hook positions: 'after_event'
 ---@param bError boolean
 ---@param byErrCode integer
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserLoad_Complete(bError, byErrCode, dwAvatorSerial) end
+---@param wClientIndex integer
+---@param multiSQLResultSet CMultiSQLResultSet
+local function SirinWorldDB_PlayerLoad_Complete(bError, byErrCode, dwAvatorSerial, wClientIndex, multiSQLResultSet) end
 
 ---Purpose: Complete avator logout notification.
 ---Hook positions: 'pre_event'
 ---@param bError boolean
 ---@param bActive boolean
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserLogout_Complete(bError, bActive, dwAvatorSerial) end
+---@param wClientIndex integer
+local function SirinWorldDB_PlayerLogout_Complete(bError, bActive, dwAvatorSerial, wClientIndex) end
 
 ---Purpose: Complete avator move lobby notification.
 ---Hook positions: 'pre_event'
 ---@param bError boolean
 ---@param bActive boolean
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserLobby_Complete(bError, bActive, dwAvatorSerial) end
+---@param wClientIndex integer
+local function SirinWorldDB_PlayerLobby_Complete(bError, bActive, dwAvatorSerial, wClientIndex) end
 
 ---Purpose: Complete avator update notification.
 ---Hook positions: 'after_event'
 ---@param byErrCode integer
 ---@param dwAvatorSerial integer
-local function SirinWorldDB_UserUpdate_Complete(byErrCode, dwAvatorSerial) end
+---@param wClientIndex integer
+---@param multiBinaryData CMultiBinaryData
+local function SirinWorldDB_PlayerUpdate_Complete(byErrCode, dwAvatorSerial, wClientIndex, multiBinaryData) end
 
 ---Purpose: Custom chat commands handler
 ---Hook positions: 'original'
