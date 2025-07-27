@@ -726,6 +726,7 @@ local function example_openWindow(pPlayer, dwWindowID, byType)
 	buf:PushUInt8(byType) -- 0 default window, 1 custom window
 	buf:PushUInt32(dwWindowID) -- window index
 	buf:PushUInt32(0) -- NPC Code for store and AH buy. in other case 0. Example: tonumber("01234", 16)
+	buf:PushUInt8(1) -- 1 - open window, 0 - close window
 	buf:SendBuffer(pPlayer, 80, 12)
 end
 
