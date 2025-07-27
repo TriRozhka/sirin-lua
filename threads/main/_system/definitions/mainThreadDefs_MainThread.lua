@@ -272,7 +272,7 @@ local console = {}
 ---@field modInfinitePotion modInfinitePotion
 ---@field modRaceSexClassChange modRaceSexClassChange
 ---@field modForceLogoutAfterUsePotion modForceLogoutAfterUsePotion
----@field modWindowExt modWindowExt
+---@field modRaceBossChipHolderBonus modRaceBossChipHolderBonus
 ---@field g_pAttack CAttack
 ---@field g_dwAttType integer
 ---@field g_HolySys CHolyStoneSystem
@@ -374,9 +374,12 @@ local modRaceSexClassChange = {}
 ---@field s_bNeedForceLogout boolean
 local modForceLogoutAfterUsePotion = {}
 
----@class (exact) modWindowExt
----@field RegisterAsset fun(): boolean
-local modWindowExt = {}
+---@class (exact) modRaceBossChipHolderBonus
+---@field GetAttackBonus fun(pPlayer: CPlayer, bActiveSkill: boolean): number
+---@field GetUnitAttackBonus fun(pPlayer: CPlayer, bGenerator: boolean): number
+---@field GetDefenseBonus fun(pPlayer: CPlayer): number
+---@field GetHPBonus fun(pPlayer: CPlayer): boolean
+local modRaceBossChipHolderBonus = {}
 
 ---@class (exact) CAssetController
 ---@field instance fun(): CAssetController
@@ -3152,7 +3155,7 @@ Sirin.mainThread.modBoxOpen = modBoxOpen
 Sirin.mainThread.modInfinitePotion = modInfinitePotion
 Sirin.mainThread.modRaceSexClassChange = modRaceSexClassChange
 Sirin.mainThread.modForceLogoutAfterUsePotion = modForceLogoutAfterUsePotion
-Sirin.mainThread.modWindowExt = modWindowExt
+Sirin.mainThread.modRaceBossChipHolderBonus = modRaceBossChipHolderBonus
 Sirin.mainThread.g_pAttack = CAttack
 Sirin.mainThread.g_HolySys = CHolyStoneSystem
 Sirin.mainThread.g_Main = CMainThread

@@ -67,6 +67,10 @@ local t = {
 				raceBoss = { 0, 1, 5 },
 			},
 			{
+				icon = { 4, 13, 10, 0 },
+				clientWindow = 12, -- QUEST JOURNAL
+			},
+			{
 				icon = { 8, 0, 7, 1 },
 				clientWindow = 49, -- REMAIN ORE
 			},
