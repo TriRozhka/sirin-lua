@@ -178,6 +178,30 @@ function script.loadScripts()
 							end
 						until true
 					end
+
+					if math.type(v["iconSize"]) ~= "integer" then
+						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'iconSize' invalid format! Number expected.\n", k)
+						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
+						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
+						bSucc = false
+						break
+					end
+
+					if math.type(v["stateFlags"]) ~= "integer" then
+						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'stateFlags' invalid format! Number expected.\n", k)
+						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
+						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
+						bSucc = false
+						break
+					end
+
+					if type(v["backgroundImage"]) ~= "table" then
+						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'backgroundImage' invalid format! Table expected.\n", k)
+						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
+						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
+						bSucc = false
+						break
+					end
 				end
 
 				if v["headerWindowID"] and math.type(v["headerWindowID"]) ~= "integer" then
@@ -660,6 +684,7 @@ function script.getWindowDataForLanguage(langPref)
 		if sw.headerWindowID then w.headerWindowID = sw.headerWindowID end
 		if sw.footerWindowID then w.footerWindowID = sw.footerWindowID end
 		if sw.layout then w.layout = clone(sw.layout) end
+		if sw.backgroundImage then w.backgroundImage = clone(sw.backgroundImage) end
 		if sw.strModal_Ok then w.strModal_Ok = sw.strModal_Ok[langPref] or sw.strModal_Ok.default or "NO DEFAULT DATA line: " .. __LINE__() end
 		if sw.strModal_Cancel then w.strModal_Cancel = sw.strModal_Cancel[langPref] or sw.strModal_Cancel.default or "NO DEFAULT DATA line: " .. __LINE__() end
 		if sw.strModal_Text then w.strModal_Text = sw.strModal_Text[langPref] or sw.strModal_Text.default or "NO DEFAULT DATA line: " .. __LINE__() end
@@ -672,6 +697,8 @@ function script.getWindowDataForLanguage(langPref)
 				w.overlayIcons[k] = o
 			end
 		end
+		if sw.iconSize then w.iconSize = sw.iconSize end
+		if sw.stateFlags then w.stateFlags = sw.stateFlags end
 		if sw.data then
 			w.data = {}
 			for k,sd in ipairs(sw.data) do
@@ -778,12 +805,15 @@ local sirin_CustomWindow_Data = {}
 ---@field width integer
 ---@field height integer
 ---@field layout table<integer, integer>
+---@field backgroundImage table<integer, integer>
 ---@field headerWindowID integer
 ---@field footerWindowID integer
 ---@field strModal_Ok table<string, string>
 ---@field strModal_Cancel table<string, string>
 ---@field strModal_Text table<string, string>
 ---@field overlayIcons table<integer, sirin_IconData>
+---@field iconSize integer
+---@field stateFlags integer
 ---@field data table<integer, sirin_CustomWindow_Data>
 local sirin_CustomWindow = {}
 
