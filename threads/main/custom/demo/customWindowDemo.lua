@@ -179,7 +179,7 @@ function script.loadScripts()
 						until true
 					end
 
-					if math.type(v["iconSize"]) ~= "integer" then
+					if v["iconSize"] and math.type(v["iconSize"]) ~= "integer" then
 						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'iconSize' invalid format! Number expected.\n", k)
 						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
 						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
@@ -187,7 +187,7 @@ function script.loadScripts()
 						break
 					end
 
-					if math.type(v["stateFlags"]) ~= "integer" then
+					if v["stateFlags"] and math.type(v["stateFlags"]) ~= "integer" then
 						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'stateFlags' invalid format! Number expected.\n", k)
 						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
 						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
@@ -195,7 +195,7 @@ function script.loadScripts()
 						break
 					end
 
-					if type(v["backgroundImage"]) ~= "table" then
+					if v["backgroundImage"] and type(v["backgroundImage"]) ~= "table" then
 						local fmt = string.format("Lua. script.loadScripts() Window record:%d 'backgroundImage' invalid format! Table expected.\n", k)
 						Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
 						Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
