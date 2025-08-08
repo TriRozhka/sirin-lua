@@ -383,7 +383,7 @@ local modForceLogoutAfterUsePotion = {}
 ---@field GetAttackBonus fun(pPlayer: CPlayer, bActiveSkill: boolean): number
 ---@field GetUnitAttackBonus fun(pPlayer: CPlayer, bGenerator: boolean): number
 ---@field GetDefenseBonus fun(pPlayer: CPlayer): number
----@field GetHPBonus fun(pPlayer: CPlayer): boolean
+---@field GetHPBonus fun(pPlayer: CPlayer): number
 local modRaceBossChipHolderBonus = {}
 
 ---@class (exact) modNetwork
