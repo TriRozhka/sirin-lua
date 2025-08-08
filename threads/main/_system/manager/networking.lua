@@ -378,9 +378,11 @@ local protoTypes = {
 	["sirin.proto.customWindows"] = {
 		4096,
 		{ 'u32', { true, { 'u32', 'u32', 's', 'u32', 'u32', 'u32', 'u32', 'pu32', 'pu32', 's', 's', 's', { true, { 'u32' ,'pu32' } }, 'u32', 'u32',
-			{ true, { 'u32', 'pu32', 's', 'u32', 'u32', 's', 'pu32', { false, { { false, { 's', 'u32' } }, { true, { 'u32', 's', 's', 'u32' } } } }, 'u32', 'u32', 'u32', 'pu32', 'pu32', 'pu32', 'b', 'b', 'u32', 'u32', 'pu32', 'pi32' } } } } },
+			{ true, { 'u32', 'pu32', 's', 'u32', 'u32', 's', 'pu32', { false, { { false, { 's', 'u32' } }, { true, { 'u32', 's', 's', 'u32' } } } }, 'u32', 'u32', 'u32', 'pu32', 'pu32', 'pu32', 'b', 'b', 'u32', 'u32', 'pu32', 'pi32' } },
+			'u32', 'u32' } } },
 		{ 'ct', { true, { 'data', 'id', 'visualVer', 'name', 'width', 'height', 'headerWindowID', 'footerWindowID', 'layout', 'backgroundImage', 'strModal_Ok', 'strModal_Cancel', 'strModal_Text', { true, { 'overlayIcons', 'id', 'icon' } }, 'iconSize', 'stateFlags',
-			{ true, { 'data', 'id', 'icon', 'description', 'durability', 'upgrade', 'text', 'item', { false, { 'tooltip', { false, { 'name', 'text', 'color' } }, { true, { 'info', 'id', 'left', 'right', 'color' } } } }, 'clientWindow', 'npcCode', 'customWindow', 'raceLimit', 'raceBoss', 'guildClass', 'isGM', 'isPremium', 'stateFlags', 'overlayFlags', 'delay', 'counter' } } } } },
+			{ true, { 'data', 'id', 'icon', 'description', 'durability', 'upgrade', 'text', 'item', { false, { 'tooltip', { false, { 'name', 'text', 'color' } }, { true, { 'info', 'id', 'left', 'right', 'color' } } } }, 'clientWindow', 'npcCode', 'customWindow', 'raceLimit', 'raceBoss', 'guildClass', 'isGM', 'isPremium', 'stateFlags', 'overlayFlags', 'delay', 'counter' } },
+			'paddingX', 'paddingY' } } },
 	},
 	["sirin.proto.onScreentext"] = {
 		2048,

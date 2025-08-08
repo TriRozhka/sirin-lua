@@ -637,6 +637,22 @@ function script.loadScripts()
 						end
 					until true
 				end
+
+				if v["paddingX"] and math.type(v["paddingX"]) ~= "integer" then
+					local fmt = string.format("Lua. script.loadScripts() Window record:%d 'paddingX' invalid format! Integer expected.\n", k)
+					Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
+					Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
+					bSucc = false
+					break
+				end
+
+				if v["paddingY"] and math.type(v["paddingY"]) ~= "integer" then
+					local fmt = string.format("Lua. script.loadScripts() Window record:%d 'paddingY' invalid format! Integer expected.\n", k)
+					Sirin.console.LogEx_NoFile(ConsoleForeground.RED, ConsoleBackground.BLACK, fmt)
+					Sirin.WriteA(script.m_pszLogPath, fmt, true, true)
+					bSucc = false
+					break
+				end
 			until true
 		end
 
@@ -739,6 +755,8 @@ function script.getWindowDataForLanguage(langPref)
 				w.data[k] = d
 			end
 		end
+		if sw.paddingX then w.paddingX = sw.paddingX end
+		if sw.paddingY then w.paddingY = sw.paddingY end
 	end
 
 	return wd
@@ -815,6 +833,8 @@ local sirin_CustomWindow_Data = {}
 ---@field iconSize integer
 ---@field stateFlags integer
 ---@field data table<integer, sirin_CustomWindow_Data>
+---@field paddingX integer
+---@field paddingY integer
 local sirin_CustomWindow = {}
 
 autoInit()

@@ -348,6 +348,55 @@ function CLogFile:SetWriteLogFile(file_name, nIsWritable, bTrace, bDate, bAddCou
 ---@field m_bReconnectFailExit boolean
 ---@field m_szLogUpperPath string
 local CRFNewDatabase = {}
+---@param szQuery string
+---@param lLen integer SQLINTEGER
+---@return integer #SQLRETURN
+function CRFNewDatabase:SQLExecDirect(szQuery, lLen) end
+---@param ipar integer SQLUSMALLINT
+---@param fParamType integer SQLSMALLINT
+---@param fCType integer SQLSMALLINT
+---@param fSqlType integer SQLSMALLINT
+---@param cbColDef integer SQLULEN
+---@param ibScale any SQLSMALLINT
+---@param rgbValue CBinaryData
+---@param cbValueMax integer SQLLEN
+---@param cbValue? integer SQLLEN
+---@return integer #SQLRETURN
+function CRFNewDatabase:SQLBindParam(ipar, fParamType, fCType, fSqlType, cbColDef, ibScale, rgbValue, cbValueMax, cbValue) end
+---@return integer #SQLRETURN
+---@return integer #affected row count in last request
+function CRFNewDatabase:SQLRowCount() end
+---@return integer #SQLRETURN
+function CRFNewDatabase:SQLFetch() end
+---@param ColumnNumber integer SQLUSMALLINT
+---@param TargetType integer SQLSMALLINT
+---@param pData integer CBinaryData
+---@param BufferLength integer SQLLEN
+---@return integer #SQLRETURN
+---@return integer #SQLLEN bytes read
+function CRFNewDatabase:SQLGetData(ColumnNumber, TargetType, pData, BufferLength) end
+---@return integer #SQLRETURN
+---@return integer #SQLLEN ParamId
+function CRFNewDatabase:SQLParamData() end
+---@param buf CBinaryData
+---@param bufLen integer SQLLEN
+---@return integer #SQLRETURN
+function CRFNewDatabase:SQLPutData(buf, bufLen) end
+---@param sqlRet integer SQLRETURN
+function CRFNewDatabase:ErrorAction(sqlRet) end
+---@param Option integer SQLUSMALLINT
+---@return integer #SQLRETURN
+function CRFNewDatabase:SQLFreeStmt(Option) end
+---@param bSet boolean
+function CRFNewDatabase:SetAutoCommitMode(bSet) end
+---@return boolean
+function CRFNewDatabase:CommitTransaction() end
+---@return boolean
+function CRFNewDatabase:RollbackTransaction() end
+---@param ElementSize integer Total size of single return row
+---@return integer #SQLRETURN
+---@return CSQLResultSet
+function CRFNewDatabase:FetchSelected(ElementSize) end
 
 ---@class (exact) CRFWorldDatabase : CRFNewDatabase
 local CRFWorldDatabase = {}

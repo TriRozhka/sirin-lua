@@ -311,3 +311,43 @@ local function canUseExchangeBtnWithNoNPC(pPlayer, wExchangeID) return false end
 ---@param byType integer 0 - weapon/shield, 1 - armor, 2 - bullet, 3 - upgrade
 ---@return boolean
 local function canUseWithNoTool(pPlayer, byType) return false end
+
+---Purpose: Init default constants.
+---Hook positions: 'pre_event'
+local function initVoteParams() end
+
+---Purpose: Checks can player vote or not.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param bVote boolean Is real vote - true, votepaper send check - false
+---@return boolean
+local function canVote(pPlayer, bVote) return false end
+
+---Purpose: Power of player's voice
+---Hook positions: 'special'
+---@param pPlayer CPlayer
+---@return number
+local function getVoiceWeight(pPlayer) return 1.0 end
+
+---Purpose: Notification of player did vote.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+---@param bAbstain boolean
+---@param pCandidate? _candidate_info
+local function votePatriarch(pPlayer, bAbstain, pCandidate) end
+
+---Purpose: Check if player can register election.
+---Hook positions: 'special'
+---@param pPlayer CPlayer
+---@return integer #return 0 if no error.
+local function canRegistElection(pPlayer) return 0 end
+
+---Purpose: Notification of player did register in election.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+local function registElection(pPlayer) end
+
+---Purpose: Checks if auto fill race boss list by race rank is enabled.
+---Hook positions: 'filter'
+---@return boolean
+local function canAutoAddPatriarchGroup() return true end

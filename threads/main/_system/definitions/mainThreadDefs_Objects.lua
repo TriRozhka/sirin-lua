@@ -1274,6 +1274,7 @@ function CPlayer:SendMsg_FanfareItem(byGetType, pItemCon, pItemBox) end
 ---@param bParty boolean
 ---@return boolean
 function CPlayer:Emb_CheckActForQuest(nActCode, pszReqCode, wAddCount, bParty) end
+---@deprecated
 ---@param nActCode integer
 ---@param pszReqCode string
 ---@param wAddCount integer

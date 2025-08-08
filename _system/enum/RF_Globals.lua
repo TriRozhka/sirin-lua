@@ -306,3 +306,65 @@ QUEST_HAPPEN = {
 	quest_happen_type_maxlevel = 8,
 	QUEST_HAPPEN_TYPE_NUM = 9,
 }
+
+---@enum CANDIDATE_CLASS
+CANDIDATE_CLASS = {
+	patriarch = 0,
+	sub_patriarch_a = 1,
+	attack_leader_a = 2,
+	defence_leader_a = 3,
+	support_leader_a = 4,
+	sub_patriarch_b = 4,
+	attack_leader_b = 6,
+	defence_leader_b = 7,
+	support_leader_b = 8,
+	patriarch_group_num = 9,
+	normal_user = 255,
+}
+
+---@enum CANDIDATE_STATUS
+CANDIDATE_STATUS = {
+	candidate_normal = 0,
+	candidate_1st = 1,
+	candidate_2st = 2,
+	candidate_appoint = 3,
+	candidate_discharge = 4,
+	candidate_delete = 5,
+	candidate_type_num = 6,
+}
+
+---@enum ELECT_PROC_CMD
+ELECT_PROC_CMD = {
+	_eRequestInitCandidate = 0,
+	_eReqUpdateWinCount = 1,
+	_eRequestCandidateList = 2,	--client request (user. get list of candidates)
+	_eRegCandidate = 3,			-- client request (user. register request)
+	_eReg2ndCandidate = 4,
+	_eMakeVotePaper = 5,
+	_eSendVotePaper = 6,		-- server notify new user about vote availability
+	_eVote = 7,					-- client request (user. vote request)
+	_eVoteScore = 8,			-- server notify new user about score
+	_eReqQryFinalDecision = 9,
+	_eReqQrySetWinner = 10,
+	_eReqQryFinalApplyer = 11,
+	_eRetQryFinalDecision = 12,
+	_eReqNetFinalDecision = 13,	-- server notify new user about results
+	_eQryAppoint = 14,			-- client request (leader. check user)
+	_eReqAppoint = 15,			-- client request (leader. appoint user)
+	_eRespAppoint = 16,			-- client request (candidate. confirmation)
+	_eReqDischarge = 17,		-- client request (leader. remove appointed)
+	_eReqPatriarchInform = 18,	-- client request (leader. get list)
+	_eNon = 19,
+}
+
+---@enum ELECT_PROCESSOR
+ELECT_PROCESSOR = {
+	_eCandidateRegister = 0,
+	_eSecondCandidateCrystallizer = 1,
+	_eVoter = 2,
+	_eFinalDecisionProcessor = 3,
+	_eFinalDecisionApplyer = 4,
+	_eClassOrderProcessor = 5,
+	_eProcessorNum = 6,
+	_eNonProcessor = 255,
+}

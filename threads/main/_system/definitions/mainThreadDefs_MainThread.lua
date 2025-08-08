@@ -258,6 +258,8 @@ local console = {}
 ---@field _guild_honor_set_request_clzo fun(): _guild_honor_set_request_clzo
 ---@field CProtoDataObject fun(): CProtoDataObject
 ---@field CloseConnect fun(dwSocket: integer, strReason?: string)
+---@field electProcessorToVoter fun(electProc: ElectProcessor): Voter
+---@field electProcessorToCandidateRegister fun(electProc: ElectProcessor): CandidateRegister
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -273,6 +275,7 @@ local console = {}
 ---@field modRaceSexClassChange modRaceSexClassChange
 ---@field modForceLogoutAfterUsePotion modForceLogoutAfterUsePotion
 ---@field modRaceBossChipHolderBonus modRaceBossChipHolderBonus
+---@field modNetwork modNetwork
 ---@field g_pAttack CAttack
 ---@field g_dwAttType integer
 ---@field g_HolySys CHolyStoneSystem
@@ -289,6 +292,8 @@ local console = {}
 ---@field CNuclearBombMgr CNuclearBombMgr
 ---@field CGuildRoomSystem CGuildRoomSystem
 ---@field CHonorGuild CHonorGuild
+---@field CandidateMgr CandidateMgr
+---@field PatriarchElectProcessor PatriarchElectProcessor
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -380,6 +385,10 @@ local modForceLogoutAfterUsePotion = {}
 ---@field GetDefenseBonus fun(pPlayer: CPlayer): number
 ---@field GetHPBonus fun(pPlayer: CPlayer): boolean
 local modRaceBossChipHolderBonus = {}
+
+---@class (exact) modNetwork
+---@field getPlayerHWID fun(dwIndex: integer): boolean, string?
+local modNetwork = {}
 
 ---@class (exact) CAssetController
 ---@field instance fun(): CAssetController
@@ -744,110 +753,6 @@ function CMainThread:m_dwGuildPower_get(a1) end
 ---@param a2 integer
 function CMainThread:m_dwGuildPower_set(a1, a2) end
 
----@class (exact) _pnt_rect
----@field nStartx integer
----@field nStarty integer
----@field nEndx integer
----@field nEndy integer
-local _pnt_rect = {}
-
----@class (exact) CMapData
----@field m_bUse boolean
----@field m_bLoad boolean
----@field m_nMapIndex integer
----@field m_Level CLevel
----@field m_nMapCode integer
----@field m_mb lightuserdata _MULTI_BLOCK
----@field m_Dummy lightuserdata CExtDummy
----@field m_nMapInPlayerNum integer
----@field m_nMapInMonsterNum integer
----@field m_nMonBlockNum integer
----@field m_pMonBlock lightuserdata _mon_block
----@field m_nMonDumNum integer
----@field m_nPortalNum integer
----@field m_pPortal _portal_dummy
----@field m_nItemStoreDumNum integer
----@field m_pItemStoreDummy _store_dummy
----@field m_nStartDumNum integer
----@field m_pStartDummy lightuserdata _start_dummy
----@field m_nBindDumNum integer
----@field m_pBindDummy lightuserdata _bind_dummy
----@field m_nResDumNum integer
----@field m_pResDummy lightuserdata _res_dummy
----@field m_nQuestDumNum integer
----@field m_pQuestDummy lightuserdata _quest_dummy
----@field m_pMapSet _map_fld
----@field m_pExtDummy_Town lightuserdata CExtDummy
----@field m_nSafeDumNum integer
----@field m_pSafeDummy lightuserdata _safe_dummy
----@field m_tbSafeDumPos lightuserdata CDummyPosTable
----@field m_tbMonBlk CRecordData
----@field m_tbPortal CRecordData
----@field m_tbMonDumPos lightuserdata CDummyPosTable
----@field m_tbPortalDumPos lightuserdata CDummyPosTable
----@field m_tbStoreDumPos lightuserdata CDummyPosTable
----@field m_tbStartDumPos lightuserdata CDummyPosTable
----@field m_tbBindDumPos lightuserdata CDummyPosTable
----@field m_tbResDumPosHigh lightuserdata CDummyPosTable
----@field m_tbResDumPosMiddle lightuserdata CDummyPosTable
----@field m_tbResDumPosLow lightuserdata CDummyPosTable
----@field m_tbQuestDumPos lightuserdata CDummyPosTable
----@field m_BspInfo lightuserdata _bsp_info
----@field m_SecInfo _sec_info
----@field m_tmrMineGradeReSet lightuserdata CMyTimer
----@field m_nMonTotalCount integer
-local CMapData = {}
----@param a1 integer
----@return _LAYER_SET
-function CMapData:m_ls_get(a1) end
----@param in_x number
----@param in_y number
----@param in_z number
----@param nRange integer
----@return boolean
----@return number x
----@return number y
----@return number z
----@nodiscard
-function CMapData:GetRandPosInRange(in_x, in_y, in_z, nRange) end
----@param in_x number
----@param in_y number
----@param in_z number
----@return boolean
-function CMapData:IsMapIn(in_x, in_y, in_z) end
----@param nRadius integer
----@param dwCurSec integer Current sector number
----@return _pnt_rect
-function CMapData:GetRectInRadius(nRadius, dwCurSec) end
----@param wLayerIndex integer
----@param dwSecIndex integer
----@return CObjectList
-function CMapData:GetSectorListObj(wLayerIndex, dwSecIndex) end
----@param wLayerIndex integer
----@param dwSecIndex integer
----@param nRadius? integer
----@param dwObjCharMask? integer
----@param dwObjItemMask? integer
----@param fRefPosX? number Required for sorting
----@param fRefPosY? number Required for sorting
----@param fRefPosZ? number Required for sorting
----@param bSortAsc? boolean Sort targets by distance in ascending order
----@return table<integer, CGameObject>
-function CMapData:GetObjectListInRadius(wLayerIndex, dwSecIndex, nRadius, dwObjCharMask, dwObjItemMask, fRefPosX, fRefPosY, fRefPosZ, bSortAsc) end
----@param wLayerIndex integer
----@param dwSecIndex integer
----@param nRadius? integer
----@param fRefPosX? number Required for sorting
----@param fRefPosY? number Required for sorting
----@param fRefPosZ? number Required for sorting
----@param bSortAsc? boolean Sort targets by distance in ascending order
----@return table<integer, CPlayer>
-function CMapData:GetPlayerListInRadius(wLayerIndex, dwSecIndex, nRadius, fRefPosX, fRefPosY, fRefPosZ, bSortAsc) end
----@param x number
----@param z number
----@return integer
-function CMapData:GetSectorIndex(x, z) end
-
 ---@class (exact) CMapOperation
 local CMapOperation = {}
 ---@param byRace integer
@@ -887,73 +792,6 @@ local CAttack = {}
 ---@param a1 integer
 ---@return _be_damaged_char
 function CAttack:m_DamList_get(a1) end
-
----@class (exact) CBsp
-local CBsp = {}
----@param from_x number
----@param from_y number
----@param from_z number
----@param to_x number
----@param to_y number
----@param to_z number
----@return integer # BOOL can or not
----@return number # stop x
----@return number # stop y
----@return number # stop z
-function CBsp:CanYouGoThere(from_x, from_y, from_z, to_x, to_y, to_z) end
----@param from_x number
----@param from_y number
----@param from_z number
----@param to_x number
----@param to_y number
----@param to_z number
----@return integer # unsigned long unknown
----@return integer # size of returned table
----@return table # table of {x, y, z}
-function CBsp:GetPathFind(from_x, from_y, from_z, to_x, to_y, to_z) end
-
----@class (exact) CLevel
----@field mMapName string
----@field mCamPos_x number
----@field mCamPos_y number
----@field mCamPos_z number
----@field mMatView lightuserdata D3DXMATRIX
----@field mIsLoadedBsp integer
----@field mBsp CBsp
----@field mSkyBox lightuserdata CSkyBox
----@field mAutoAniCam lightuserdata CAniCamera
----@field mTimer lightuserdata CTimer
----@field mDummy lightuserdata CExtDummy
----@field mLightTexMemSize integer
----@field mMapTexMemSize integer
----@field mSkyTexMemSize integer
----@field mEntityTexMemSize integer
----@field mEnvironment integer
-local CLevel = {}
----@param from_x number
----@param from_y number
----@param from_z number
----@param to_x number
----@param to_y number
----@param to_z number
----@return integer # BOOL result
----@return number # Y position
-function CLevel:GetNextYposForServerFar(from_x, from_y, from_z, to_x, to_y, to_z) end
----@param from_x number
----@param from_y number
----@param from_z number
----@param to_x number
----@param to_y number
----@param to_z number
----@return integer # BOOL result
----@return number # Y position
-function CLevel:GetNextYposFarProgress(from_x, from_y, from_z, to_x, to_y, to_z) end
----@param from_x number
----@param from_y number
----@param from_z number
----@return integer # BOOL result
----@return number # Y position
-function CLevel:GetNextYposForServer(from_x, from_y, from_z) end
 
 ---@class (exact) CHolyScheduleData____HolyScheduleNode
 local CHolyScheduleData____HolyScheduleNode = {}
@@ -1095,93 +933,6 @@ function CPartyPlayer:GetLootAuthor() end
 ---@param a1 CPlayer
 ---@return boolean
 function CPartyPlayer:IsPartyMember(a1) end
-
----@class (exact) CPlayerDB
----@field m_byPvPGrade integer
----@field m_dbChar _character_db_load
----@field m_dbInven _bag_db_load
----@field m_dbEquip _equip_db_load
----@field m_dbEmbellish _embellish_db_load
----@field m_dbForce _force_db_load
----@field m_dbAnimus _animus_db_load
----@field m_dbTrunk _trunk_db_load
----@field m_dbExtTrunk _Exttrunk_db_load
----@field m_UnitDB _UNIT_DB_BASE
----@field m_QuestDB _QUEST_DB_BASE
----@field m_SFContDB _SFCONT_DB_BASE
----@field m_ItemCombineDB _ITEMCOMBINE_DB_BASE
----@field m_PostStorage lightuserdata CPostStorage
----@field m_ReturnPostStorage lightuserdata CPostReturnStorage
----@field m_bPersonalAmineInven boolean
----@field m_pAPM AutominePersonal
----@field m_dbPersonalAmineInven _personal_amine_inven_db_load
----@field m_byNameLen integer
----@field m_pClassData _class_fld
----@field m_pGuild CGuild
----@field m_pGuildMemPtr _guild_member_info
----@field m_byClassInGuild integer
----@field m_pApplyGuild CGuild
----@field m_bGuildLock boolean
----@field m_bTrunkOpen boolean
----@field m_wszTrunkPasswd string
----@field m_dTrunkDalant number
----@field m_dTrunkGold number
----@field m_byTrunkSlotNum integer
----@field m_byTrunkHintIndex integer
----@field m_wszTrunkHintAnswer string
----@field m_byExtTrunkSlotNum integer
----@field m_byTrunkIteg integer
----@field m_nMakeTrapMaxNum integer
----@field m_dPvpPointLeak number
----@field m_bLastAttBuff boolean
----@field m_dwGuildEntryDelay integer
----@field m_byPlayerInteg integer
----@field m_wSerialCount integer
----@field m_pThis CPlayer
----@field m_aszName string
-local CPlayerDB = {}
----@param a1 integer
----@return _STORAGE_LIST
-function CPlayerDB:m_pStoragePtr_get(a1) end
----@param a1 integer
----@param a2 _STORAGE_LIST
-function CPlayerDB:m_pStoragePtr_set(a1, a2) end
----@param a1 integer
----@return integer
-function CPlayerDB:m_wCuttingResBuffer_get(a1) end
----@param a1 integer
----@param a2 integer
-function CPlayerDB:m_wCuttingResBuffer_set(a1, a2) end
----@param a1 integer
----@return integer
-function CPlayerDB:m_dwAlterMastery_get(a1) end
----@param a1 integer
----@param a2 integer
-function CPlayerDB:m_dwAlterMastery_set(a1, a2) end
----@param a1 integer
----@return _class_fld
-function CPlayerDB:m_pClassHistory_get(a1) end
----@param a1 integer
----@param a2 _class_fld
-function CPlayerDB:m_pClassHistory_set(a1, a2) end
----@param a1 integer
----@return _class_fld
-function CPlayerDB:m_ppHistoryEffect_get(a1) end
----@param a1 integer
----@return lightuserdata _quick_link
-function CPlayerDB:m_QLink_get(a1) end
----@return integer
-function CPlayerDB:GetCharSerial() end
----@return number
-function CPlayerDB:GetPvPPoint() end
----@return integer
-function CPlayerDB:GetRaceCode() end
----@return integer
-function CPlayerDB:GetDalant() end
----@return integer
-function CPlayerDB:GetGold() end
----@return integer
-function CPlayerDB:GetNewItemSerial() end
 
 ---@class (exact) CPotionMgr
 ---@field m_PotionInnerData lightuserdata PotionInnerData
@@ -1501,86 +1252,6 @@ local _LAYER_SET = {}
 function _LAYER_SET:m_MonAct_get(a1, a2) end
 ---@return boolean
 function _LAYER_SET:IsActiveLayer() end
-
----@class (exact) _MASTERY_PARAM
----@field m_byRaceCode integer
----@field m_BaseCum _STAT_DB_BASE
----@field m_mtySuffer integer
----@field m_mtyShield integer
----@field m_mtyStaff integer
----@field m_mtySpecial integer
----@field m_MastUpData _mastery_up_data
----@field m_SkillUpData _skill_lv_up_data
----@field m_bUpdateEquipMast boolean
-local _MASTERY_PARAM = {}
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_dwSkillMasteryCum_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_dwSkillMasteryCum_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_dwForceLvCum_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_dwForceLvCum_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_mtyWp_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_mtyWp_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_lvSkill_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_lvSkill_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_mtySkill_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_mtySkill_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_mtyForce_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_mtyForce_set(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_mtyMakeItem_get(a1) end
----@param a1 integer
----@param a2 integer
-function _MASTERY_PARAM:m_mtyMakeItem_set(a1, a2) end
----@param a1 integer
----@param a2 integer
----@return integer
-function _MASTERY_PARAM:m_ppdwMasteryCumPtr_get(a1, a2) end
----@param a1 integer
----@param a2 integer
----@return integer
-function _MASTERY_PARAM:m_ppbyMasteryPtr_get(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:m_ppbyEquipMasteryPrt_get(a1) end
----@param a1 integer
----@param a2 integer
----@return integer
-function _MASTERY_PARAM:GetMasteryPerMast(a1, a2) end
----@param a1 integer
----@return integer
-function _MASTERY_PARAM:GetSkillLv(a1) end
----@param a1 integer
----@param a2 integer
----@return integer
-function _MASTERY_PARAM:GetCumPerMast(a1, a2) end
----@param a1 integer
----@param a2 integer
----@param a3 integer
-function _MASTERY_PARAM:UpdateCumPerMast(a1, a2, a3) end
 
 ---@class (exact) _QUEST_CASH
 ---@field dwAvatorSerial integer
@@ -2367,6 +2038,10 @@ function CGuild:m_IOMoneyHistory_get(i) end
 function CGuild:GetGuildMemberList() end
 ---@return table<integer, _guild_applier_info>
 function CGuild:GetGuildApplierList() end
+function CGuild:MakeDownMemberPacket() end
+---@param dwSerial integer
+---@return _guild_member_info
+function CGuild:GetMemberFromSerial(dwSerial) end
 
 ---@class (exact) CLootingMgr___list
 ---@field pAtter CPlayer
@@ -3134,6 +2809,101 @@ function CProtoDataObject:GetWritePacketSize() end
 ---@param pszID string
 function CProtoDataObject:Send(dwSocket, pszID) end
 
+---@class (exact) CandidateMgr
+---@field Instance fun(): CandidateMgr
+---@field _nMaxNum integer
+---@field _kSysLog CLogFile
+---@field _kVoteResultLog CLogFile
+local CandidateMgr = {}
+---@param byRace integer
+---@param dwIndex integer
+---@return _candidate_info
+function CandidateMgr:_kCandidate_get(byRace, dwIndex) end
+---@param byRace integer
+---@param dwIndex integer
+---@return _candidate_info
+function CandidateMgr:_kCandidate_old_get(byRace, dwIndex) end
+---@param byRace integer
+---@param dwIndex integer
+---@return _candidate_info
+function CandidateMgr:_kPatriarchGroup_get(byRace, dwIndex) end
+---@param byRace integer
+---@return integer
+function CandidateMgr:_nCandidateCnt_1st_get(byRace) end
+---@param byRace integer
+---@param dwIndex integer
+---@return _candidate_info
+function CandidateMgr:_pkCandidateLink_1st_get(byRace, dwIndex) end
+---@param byRace integer
+---@return integer
+function CandidateMgr:_nCandidateCnt_2st_get(byRace) end
+---@param byRace integer
+---@param dwIndex integer
+---@return _candidate_info
+function CandidateMgr:_pkCandidateLink_2st_get(byRace, dwIndex) end
+---@param byRace integer
+---@param dwSerial integer
+---@return boolean
+function CandidateMgr:IsRegistedAvator_1(byRace, dwSerial) end
+---@param byRace integer
+---@param param integer|string Serial or name
+---@return boolean
+function CandidateMgr:IsRegistedAvator_2(byRace, param) end
+---@param pPlayer CPlayer
+---@return boolean
+function CandidateMgr:Regist(pPlayer) end
+---@param pPlayer CPlayer
+---@param group CANDIDATE_CLASS
+---@return boolean
+function CandidateMgr:AppointPatriarchGroup(pPlayer, group) end
+---@param byRace integer
+---@param dwSerial integer
+---@return integer
+function CandidateMgr:GetWinCnt(byRace, dwSerial) end
+
+---@class (exact) PatriarchElectProcessor
+---@field Instance fun(): PatriarchElectProcessor
+---@field _eProcessType ELECT_PROCESSOR
+---@field _kRunningProcessor ElectProcessor
+---@field _bTimeCheck boolean
+---@field _bInitProce boolean
+---@field _dwNextCheckTime integer
+---@field _dwNextCheckDay integer
+---@field _dwNextScoreUpdateTime integer
+---@field _dwElectSerial integer
+---@field _dwCurrPatriarchElectSerial integer
+---@field _kSysLog CLogFile
+local PatriarchElectProcessor = {}
+---@param byRace integer
+---@return integer
+function PatriarchElectProcessor:m_dwNonvoteCnt_get(byRace) end
+---@param byRace integer
+---@param val integer
+---@return integer
+function PatriarchElectProcessor:m_dwNonvoteCnt_set(byRace, val) end
+---@param byRace integer
+---@return integer
+function PatriarchElectProcessor:m_dwTotalVoteCnt_get(byRace) end
+---@param byRace integer
+---@param val integer
+---@return integer
+function PatriarchElectProcessor:m_dwTotalVoteCnt_set(byRace, val) end
+---@param byRace integer
+---@return integer
+function PatriarchElectProcessor:m_dwHighGradeNum_get(byRace) end
+---@param byRace integer
+---@param val integer
+---@return integer
+function PatriarchElectProcessor:m_dwHighGradeNum_set(byRace, val) end
+---@param index ELECT_PROCESSOR
+---@return ElectProcessor
+function PatriarchElectProcessor:_kProcessor_get(index) end
+---@param cmd ELECT_PROC_CMD
+---@param pPlayer? CPlayer
+---@param pData? CBinaryData
+---@return integer
+function PatriarchElectProcessor:DoIt(cmd, pPlayer, pData) end
+
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4
 Sirin.CAssetController = CAssetController
@@ -3156,6 +2926,7 @@ Sirin.mainThread.modInfinitePotion = modInfinitePotion
 Sirin.mainThread.modRaceSexClassChange = modRaceSexClassChange
 Sirin.mainThread.modForceLogoutAfterUsePotion = modForceLogoutAfterUsePotion
 Sirin.mainThread.modRaceBossChipHolderBonus = modRaceBossChipHolderBonus
+Sirin.mainThread.modNetwork = modNetwork
 Sirin.mainThread.g_pAttack = CAttack
 Sirin.mainThread.g_HolySys = CHolyStoneSystem
 Sirin.mainThread.g_Main = CMainThread
@@ -3171,3 +2942,5 @@ Sirin.mainThread.CNuclearBombMgr = CNuclearBombMgr
 Sirin.mainThread._100_per_random_table = _100_per_random_table
 Sirin.mainThread.CGuildRoomSystem = CGuildRoomSystem
 Sirin.mainThread.CHonorGuild = CHonorGuild
+Sirin.mainThread.CandidateMgr = CandidateMgr
+Sirin.mainThread.PatriarchElectProcessor = PatriarchElectProcessor
