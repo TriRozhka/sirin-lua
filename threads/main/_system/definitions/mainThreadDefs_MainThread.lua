@@ -294,6 +294,7 @@ local console = {}
 ---@field CHonorGuild CHonorGuild
 ---@field CandidateMgr CandidateMgr
 ---@field PatriarchElectProcessor PatriarchElectProcessor
+---@field CWeeklyGuildRankManager CWeeklyGuildRankManager
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -2904,6 +2905,13 @@ function PatriarchElectProcessor:_kProcessor_get(index) end
 ---@return integer
 function PatriarchElectProcessor:DoIt(cmd, pPlayer, pData) end
 
+---@class (exact) CWeeklyGuildRankManager
+---@field Instance fun(): CWeeklyGuildRankManager
+---@field m_tNextUpdateTime integer
+---@field m_tNextSetOwnerTime integer
+---@field m_kInfo lightuserdata
+local CWeeklyGuildRankManager = {}
+
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4
 Sirin.CAssetController = CAssetController
@@ -2944,3 +2952,4 @@ Sirin.mainThread.CGuildRoomSystem = CGuildRoomSystem
 Sirin.mainThread.CHonorGuild = CHonorGuild
 Sirin.mainThread.CandidateMgr = CandidateMgr
 Sirin.mainThread.PatriarchElectProcessor = PatriarchElectProcessor
+Sirin.mainThread.CWeeklyGuildRankManager = CWeeklyGuildRankManager

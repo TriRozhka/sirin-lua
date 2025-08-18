@@ -351,3 +351,9 @@ local function registElection(pPlayer) end
 ---Hook positions: 'filter'
 ---@return boolean
 local function canAutoAddPatriarchGroup() return true end
+
+---Purpose: Honor guild set next complete notification.
+---Hook positions: 'after_event'
+---@param byErrCode integer
+---@param byRace integer
+local function HonorGuild_SetNextComplete(byErrCode, byRace) end
