@@ -1979,8 +1979,6 @@ local CExtPotionBuf = {}
 ---@field bPossibleElectMaster boolean
 ---@field wDataSize integer
 local _guild_member_download_zocl = {}
----@return table<integer, _guild_member_info>
-function _guild_member_download_zocl:GetGuildMemberList() end
 
 ---@class (exact) CGuild
 ---@field m_nIndex integer
@@ -2043,6 +2041,9 @@ function CGuild:MakeDownMemberPacket() end
 ---@param dwSerial integer
 ---@return _guild_member_info
 function CGuild:GetMemberFromSerial(dwSerial) end
+---@param byDowntype integer
+---@param pMember _guild_member_info
+function CGuild:SendMsg_DownPacket(byDowntype, pMember) end
 
 ---@class (exact) CLootingMgr___list
 ---@field pAtter CPlayer

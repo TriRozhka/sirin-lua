@@ -23,6 +23,25 @@ local function CPlayer__Guild_Insert_Complete(pGuild) end
 ---@return boolean
 local function CPlayer__pc_GuildJoinApplyRequest(pPlayer, pGuild) return true end
 
+---Purpose: Guild apply request result notification.
+---Hook positions: 'pre_event'.
+---@param pPlayer CPlayer
+---@param byErrCode integer
+---@param pApplyGuild CGuild
+local function CPlayer__SendMsg_GuildJoinApplyResult(pPlayer, byErrCode, pApplyGuild) end
+
+---Purpose: Make applier list packet.
+---Hook positions: 'original'.
+---@param pGuild CGuild
+---@param pData CBinaryData
+local function CGuild__MakeDownApplierPacket(pGuild, pData) end
+
+---Purpose: Send new applier data to guild senate.
+---Hook positions: 'original'.
+---@param pGuild CGuild
+---@param pApplierInfo _guild_applier_info
+local function CGuild__SendMsg_AddJoinApplier(pGuild, pApplierInfo) end
+
 ---Purpose: Guild join cancel notification.
 ---Hook positions: 'after_event'.
 ---@param pPlayer CPlayer
@@ -41,6 +60,13 @@ local function CPlayer__pc_GuildJoinAcceptRequest(pPlayer, dwApplierSerial, bAcc
 ---@param dwGuildSerial integer
 ---@param dwApplierSerial integer
 local function CPlayer__Guild_Join_Accept_Complete(dwGuildSerial, dwApplierSerial) end
+
+---Purpose: Guild join result members inform.
+---Hook positions: 'original'.
+---@param pGuild CGuild
+---@param pNewMember _guild_member_info
+---@param dwAcceptSerial integer
+local function CGuild__SendMsg_GuildJoinAcceptInform(pGuild, pNewMember, dwAcceptSerial) end
 
 ---Purpose: Filter guild self leave requests.
 ---Hook positions: 'filter'.
