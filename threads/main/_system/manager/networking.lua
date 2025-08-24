@@ -389,6 +389,11 @@ local protoTypes = {
 		{ 'u32', { true, { 'u32', 'b', 'u32', { false, { 's', 'u32' } }, { false, { 's', 'u32' } }, 'i32', 'i32', 'u32', 'f' } } },
 		{ 'ct', { true, { 'data', 'id', 'visible', 'type', { false, { 'text', 'str', 'color' } }, { false, { 'name', 'str', 'color' } }, 'x', 'y', 'flags', 'scale' } } },
 	},
+	["sirin.proto.upgradeRates"] = {
+		2048,
+		{ 'u32', 'f', { true, { 'u32', 'pu32' } } },
+		{ 'ct', 'noGemRate', { true, { 'SuccRates', 'id', 'data' } } },
+	},
 }
 
 ---Convert lua table to protobuf format

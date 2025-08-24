@@ -227,6 +227,11 @@ local function init()
 		t.default = "Skin"
 		assetTranslation:loadTranslationTable("guard.ui.tooltip.skin", t)
 	end
+	do
+		local t = {}
+		t.default = "Success rate: %.3f%%"
+		assetTranslation:loadTranslationTable("guard.ui.upgradeUI.succ_rate", t)
+	end
 end
 
 init()
