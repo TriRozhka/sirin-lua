@@ -372,7 +372,7 @@ local modBoxOpen = {}
 local modInfinitePotion = {}
 
 ---@class (exact) modRaceSexClassChange
----@field updateRaceSexClass fun(pPlayer: CPlayer, byNewRaceSex: integer, pszClassCode?: string): integer
+---@field updateRaceSexClass fun(pPlayer: CPlayer, byNewRaceSex: integer, pszClassCode?: string, bSkipForceReaverCheck?: boolean): integer
 ---@field updateBaseShape fun(pPlayer: CPlayer, dwBaseShape: integer): integer
 local modRaceSexClassChange = {}
 
