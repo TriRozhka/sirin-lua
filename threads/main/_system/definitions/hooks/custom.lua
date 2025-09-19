@@ -357,3 +357,14 @@ local function canAutoAddPatriarchGroup() return true end
 ---@param byErrCode integer
 ---@param byRace integer
 local function HonorGuild_SetNextComplete(byErrCode, byRace) end
+
+---Purpose: Exchange button result notification.
+---Hook positions: 'pre_event'
+---@param pPlayer CPlayer
+---@param byErrCode integer
+---@param wTmpManualIndex integer
+---@param dwFee integer
+---@param luaMats table<integer, _STORAGE_LIST___db_con>
+---@param pOverlapCon? _STORAGE_LIST___db_con
+---@param pNewItem? _STORAGE_LIST___db_con
+local function combineButtonResult(pPlayer, byErrCode, wTmpManualIndex, dwFee, luaMats, pOverlapCon, pNewItem) end
