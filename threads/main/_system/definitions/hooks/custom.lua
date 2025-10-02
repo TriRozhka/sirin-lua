@@ -368,3 +368,10 @@ local function HonorGuild_SetNextComplete(byErrCode, byRace) end
 ---@param pOverlapCon? _STORAGE_LIST___db_con
 ---@param pNewItem? _STORAGE_LIST___db_con
 local function combineButtonResult(pPlayer, byErrCode, wTmpManualIndex, dwFee, luaMats, pOverlapCon, pNewItem) end
+
+---Purpose: pre apply continuing effect hook. can change final buff time and level.
+---Hook positions: 'pre_event'
+---@param pPlayer CPlayer
+---@param pActPlayer CPlayer
+---@param pCont _sf_continous_ex
+local function PreContEffectInsert(pPlayer, pActPlayer, pCont) end

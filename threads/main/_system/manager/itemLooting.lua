@@ -27,7 +27,7 @@ local monsterLevelDiffRate = {
 }
 
 ---@enum LOOT_AUTH
-local LOOT_AUTH = {
+LOOT_AUTH = {
 	party = 1,
 	race = 2,
 	guild = 3,
@@ -38,9 +38,7 @@ local LOOT_AUTH = {
 }
 
 ---@type table<string, LOOT_AUTH>
-local eventMonsterList = {
-	-- ["00000"] = LOOT_AUTH.free_for_all,
-}
+local eventMonsterList = {} -- please, fill this table at the end of the file
 
 local eventLootCode = { 0, 1, 2, 6, 4, 5, 3 }
 
@@ -388,41 +386,42 @@ function sirinLootingMgr.onLoop()
 				dropNum = 25
 			end
 
-			if v.byEventLooting ~= 0 then
-				for ii = 1, dropNum do
-					local box = Sirin.mainThread.createItemBox(v[2].m_strCode, 0, 0, 0, 7, v.pMap, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3], v.pMonRecFld.m_bMonsterCondition ~= 0 and sirinLootingMgr.m_nBbossDropRange or 10, false, nil, false, nil, nil, 0, false)
+			local pBoxList = Sirin.mainThread.getEmptyItemBoxList(dropNum)
 
-					if box then
-						box.m_byEventLootAuth = eventLootCode[v.byEventLooting]
-						box.m_dwEventPartyBoss = v.dwPartyBossSerial
-						box.m_byEventRaceCode = v.byEventRace
-						box.m_dwEventGuildSerial = v.dwEventGuild
+			for _,b in pairs(pBoxList) do
+				local lootItem = v.lootTable[v.dwNextDropIndex]
+
+				if lootItem then
+					if sirinLootingMgr.m_bDebugLog then
+						local emsg = string.format("Loot Drop (%d) id: '%s'; map: %s; layer: %d; pos(%.2f, %.2f, %.2f)", v.dwNextDropIndex, lootItem[2].m_strCode, v.pMap.m_pMapSet.m_strCode, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3])
+						print(emsg)
 					end
-				end
-			else
-				local pBoxList = Sirin.mainThread.getEmptyItemBoxList(dropNum)
 
-				for _,b in pairs(pBoxList) do
-					local lootItem = v.lootTable[v.dwNextDropIndex]
+					b.m_bBossMob = v.pMonRecFld and v.pMonRecFld.m_bMonsterCondition == 1 or false
 
-					if lootItem then
-						if sirinLootingMgr.m_bDebugLog then
-							local emsg = string.format("Loot Drop (%d). id: map: %s layer: %d pos(%.2f, %.2f, %.2f)", v.dwNextDropIndex, v.pMap.m_pMapSet.m_strCode, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3])
+					if v.byEventLooting ~= 0 then
+						if not Sirin.mainThread.createItemBox_Monster(b, lootItem[1], lootItem[2], 0, 7, v.pMap, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3], sirinLootingMgr.m_nBbossDropRange, false, 0xFFFFFFFF, 0, 0, 0, v.pMonRecFld) then
+							local emsg = string.format("Error. box = null. Loot Drop (%d) id: '%s'; map: %s layer: %d pos(%.2f, %.2f, %.2f)", v.dwNextDropIndex, lootItem[2].m_strCode, v.pMap.m_pMapSet.m_strCode, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3])
 							print(emsg)
+							break
 						end
 
-						b.m_bBossMob = v.pMonRecFld and v.pMonRecFld.m_bMonsterCondition == 1 or false
-
+						b.m_byEventLootAuth = eventLootCode[v.byEventLooting]
+						b.m_dwEventPartyBoss = v.dwPartyBossSerial
+						b.m_byEventRaceCode = v.byEventRace
+						b.m_dwEventGuildSerial = v.dwEventGuild
+					else
 						if not Sirin.mainThread.createItemBox_Monster(b, lootItem[1], lootItem[2], 0, 0, v.pMap, v.wLayerIndex, v.pos[1], v.pos[2], v.pos[3], sirinLootingMgr.m_nBbossDropRange, false, v.dwOwnerObjSerial, v.wOwnerObjIndex, v.dwThrowerObjSerial, v.wThrowerObjIndex, v.pMonRecFld) then
 							break
 						end
 
-						b.m_byThrowerID = ID_CHAR.monster
 						b.m_dwPartyBossSerial = v.dwPartyBossSerial
 						b.m_bPartyShare = v.bPartyShare
-						b.m_bCompDgr = v.byOwnerUserDgr ~= 0
-						v.dwNextDropIndex = v.dwNextDropIndex + 1
 					end
+
+					b.m_byThrowerID = ID_CHAR.monster
+					b.m_bCompDgr = v.byOwnerUserDgr ~= 0
+					v.dwNextDropIndex = v.dwNextDropIndex + 1
 				end
 			end
 
@@ -731,5 +730,10 @@ local SirinLootRecord = {}
 ---@field byEventRace integer
 ---@field dwEventGuild integer
 local SirinDelayedLootRecord = {}
+
+-- fill this table
+eventMonsterList = {
+	-- ["00000"] = LOOT_AUTH.free_for_all,
+}
 
 return sirinLootingMgr

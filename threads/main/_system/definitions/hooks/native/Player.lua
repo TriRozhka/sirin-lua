@@ -276,3 +276,11 @@ local function AutominePersonal__GetDefFacing(pAMP, nPart) return 0.5 end
 ---@return integer #Err code
 ---@return integer #Def point
 local function AutominePersonal__GetDefFC(pAMP, nAttactPart, pAttackerChar) return 0, 0 end
+
+---Purpose: Unit repair rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param bySlotIndex integer
+---@param bUseNPCLinkIntem boolean
+---@param bUnitRepairOut boolean
+local function CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex, bUseNPCLinkIntem, bUnitRepairOut) end

@@ -497,6 +497,13 @@ function CCharacter:FindEffectDst(nEffectCode, nAreaType, nLv, bBenefit, pOriDst
 ---@param pDst CCharacter
 ---@return boolean
 function CCharacter:IsEffectableDst(strActableDst, pDst) end
+---@param nAttPnt integer
+---@param nAttPart integer
+---@param nTolType integer
+---@param pDst CCharacter
+---@param bBackAttack boolean
+---@return integer
+function CCharacter:GetAttackDamPoint(nAttPnt, nAttPart, nTolType, pDst, bBackAttack) end
 
 ---@class (exact) AutominePersonal: CCharacter
 ---@field m_bDBLoad boolean

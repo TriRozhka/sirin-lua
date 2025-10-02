@@ -563,6 +563,11 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 			break
 		end
 
+		if self.m_pAttChar.m_pCurMap ~= pDst.m_pCurMap then
+			Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("FlashDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
+			break
+		end
+
 		if self.m_pp.bMatchless then
 			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
 			self.m_nDamagedObjNum = 1
@@ -574,11 +579,6 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 		local secIndex = pDst:GetCurSecNum()
 
 		if secIndex == 0xFFFFFFFF then
-			break
-		end
-
-		if self.m_pAttChar.m_pCurMap ~= pDst then
-			Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("FlashDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
 			break
 		end
 
@@ -627,7 +627,7 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() ~= pTestTar:GetObjRace()
+				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 
 				if not bSameRace then
 					bValid = true
@@ -716,7 +716,7 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 						if self.m_pp.bMatchless then
 							table.insert(self.m_DamList, Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = pTestTar:GetHP() })
 						else
-							local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(pTestTar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, self.m_pp.pDst, false) }
+							local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, pTestTar, false) }
 
 							if dam_obj.m_nDamage ~= -2 then
 								dam_obj.m_nDamage = math.floor(dam_obj.m_nDamage * (nLimDist - dist) / nLimDist)
@@ -769,26 +769,32 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 	repeat
 		local pDst = self.m_pp.pDst
 
-		if not pDst then
-			break
+		if pDst then
+			if self.m_pAttChar.m_pCurMap ~= pDst.m_pCurMap then
+				Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("AreaDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
+				break
+			end
+
+			if not IsSameObject(pDst, self.m_pAttChar) then
+				if self.m_pp.bMatchless then
+					self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
+					self.m_nDamagedObjNum = 1
+				else
+					self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and nEffAttPower or nAttPower, self.m_pp.nPart, self.m_pp.nTol, self.m_pp.pDst, self.m_pp.bBackAttack) }
+					self.m_nDamagedObjNum = 1
+				end
+			end
 		end
 
-		if self.m_pp.bMatchless then
-			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
-			self.m_nDamagedObjNum = 1
+		local secIndex = 0xFFFFFFFF
+
+		if pDst then
+			secIndex = pDst:GetCurSecNum()
 		else
-			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and nEffAttPower or nAttPower, self.m_pp.nPart, self.m_pp.nTol, self.m_pp.pDst, self.m_pp.bBackAttack) }
-			self.m_nDamagedObjNum = 1
+			secIndex = self.m_pAttChar.m_pCurMap:GetSectorIndex(x, z)
 		end
-
-		local secIndex = pDst:GetCurSecNum()
 
 		if secIndex == 0xFFFFFFFF then
-			break
-		end
-
-		if self.m_pAttChar.m_pCurMap ~= pDst then
-			Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("AreaDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
 			break
 		end
 
@@ -802,7 +808,7 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					break
 				end
 
-				if IsSameObject(pTestTar, pDst) then
+				if pDst and IsSameObject(pTestTar, pDst) then
 					break
 				end
 
@@ -837,7 +843,7 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() ~= pTestTar:GetObjRace()
+				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 
 				if not bSameRace then
 					bValid = true
@@ -925,7 +931,7 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					if self.m_pp.bMatchless then
 						table.insert(self.m_DamList, Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = pTestTar:GetHP() })
 					else
-						local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(pTestTar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, self.m_pp.pDst, false) }
+						local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, pTestTar, false) }
 
 						if dam_obj.m_nDamage ~= -2 then
 							dam_obj.m_nDamage = math.floor(dam_obj.m_nDamage * (nLimitRadius - dist) / nLimitRadius)
@@ -943,7 +949,7 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 			return self.m_nDamagedObjNum < 30
 		end
 
-		local nearPlyers = pDst.m_pCurMap:GetPlayerListInRadius(pDst.m_wMapLayerIndex, secIndex, 1)
+		local nearPlyers = self.m_pAttChar.m_pCurMap:GetPlayerListInRadius(self.m_pAttChar.m_wMapLayerIndex, secIndex, 1)
 
 		for _,p in ipairs(nearPlyers) do
 			if not targetHandler(p) then
@@ -955,7 +961,7 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 			break
 		end
 
-		local nearCharacters = pDst.m_pCurMap:GetObjectListInRadius(pDst.m_wMapLayerIndex, secIndex, 1, 2298) -- 2298 is a bitmask for no player damageable objects
+		local nearCharacters = self.m_pAttChar.m_pCurMap:GetObjectListInRadius(self.m_pAttChar.m_wMapLayerIndex, secIndex, 1, 2298) -- 2298 is a bitmask for no player damageable objects
 
 		for _,p in ipairs(nearCharacters) do
 			if not targetHandler(objectToCharacter(p)) then
@@ -983,6 +989,11 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 			break
 		end
 
+		if self.m_pAttChar.m_pCurMap ~= pDst.m_pCurMap then
+			Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("SectorDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
+			break
+		end
+
 		if self.m_pp.bMatchless then
 			self.m_DamList[1] = Sirin_be_damaged_char:new{ m_pChar = pDst, m_nDamage = pDst:GetHP() }
 			self.m_nDamagedObjNum = 1
@@ -998,11 +1009,6 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 		end
 
 		if nShotNum <= 1 then
-			break
-		end
-
-		if self.m_pAttChar.m_pCurMap ~= pDst then
-			Sirin.mainThread.g_Main.m_logSystemError:Write(string.format("SectorDamage Error AttackTarget Map : Attack Obj( %s : %s ) Dst Obj( %s : %s )", self.m_pAttChar:GetObjName(), self.m_pAttChar.m_pCurMap.m_pMapSet.m_strCode, self.m_pp.pDst:GetObjName(), self.m_pp.pDst.m_pCurMap.m_pMapSet.m_strCode))
 			break
 		end
 
@@ -1051,7 +1057,7 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() ~= pTestTar:GetObjRace()
+				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 
 				if not bSameRace then
 					bValid = true
@@ -1141,7 +1147,7 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 						if self.m_pp.bMatchless then
 							table.insert(self.m_DamList, Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = pTestTar:GetHP() })
 						else
-							local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(pTestTar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, self.m_pp.pDst, false) }
+							local dam_obj = Sirin_be_damaged_char:new{ m_pChar = pTestTar, m_nDamage = CharacterMgr.GetAttackDamPoint(self.m_pAttChar, bUseEffBullet and nEffAttPower or nAttPower, CharacterMgr.GetAttackRandomPart(pTestTar), self.m_pp.nTol, pTestTar, false) }
 
 							if dam_obj.m_nDamage ~= -2 then
 								dam_obj.m_nDamage = math.floor(dam_obj.m_nDamage * (nWeaponRange - dist) / nWeaponRange)

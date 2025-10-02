@@ -260,6 +260,9 @@ local console = {}
 ---@field CloseConnect fun(dwSocket: integer, strReason?: string)
 ---@field electProcessorToVoter fun(electProc: ElectProcessor): Voter
 ---@field electProcessorToCandidateRegister fun(electProc: ElectProcessor): CandidateRegister
+---@field eGetTex fun(byRace): number
+---@field eGetTexRate fun(byRace): integer
+---@field eGetOreRate fun(byRace): number
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -2905,6 +2908,10 @@ function PatriarchElectProcessor:_kProcessor_get(index) end
 ---@param pData? CBinaryData
 ---@return integer
 function PatriarchElectProcessor:DoIt(cmd, pPlayer, pData) end
+---@param pPlayer CPlayer
+---@param byClass integer
+---@return boolean
+function PatriarchElectProcessor:CheatSetPatriarch(pPlayer, byClass) end
 
 ---@class (exact) CWeeklyGuildRankManager
 ---@field Instance fun(): CWeeklyGuildRankManager
