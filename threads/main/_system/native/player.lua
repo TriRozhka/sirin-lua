@@ -2614,17 +2614,13 @@ function sirinPlayerMgr.CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex,
 	local byFrame = pData.byFrame
 	local dwNewGauge = 0
 	local dwRepPrice = 0
+	local dwRepairValue = 0
 
 	if not pPlayer.m_pUserDB then
 		return
 	end
 
 	repeat
-		if bUnitRepairOut then
-			byErrCode = 43
-			break
-		end
-
 		if pPlayer:GetObjRace() ~= 0 then
 			byErrCode = 1
 			break
@@ -2660,7 +2656,7 @@ function sirinPlayerMgr.CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex,
 		end
 
 		dwNewGauge = pFrameFld.m_nUnit_HP
-		local dwRepairValue = dwNewGauge - pData.dwGauge
+		dwRepairValue = dwNewGauge - pData.dwGauge
 
 		if dwRepairValue <= 0 then
 			byErrCode = 14
@@ -2685,6 +2681,11 @@ function sirinPlayerMgr.CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex,
 		end
 
 		dwRepPrice = math.floor(dwDesRepPrice + dwRepPrice * dwRepairValue * pPlayer.m_fUnitPv_RepPr)
+
+		if bUnitRepairOut then
+			byErrCode = 43
+			break
+		end
 
 		if pPlayer.m_Param:GetDalant() < dwRepPrice then
 			byErrCode = 7
@@ -2713,6 +2714,7 @@ function sirinPlayerMgr.CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex,
 		char bySlotIndex;
 		unsigned int dwNewGauge;
 		unsigned int dwConsumDalant;
+		unsigned char by2ndValue; // AoP only. Value in braces of repair result window.
 		unsigned int dwLeftDalant;
 	};
 	--]]
@@ -2723,6 +2725,11 @@ function sirinPlayerMgr.CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex,
 	buf:PushUInt8(bySlotIndex)
 	buf:PushUInt32(dwNewGauge)
 	buf:PushUInt32(dwRepPrice)
+
+	if SERVER_AOP then
+		buf:PushUInt8(math.floor(dwRepairValue / dwNewGauge * 100))
+	end
+
 	buf:PushUInt32(pPlayer.m_Param:GetDalant())
 	buf:SendBuffer(pPlayer, 23, 8)
 	--

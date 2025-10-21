@@ -90,6 +90,42 @@ local function AutominePersonal__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAtt
 ---@param pDier CCharacter
 local function CPlayer__RecvKillMessage(pPlayer, pDier) end
 
+---Purpose: Kill notification to animus.
+---Hook positions: 'after_event'.
+---@param pAnimus CAnimus
+---@param pDier CCharacter
+local function CAnimus__RecvKillMessage(pAnimus, pDier) end
+
+---Purpose: Kill notification to trap.
+---Hook positions: 'after_event'.
+---@param pTrap CTrap
+---@param pDier CCharacter
+local function CTrap__RecvKillMessage(pTrap, pDier) end
+
+---Purpose: Kill notification to tower.
+---Hook positions: 'after_event'.
+---@param pTower CGuardTower
+---@param pDier CCharacter
+local function CGuardTower__RecvKillMessage(pTower, pDier) end
+
+---Purpose: Kill notification to nuclear bomb.
+---Hook positions: 'after_event'.
+---@param pBomb CNuclearBomb
+---@param pDier CCharacter
+local function CNuclearBomb__RecvKillMessage(pBomb, pDier) end
+
+---Purpose: Kill notification to keeper.
+---Hook positions: 'after_event'.
+---@param pKeeper CHolyKeeper
+---@param pDier CCharacter
+local function CHolyKeeper__RecvKillMessage(pKeeper, pDier) end
+
+---Purpose: Kill notification to monster.
+---Hook positions: 'after_event'.
+---@param pMonster CMonster
+---@param pDier CCharacter
+local function CMonster__RecvKillMessage(pMonster, pDier) end
+
 ---Purpose: Animus attack process.
 ---Hook positions: 'original'.
 ---@param pAnimus CAnimus

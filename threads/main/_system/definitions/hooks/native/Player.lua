@@ -282,5 +282,23 @@ local function AutominePersonal__GetDefFC(pAMP, nAttactPart, pAttackerChar) retu
 ---@param pPlayer CPlayer
 ---@param bySlotIndex integer
 ---@param bUseNPCLinkIntem boolean
----@param bUnitRepairOut boolean
+---@param bUnitRepairOut boolean AoP only
 local function CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex, bUseNPCLinkIntem, bUnitRepairOut) end
+
+---Purpose: Teleport potion filter.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param pDstObj CCharacter
+---@param bStone boolean
+---@return boolean
+local function CPlayer__SF_TeleportToDestination(pPlayer, pDstObj, bStone) return true end
+
+---Purpose: Map teleport filter.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param nPortalIndex integer
+---@param pConsumeSerial_1 integer
+---@param pConsumeSerial_2 integer
+---@param pConsumeSerial_3 integer
+---@return boolean
+local function CPlayer__pc_MovePortal(pPlayer, nPortalIndex, pConsumeSerial_1, pConsumeSerial_2, pConsumeSerial_3) return true end
