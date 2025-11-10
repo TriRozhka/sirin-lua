@@ -202,6 +202,14 @@ local function CPvpOrderView__Update_PvpTempCash(pOrderView, wIndex, dTempPvpCas
 ---@param IOCode PVP_MONEY_ALTER_TYPE
 local function CPlayer__AlterPvPCashBag(pPlayer, dAlter, IOCode) end
 
+---Purpose: Fixed PvP Cash point change on login notification.
+---Hook positions: 'after_event'
+---@param pOrderView CPvpOrderView
+---@param dPvpPoint number
+---@param pkInfo _PVP_ORDER_VIEW_DB_BASE
+---@param pPlayer CPlayer
+local function CPvpOrderView__SetPvpOrderView(pOrderView, dPvpPoint, pkInfo, pPlayer) end
+
 ---Purpose: Overrides HQ map
 ---Hook positions: 'original'
 ---@param pMapOper CMapOperation
@@ -284,6 +292,41 @@ local function AutominePersonal__GetDefFC(pAMP, nAttactPart, pAttackerChar) retu
 ---@param bUseNPCLinkIntem boolean
 ---@param bUnitRepairOut boolean AoP only
 local function CPlayer__pc_UnitFrameRepairRequest(pPlayer, bySlotIndex, bUseNPCLinkIntem, bUnitRepairOut) end
+
+---Purpose: Unit purchase rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param byFrameCode integer
+---@param bUseNPCLinkIntem boolean
+local function CPlayer__pc_UnitFrameBuyRequest(pPlayer, byFrameCode, bUseNPCLinkIntem) end
+
+---Purpose: Unit sell rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param bySlotIndex integer
+---@param bUseNPCLinkIntem boolean
+local function CPlayer__pc_UnitSellRequest(pPlayer, bySlotIndex, bUseNPCLinkIntem) end
+
+---Purpose: Unit part tuning rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param pMsg _unit_part_tuning_request_clzo
+---@param bUseNPCLinkIntem boolean
+local function CPlayer__pc_UnitPartTuningRequest(pPlayer, pMsg, bUseNPCLinkIntem) end
+
+---Purpose: Unit main ammo fill rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param pMsg _unit_bullet_fill_request_clzo
+---@param bUseNPCLinkIntem boolean
+local function CPlayer__pc_UnitBulletFillRequest(pPlayer, pMsg, bUseNPCLinkIntem) end
+
+---Purpose: Unit spare ammo fill rutine.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param pMsg _unit_pack_fill_request_clzo
+---@param bUseNPCLinkIntem boolean
+local function CPlayer__pc_UnitPackFillRequest(pPlayer, pMsg, bUseNPCLinkIntem) end
 
 ---Purpose: Teleport potion filter.
 ---Hook positions: 'filter'

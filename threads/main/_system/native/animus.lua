@@ -160,7 +160,7 @@ function sirinAnimusMgr.IsValidTarget(pAnimus)
 	local pTarget = pAnimus.m_pTarget
 
 	repeat
-		if not pTarget then
+		if not pTarget or not pAnimus.m_pMaster then
 			break
 		end
 
@@ -168,18 +168,44 @@ function sirinAnimusMgr.IsValidTarget(pAnimus)
 			break
 		end
 
+		if pTarget.m_pCurMap ~= pAnimus.m_pCurMap then
+			break
+		end
+
+		if pTarget.m_wMapLayerIndex ~= pAnimus.m_wMapLayerIndex then
+			break
+		end
+
+		if pTarget.m_dwCurSec == 0xFFFFFFFF or pAnimus.m_dwCurSec == 0xFFFFFFFF then
+			break
+		end
+
+		if pTarget.m_ObjID.m_byID == ID_CHAR.player then
+			local pTarPlayer = objectToPlayer(pTarget)
+
+			if pTarPlayer:GetObjRace() == pAnimus:GetObjRace() and not pTarPlayer:IsPunished(1, false) and not pAnimus.m_pMaster:IsChaosMode() then
+				break
+			end
+		else
+			if pTarget:GetObjRace() == pAnimus:GetObjRace() then
+				break
+			end
+		end
+
 		if not pTarget:IsBeAttackedAble(true) then
 			break
 		end
 
-		if pAnimus.m_byRoleCode ~= 3 then
+		if pAnimus.m_byRoleCode == 3 then
+			if not IsSameObject(pTarget, pAnimus.m_pMaster) then
+				break
+			end
+		else
 			if pTarget.m_bObserver then
 				break
 			end
 
-			local pCharTraget = objectToCharacter(pTarget)
-
-			if pCharTraget:GetStealth(true) then
+			if pTarget:GetStealth(true) then
 				break
 			end
 
@@ -260,11 +286,6 @@ function sirinAnimusMgr.Attack(pAnimus, nSkill)
 		local nRet = pAnimus.m_pCurMap.m_Level.mBsp:CanYouGoThere(pAnimus.m_fCurPos_x, pAnimus.m_fCurPos_y, pAnimus.m_fCurPos_z, pTarget.m_fCurPos_x, pTarget.m_fCurPos_y, pTarget.m_fCurPos_z)
 
 		if nRet == 0 then
-			break
-		end
-
-		-- added in AoP
-		if pAnimus.m_pMaster and not pAnimus.m_pMaster:IsChaosMode() and pAnimus.m_pMaster:GetObjRace() == pTarget:GetObjRace() then
 			break
 		end
 

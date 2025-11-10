@@ -28,6 +28,8 @@ SERVER_2232 = false
 ---@field getFileList fun(strFolderPath: string): table<integer, string>
 ---@field CBinaryData fun(size: integer): CBinaryData
 ---@field CSQLResultSet fun(size: integer): CSQLResultSet
+---@field ShutdownServer fun()
+---@field SetLoginOpen fun(bOpen: boolean)
 Sirin = {}
 
 ---@class (exact) NATS

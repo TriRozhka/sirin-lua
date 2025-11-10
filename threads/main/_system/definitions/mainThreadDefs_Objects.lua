@@ -1427,6 +1427,16 @@ function CPlayer:SetFP(nValue, bOver) end
 ---@return boolean
 function CPlayer:SetSP(nValue, bOver) end
 function CPlayer:SenseState() end
+---@param dwAdd integer
+---@param bPenalty boolean
+function CPlayer:AddDalant(dwAdd, bPenalty) end
+---@param dwAdd integer
+---@param bPenalty boolean
+function CPlayer:AddGold(dwAdd, bPenalty) end
+---@param dwSub integer
+function CPlayer:SubDalant(dwSub) end
+---@param dwSub integer
+function CPlayer:SubGold(dwSub) end
 
 ---@class (exact) _trap_create_setdata : _character_create_setdata
 ---@field nHP integer

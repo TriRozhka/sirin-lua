@@ -30,6 +30,8 @@ SERVER_2232 = false
 ---@field CSQLResultSet fun(size: integer): CSQLResultSet
 ---@field CMultiBinaryData fun(): CMultiBinaryData
 ---@field CMultiSQLResultSet fun(): CMultiSQLResultSet
+---@field ShutdownServer fun()
+---@field SetLoginOpen fun(bOpen: boolean)
 Sirin = {}
 
 ---@class (exact) NATS
@@ -263,6 +265,7 @@ local console = {}
 ---@field eGetTex fun(byRace): number
 ---@field eGetTexRate fun(byRace): integer
 ---@field eGetOreRate fun(byRace): number
+---@field cloneQuestResult fun(): _quest_check_result
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -756,6 +759,7 @@ function CMainThread:m_dwGuildPower_get(a1) end
 ---@param a1 integer
 ---@param a2 integer
 function CMainThread:m_dwGuildPower_set(a1, a2) end
+function CMainThread:gm_ServerClose() end
 
 ---@class (exact) CMapOperation
 local CMapOperation = {}
@@ -1154,6 +1158,17 @@ function CUserDB:Update_ExtTrunkSlotNum(bySlotNum) end
 function CUserDB:ForceCloseCommand(byKickType, dwPushIP, bSlow, pszReason) end
 ---@return boolean
 function CUserDB:Lobby_Char_Request() end
+---@param bySlotIndex integer
+---@param pSlotData _UNIT_DB_BASE___LIST
+---@return boolean
+function CUserDB:Update_UnitInsert(bySlotIndex, pSlotData) end
+---@param bySlotIndex integer
+---@return boolean
+function CUserDB:Update_UnitDelete(bySlotIndex) end
+---@param bySlotIndex integer
+---@param pSlotData _UNIT_DB_BASE___LIST
+---@return boolean
+function CUserDB:Update_UnitData(bySlotIndex, pSlotData) end
 
 ---@class (exact) EffectData
 ---@field nEffCode integer
@@ -2919,6 +2934,45 @@ function PatriarchElectProcessor:CheatSetPatriarch(pPlayer, byClass) end
 ---@field m_tNextSetOwnerTime integer
 ---@field m_kInfo lightuserdata
 local CWeeklyGuildRankManager = {}
+
+---@class (exact) _tuning_data
+---@field byPartCode integer
+---@field byPartIndex integer
+local _tuning_data = {}
+
+---@class (exact) _unit_part_tuning_request_clzo
+---@field bySlotIndex integer
+---@field byTuningNum integer
+---@field nUseNPCLinkIntem integer
+local _unit_part_tuning_request_clzo = {}
+---@param index integer
+---@return _tuning_data
+function _unit_part_tuning_request_clzo:TuningList_get(index) end
+
+---@class (exact) _unit_bullet_fill_request_clzo
+---@field bySlotIndex integer
+---@field nUseNPCLinkIntem integer
+local _unit_bullet_fill_request_clzo = {}
+---@param index integer
+---@return integer
+function _unit_bullet_fill_request_clzo:wBulletIndex_get(index) end
+---@param index integer
+---@param val integer
+function _unit_bullet_fill_request_clzo:wBulletIndex_set(index, val) end
+
+---@class (exact) _unit_pack_fill_request_clzo____list
+---@field bySpareIndex integer
+---@field wBulletIndex integer
+local _unit_pack_fill_request_clzo____list = {}
+
+---@class (exact) _unit_pack_fill_request_clzo
+---@field bySlotIndex integer
+---@field byFillNum integer
+---@field nUseNPCLinkIntem integer
+local _unit_pack_fill_request_clzo = {}
+---@param index integer
+---@return _unit_pack_fill_request_clzo____list
+function _unit_pack_fill_request_clzo:List_get(index) end
 
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4

@@ -20,6 +20,12 @@ local function CAnimus__AlterExp(pAnimus, nAddExp)
 	return nAddExp
 end
 
+---Purpose: Validation of animus target.
+---Hook positions: 'original'
+---@param pAnimus CAnimus
+---@return boolean
+local function CAnimus__IsValidTarget(pAnimus) return false end
+
 ---Purpose: DefGap script value return.
 ---Hook positions: 'original'
 ---@param pAnimus CAnimus
