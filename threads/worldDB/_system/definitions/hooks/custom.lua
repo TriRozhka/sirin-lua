@@ -22,8 +22,9 @@ local function SirinWorldDB_PlayerDelete(dwAvatorSerial) end
 ---Purpose: Post load avator routine notification.
 ---Hook positions: 'after_event'
 ---@param dwAvatorSerial integer
+---@param dwAccountSerial integer
 ---@param multiSQLResultSet CMultiSQLResultSet
-local function SirinWorldDB_PlayerLoad(dwAvatorSerial, multiSQLResultSet) end
+local function SirinWorldDB_PlayerLoad(dwAvatorSerial, dwAccountSerial, multiSQLResultSet) end
 
 ---Purpose: Post logout avator routine notification.
 ---Hook positions: 'after_event'

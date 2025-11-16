@@ -2136,13 +2136,13 @@ function sirinDummyRift:GetOpenLast()
 
 					if diff < 0 then
 						u = u - (7 + diff) * 24 * 60 * 60
-					end
-
-					if diff > 0 then
+					elseif diff > 0 then
 						u = u - diff * 24 * 60 * 60
+					elseif u > tCurTime then
+						u = u - 7 * 24 * 60 * 60
 					end
 
-					if u > tPrevOpenTime and u <= tCurTime then
+					if u > tPrevOpenTime then
 						tPrevOpenTime = u
 					end
 				end

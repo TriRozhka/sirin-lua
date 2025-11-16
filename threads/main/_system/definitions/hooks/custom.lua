@@ -126,8 +126,9 @@ local function CDummyRift__SendMsg_MovePortal(pRift, pPlayer) end
 ---@param strParam string
 ---@param nAlterValue integer
 ---@param dwCashLeft integer
+---@param dwAccountSerial integer
 ---@param pPlayer? CPlayer
-local function AlterCashComplete(dwRetCode, strParam, nAlterValue, dwCashLeft, pPlayer) end
+local function AlterCashComplete(dwRetCode, strParam, nAlterValue, dwCashLeft, dwAccountSerial, pPlayer) end
 
 ---Purpose: buff/debuff effect insert notification.
 ---Hook positions: 'after_event'

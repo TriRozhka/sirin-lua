@@ -59,6 +59,11 @@ local function init()
 	end
 	do
 		local t = {}
+		t.default = "%d Cash consumed"
+		assetTranslation:loadTranslationTable("guard.msg.item_sub.cash_coin", t)
+	end
+	do
+		local t = {}
 		t.default = "%s of Premium service obtained"
 		assetTranslation:loadTranslationTable("guard.msg.item_add.premium", t)
 	end
