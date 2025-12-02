@@ -17,6 +17,7 @@ local sendBuf = Sirin.mainThread.CLuaSendBuffer.Instance()
 ---@field m_bTowerSelfDefense boolean
 ---@field m_strUUID string
 ---@field initHooks fun()
+---@field IsValidTarget fun(pTower: CGuardTower): boolean
 ---@field testTowerTarget fun(pTower: CGuardTower, pTarget: CCharacter): boolean
 ---@field searchNearEnemy fun(pTower:CGuardTower): CCharacter?
 ---@field make_tower_attack_param fun(pTower: CGuardTower, pDst: CCharacter): sirinCAttack
@@ -25,18 +26,19 @@ local sirinTowerMgr = {
 	m_bSystemTowerAssist = true,
 	m_bPlayerTowerAssist = false,
 	m_bTowerSelfDefense = true,
+	m_bMasterDefense = true,
 	m_strUUID = 'sirin.lua.sirinTowerMgr',
 }
 
 function sirinTowerMgr.initHooks()
-	SirinLua.HookMgr.addHook("CGuardTower__SearchNearEnemy", HOOK_POS.original, sirinTowerMgr.m_strUUID,
-		---@param pTower CGuardTower
-		---@return CCharacter?
-		function (pTower) return sirinTowerMgr.searchNearEnemy(pTower) end)
-	SirinLua.HookMgr.addHook("CGuardTower__IsValidTarget", HOOK_POS.original, sirinTowerMgr.m_strUUID,
-		---@param pTower CGuardTower
-		---@return boolean
-		function (pTower) return sirinTowerMgr.testTowerTarget(pTower, pTower.m_pTarget) end)
+	SirinLua.HookMgr.addHook("CGuardTower__SearchNearEnemy", HOOK_POS.original, sirinTowerMgr.m_strUUID, sirinTowerMgr.searchNearEnemy)
+	SirinLua.HookMgr.addHook("CGuardTower__IsValidTarget", HOOK_POS.original, sirinTowerMgr.m_strUUID, sirinTowerMgr.IsValidTarget)
+end
+
+---@param pTower CGuardTower
+---@return boolean
+function sirinTowerMgr.IsValidTarget(pTower)
+	return sirinTowerMgr.testTowerTarget(pTower, pTower.m_pTarget)
 end
 
 ---@param pTower CGuardTower
@@ -113,8 +115,6 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 			break -- towers not deal damage to stones
 		end
 
-		local bSameRace = pTower:GetObjRace() == pTarget:GetObjRace()
-
 		if pTower.m_pMasterTwr then -- we are non system tower
 			if pTower.m_pMasterTwr.m_bInGuildBattle then -- we are in guild battle
 				if not pTarPlayer or not pTarPlayer.m_bInGuildBattle or pTower.m_pMasterTwr.m_byGuildBattleColorInx == pTarPlayer.m_byGuildBattleColorInx then
@@ -125,41 +125,15 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 					break -- we not allwed to touch objects in guild battle
 				end
 
+				local bSameRace = pTower:GetObjRace() == pTarget:GetObjRace()
+
 				if pTarPlayer and bSameRace and not pTarPlayer:IsPunished(1, false) and not pTower.m_pMasterTwr:IsChaosMode() then
 					break -- not allowed to attack player related objects of same race if not have conditions
-				end
-			end
-
-			if sirinTowerMgr.m_bPlayerTowerAssist and pTarget.m_ObjID.m_byID == ID_CHAR.monster then
-				local pMonTar = objectToMonster(pTarget).m_pTargetChar
-
-				if not pMonTar or not pMonTar.m_bLive or pMonTar.m_bCorpse then
-					break -- not allow attack monster with no target
-				end
-
-				if pMonTar and pMonTar:GetObjRace() ~= pTower:GetObjRace() then
-					break -- system towers not attack monsters who attack enemy race
 				end
 			end
 		else -- we are system tower
 			if pTarPlayer and pTarPlayer.m_bInGuildBattle then
 				break -- we not allwed to touch objects in guild battle
-			end
-
-			if bSameRace then
-				break -- not allowed attack same race to system towers
-			end
-
-			if sirinTowerMgr.m_bSystemTowerAssist and pTarget.m_ObjID.m_byID == ID_CHAR.monster then
-				local pMonTar = objectToMonster(pTarget).m_pTargetChar
-
-				if not pMonTar or not pMonTar.m_bLive or pMonTar.m_bCorpse then
-					break -- not allow attack monster with no target
-				end
-
-				if pMonTar and pMonTar:GetObjRace() ~= pTower:GetObjRace() then
-					break -- system towers not attack monsters who attack enemy race
-				end
 			end
 		end
 
@@ -233,8 +207,13 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 				elseif idChar == ID_CHAR.monster then
 					local pMonTar = objectToMonster(pTestObj).m_pTargetChar
 
-					if pMonTar and (sirinTowerMgr.m_bTowerSelfDefense and IsSameObject(pTower, pMonTar) or ((sirinTowerMgr.m_bSystemTowerAssist and not pTower.m_pMasterTwr or sirinTowerMgr.m_bPlayerTowerAssist and pTower.m_pMasterTwr) and pMonTar:GetObjRace() == pTower:GetObjRace())) and sirinTowerMgr.testTowerTarget(pTower, pTestChar) then
-						table.insert(aroundEnemyMonsters, pTestChar)
+					if pMonTar and not pMonTar.m_bCorpse then
+						if (sirinTowerMgr.m_bMasterDefense and IsSameObject(pMonTar, pTower.m_pMasterTwr) or
+						sirinTowerMgr.m_bTowerSelfDefense and IsSameObject(pTower, pMonTar) or
+						(sirinTowerMgr.m_bSystemTowerAssist and not pTower.m_pMasterTwr or sirinTowerMgr.m_bPlayerTowerAssist and pTower.m_pMasterTwr) and pMonTar:GetObjRace() == pTower:GetObjRace()) and
+						sirinTowerMgr.testTowerTarget(pTower, pTestChar) then
+							table.insert(aroundEnemyMonsters, pTestChar)
+						end
 					end
 				end
 
@@ -331,33 +310,33 @@ function sirinTowerMgr.Attack(pTower, pTarget)
 	until true
 end
 
----@param _this CGuardTower
+---@param pTower CGuardTower
 ---@param nPart integer
 ---@return number
-function sirinTowerMgr.GetDefGap(_this, nPart)
-	return baseToGuardTowerItem(_this.m_pRecordSet).m_fDefGap
+function sirinTowerMgr.GetDefGap(pTower, nPart)
+	return baseToGuardTowerItem(pTower.m_pRecordSet).m_fDefGap
 end
 
----@param _this CGuardTower
+---@param pTower CGuardTower
 ---@param nPart integer
 ---@return number
-function sirinTowerMgr.GetDefFacing(_this, nPart)
-	return baseToGuardTowerItem(_this.m_pRecordSet).m_fDefFacing
+function sirinTowerMgr.GetDefFacing(pTower, nPart)
+	return baseToGuardTowerItem(pTower.m_pRecordSet).m_fDefFacing
 end
 
----@param _this CGuardTower
+---@param pTower CGuardTower
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinTowerMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
-	return baseToGuardTowerItem(_this.m_pRecordSet).m_nDefFc, 0
+function sirinTowerMgr.GetDefFC(pTower, nAttactPart, pAttChar)
+	return baseToGuardTowerItem(pTower.m_pRecordSet).m_nDefFc, 0
 end
 
----@param _this CGuardTower
+---@param pTower CGuardTower
 ---@return number
-function sirinTowerMgr.GetWeaponAdjust(_this)
-	return baseToGuardTowerItem(_this.m_pRecordSet).m_fAttGap
+function sirinTowerMgr.GetWeaponAdjust(pTower)
+	return baseToGuardTowerItem(pTower.m_pRecordSet).m_fAttGap
 end
 
 return sirinTowerMgr

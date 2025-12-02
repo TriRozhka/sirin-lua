@@ -2,37 +2,37 @@ local math = math
 
 local sirinKeeperMgr = {}
 
----@param _this CHolyKeeper
+---@param pKeeper CHolyKeeper
 ---@param nPart integer
 ---@return number
-function sirinKeeperMgr.GetDefGap(_this, nPart)
-	return _this.m_pRec.m_fDefGap
+function sirinKeeperMgr.GetDefGap(pKeeper, nPart)
+	return pKeeper.m_pRec.m_fDefGap
 end
 
----@param _this CHolyKeeper
+---@param pKeeper CHolyKeeper
 ---@param nPart integer
 ---@return number
-function sirinKeeperMgr.GetDefFacing(_this, nPart)
-	return _this.m_pRec.m_fDefFacing
+function sirinKeeperMgr.GetDefFacing(pKeeper, nPart)
+	return pKeeper.m_pRec.m_fDefFacing
 end
 
----@param _this CHolyKeeper
+---@param pKeeper CHolyKeeper
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinKeeperMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
+function sirinKeeperMgr.GetDefFC(pKeeper, nAttactPart, pAttChar)
 	if nAttactPart == -1 then
-		return _this:m_nDefPart_get(math.random(0, 4)), 0
+		return pKeeper:m_nDefPart_get(math.random(0, 4)), 0
 	else
-		return _this:m_nDefPart_get(nAttactPart), 0
+		return pKeeper:m_nDefPart_get(nAttactPart), 0
 	end
 end
 
----@param _this CHolyKeeper
+---@param pKeeper CHolyKeeper
 ---@return number
-function sirinKeeperMgr.GetWeaponAdjust(_this)
-	return _this.m_pRec.m_fDefGap -- yes, this is not my mistake
+function sirinKeeperMgr.GetWeaponAdjust(pKeeper)
+	return pKeeper.m_pRec.m_fDefGap -- yes, this is not my mistake
 end
 
 return sirinKeeperMgr

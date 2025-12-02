@@ -351,8 +351,7 @@ function sirinCPlayerAttack:AttackSkill(bUseEffBullet)
 	self:CalcAvgDamage()
 end
 
----@param fBulletGARate number
-function sirinCPlayerAttack:AttackUnit(fBulletGARate)
+function sirinCPlayerAttack:AttackUnit()
 	local bSucc = true
 	self.m_pAttChar:BreakStealth()
 	local pDst = self.m_pp.pDst
@@ -2866,7 +2865,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Unit(pPlayer, pTarget, byWeapo
 	local pAT = sirinPlayerAttack.make_unit_attack_param(pPlayer, pTarget, pUnitWeaponFld, fBulletGARate)
 
 	pPlayer.m_byUsingWeaponPart = byWeaponPart
-	pAT:AttackUnit(fBulletGARate)
+	pAT:AttackUnit()
 	pPlayer.m_AttDelayChker:SetDelay(pUnitWeaponFld.m_nAttackDel)
 
 	if pPlayer.m_EP:GetEff_State(_EFF_STATE.Res_Att) then

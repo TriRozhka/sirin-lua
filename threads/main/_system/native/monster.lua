@@ -366,40 +366,40 @@ function sirinMonsterMgr.Attack(pMonster, pDst, pSkill)
 	return 1
 end
 
----@param _this CMonster
+---@param pMonster CMonster
 ---@param nPart integer
 ---@return number
-function sirinMonsterMgr.GetDefGap(_this, nPart)
-	return baseToMonsterCharacter(_this.m_pRecordSet).m_fDefGap
+function sirinMonsterMgr.GetDefGap(pMonster, nPart)
+	return baseToMonsterCharacter(pMonster.m_pRecordSet).m_fDefGap
 end
 
----@param _this CMonster
+---@param pMonster CMonster
 ---@param nPart integer
 ---@return number
-function sirinMonsterMgr.GetDefFacing(_this, nPart)
-	return baseToMonsterCharacter(_this.m_pRecordSet).m_fDefFacing
+function sirinMonsterMgr.GetDefFacing(pMonster, nPart)
+	return baseToMonsterCharacter(pMonster.m_pRecordSet).m_fDefFacing
 end
 
----@param _this CMonster
+---@param pMonster CMonster
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinMonsterMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
-	if _this.m_pMonRec then
-		if pAttChar and _this.m_pMonRec.m_nShieldBlock == 1 and math.random(0, 99) < _this.m_pMonRec.m_nBlockPer then
+function sirinMonsterMgr.GetDefFC(pMonster, nAttactPart, pAttChar)
+	if pMonster.m_pMonRec then
+		if pAttChar and pMonster.m_pMonRec.m_nShieldBlock == 1 and math.random(0, 99) < pMonster.m_pMonRec.m_nBlockPer then
 			return -2, 0
 		end
 
 		local defFC = 0
 
 		if nAttactPart == -1 then
-			defFC =  _this:m_DefPart_get(math.random(0, 4))
+			defFC =  pMonster:m_DefPart_get(math.random(0, 4))
 		else
-			defFC =  _this:m_DefPart_get(nAttactPart)
+			defFC =  pMonster:m_DefPart_get(nAttactPart)
 		end
 
-		defFC = math.floor(defFC * _this.m_EP:GetEff_Rate(_EFF_RATE.DefFc))
+		defFC = math.floor(defFC * pMonster.m_EP:GetEff_Rate(_EFF_RATE.DefFc))
 
 		return defFC, 0
 	else
@@ -407,10 +407,10 @@ function sirinMonsterMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
 	end
 end
 
----@param _this CMonster
+---@param pMonster CMonster
 ---@return number
-function sirinMonsterMgr.GetWeaponAdjust(_this)
-	return baseToMonsterCharacter(_this.m_pRecordSet).m_fAttGap
+function sirinMonsterMgr.GetWeaponAdjust(pMonster)
+	return baseToMonsterCharacter(pMonster.m_pRecordSet).m_fAttGap
 end
 
 return sirinMonsterMgr

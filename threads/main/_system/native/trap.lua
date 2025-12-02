@@ -82,32 +82,32 @@ function sirinTrapMgr.CTrap__Attack(pTrap, pTarget)
 	until true
 end
 
----@param _this CTrap
+---@param pTrap CTrap
 ---@param nPart integer
 ---@return number
-function sirinTrapMgr.GetDefGap(_this, nPart)
-	return baseToTrapItem(_this.m_pRecordSet).m_fDefGap
+function sirinTrapMgr.GetDefGap(pTrap, nPart)
+	return baseToTrapItem(pTrap.m_pRecordSet).m_fDefGap
 end
 
----@param _this CTrap
+---@param pTrap CTrap
 ---@param nPart integer
 ---@return number
-function sirinTrapMgr.GetDefFacing(_this, nPart)
-	return baseToTrapItem(_this.m_pRecordSet).m_fDefFacing
+function sirinTrapMgr.GetDefFacing(pTrap, nPart)
+	return baseToTrapItem(pTrap.m_pRecordSet).m_fDefFacing
 end
 
----@param _this CTrap
+---@param pTrap CTrap
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinTrapMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
-	return baseToTrapItem(_this.m_pRecordSet).m_nDefFc, 0
+function sirinTrapMgr.GetDefFC(pTrap, nAttactPart, pAttChar)
+	return baseToTrapItem(pTrap.m_pRecordSet).m_nDefFc, 0
 end
 
----@param _this CTrap
+---@param pTrap CTrap
 ---@return number
-function sirinTrapMgr.GetWeaponAdjust(_this)
+function sirinTrapMgr.GetWeaponAdjust(pTrap)
 	return 1.0
 end
 

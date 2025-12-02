@@ -605,7 +605,7 @@ local _dh_player_mgr = {}
 ---@field m_nOpenerSubDegree integer
 ---@field m_bCheckMemberClose boolean
 ---@field m_pPartyMng CPartyPlayer
----@field m_pLeaderPtr lightuserdata _dh_player_mgr
+---@field m_pLeaderPtr _dh_player_mgr
 ---@field m_dwEnterOrderCounter integer
 ---@field m_dwNextCloseTime integer
 ---@field m_dwSendNewMissionMsgNextTime integer

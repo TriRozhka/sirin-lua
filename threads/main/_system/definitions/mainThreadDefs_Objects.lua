@@ -608,6 +608,7 @@ function CAnimus:m_AITimer_get(a1) end
 function CAnimus:m_Skill_get(a1) end
 ---@param a1 integer
 function CAnimus:AlterExp(a1) end
+function CAnimus:AlterHP_MasterReport() end
 
 ---@class (exact) _tower_create_setdata : _character_create_setdata
 ---@field nHP integer
@@ -638,6 +639,8 @@ local CGuardTower = {}
 ---@param bSystemBack boolean
 ---@return boolean
 function CGuardTower:Destroy(byDesType, bSystemBack) end
+---@param pDst CCharacter
+function CGuardTower:NotifyOwnerAttackInform(pDst) end
 
 ---@class (exact) _keeper_create_setdata : _character_create_setdata
 ---@field nMasterRace integer
@@ -1437,6 +1440,11 @@ function CPlayer:AddGold(dwAdd, bPenalty) end
 function CPlayer:SubDalant(dwSub) end
 ---@param dwSub integer
 function CPlayer:SubGold(dwSub) end
+---@param bUseableJade boolean
+function CPlayer:pc_Revival(bUseableJade) end
+---@param pCon _STORAGE_LIST___storage_con
+---@return boolean
+function CPlayer:IsEffectableEquip(pCon) end
 
 ---@class (exact) _trap_create_setdata : _character_create_setdata
 ---@field nHP integer

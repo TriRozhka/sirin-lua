@@ -180,27 +180,19 @@ function sirinAnimusMgr.IsValidTarget(pAnimus)
 			break
 		end
 
-		if pTarget.m_ObjID.m_byID == ID_CHAR.player then
-			local pTarPlayer = objectToPlayer(pTarget)
+		if pAnimus.m_byRoleCode ~= 3 then
+			if pAnimus.m_pTarget:GetObjRace() == pAnimus:GetObjRace() then
+				local pTarPlayer = objectToPlayer(pTarget)
 
-			if pTarPlayer:GetObjRace() == pAnimus:GetObjRace() and not pTarPlayer:IsPunished(1, false) and not pAnimus.m_pMaster:IsChaosMode() then
+				if pTarget.m_ObjID.m_byID ~= ID_CHAR.player or (not pTarPlayer:IsPunished(1, false) and not pAnimus.m_pMaster:IsChaosMode()) then
+					break
+				end
+			end
+
+			if not pTarget:IsBeAttackedAble(true) then
 				break
 			end
-		else
-			if pTarget:GetObjRace() == pAnimus:GetObjRace() then
-				break
-			end
-		end
 
-		if not pTarget:IsBeAttackedAble(true) then
-			break
-		end
-
-		if pAnimus.m_byRoleCode == 3 then
-			if not IsSameObject(pTarget, pAnimus.m_pMaster) then
-				break
-			end
-		else
 			if pTarget.m_bObserver then
 				break
 			end
@@ -210,6 +202,12 @@ function sirinAnimusMgr.IsValidTarget(pAnimus)
 			end
 
 			if (pAnimus:IsInTown() or pTarget:IsInTown()) and not pTarget:IsAttackableInTown() then
+				break
+			end
+		else
+			local pTarPlayer = objectToPlayer(pTarget)
+
+			if pAnimus.m_pTarget:GetObjRace() ~= pAnimus:GetObjRace() or pTarget.m_ObjID.m_byID ~= ID_CHAR.player or (not IsSameObject(pTarget, pAnimus.m_pMaster) and (pTarPlayer:IsPunished(1, false) or pAnimus.m_pMaster:IsChaosMode())) then
 				break
 			end
 		end
@@ -247,14 +245,14 @@ function sirinAnimusMgr.make_gen_attack_param(pAnimus, pDst, byPart, nSkillIndex
 	pAP.nMaxAF = sk.m_MaxDmg
 
 	if pAnimus.m_byRoleCode == 4 then
-		pAP.nMaxAF = pAnimus.m_pMaster.m_EP:GetEff_Rate(_EFF_RATE.Fg_Animus)
+		pAP.nMaxAF = pAP.nMaxAF * pAnimus.m_pMaster.m_EP:GetEff_Rate(_EFF_RATE.Fg_Animus)
 	end
 
 	pAP.nMinSel = sk.m_MinProb
 	pAP.nMaxSel = sk.m_MaxProb
 
-	if pAnimus.m_byRoleCode == 4 then
-		pAP.nMaxAF = pAnimus.m_pMaster.m_EP:GetEff_Plus(_EFF_PLUS.Fg_Crt)
+	if pAnimus.m_byRoleCode == 2 then
+		pAP.nMaxSel = pAP.nMaxSel - pAnimus.m_pMaster.m_EP:GetEff_Plus(_EFF_PLUS.Fg_Crt)
 		pAP.nAttactType = 6
 		pAP.nExtentRange = 15
 
@@ -489,7 +487,7 @@ function sirinAnimusMgr.Heal(pAnimus, nSkill)
 			pAnimus.m_nHP = pAnimus.m_nHP - _10per
 
 			if pAnimus.m_nHP > 0 then
-
+				pAnimus:AlterHP_MasterReport()
 			else
 				pAnimus.m_nHP = 0
 				pAnimus.m_pMaster.m_byNextRecallReturn = 1
@@ -505,39 +503,39 @@ function sirinAnimusMgr.Heal(pAnimus, nSkill)
 	return false
 end
 
----@param _this CAnimus
+---@param pAnimus CAnimus
 ---@param nPart integer
 ---@return number
-function sirinAnimusMgr.GetDefGap(_this, nPart)
-	return _this.m_pRecord.m_fDefGap
+function sirinAnimusMgr.GetDefGap(pAnimus, nPart)
+	return pAnimus.m_pRecord.m_fDefGap
 end
 
----@param _this CAnimus
+---@param pAnimus CAnimus
 ---@param nPart integer
 ---@return number
-function sirinAnimusMgr.GetDefFacing(_this, nPart)
-	return _this.m_pRecord.m_fDefFacing
+function sirinAnimusMgr.GetDefFacing(pAnimus, nPart)
+	return pAnimus.m_pRecord.m_fDefFacing
 end
 
----@param _this CAnimus
+---@param pAnimus CAnimus
 ---@param nAttactPart integer
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinAnimusMgr.CPlayer__GetDefFC(_this, nAttactPart, pAttChar)
-	local defFC = _this.m_pRecord.m_nStdDefFc
+function sirinAnimusMgr.GetDefFC(pAnimus, nAttactPart, pAttChar)
+	local defFC = pAnimus.m_pRecord.m_nStdDefFc
 
-	if _this.m_byRoleCode == 1 and _this.m_pMaster then
-		defFC = math.floor(defFC * _this.m_pMaster.m_EP:GetEff_Rate(_EFF_RATE.Fg_Def))
+	if pAnimus.m_byRoleCode == 1 and pAnimus.m_pMaster then
+		defFC = math.floor(defFC * pAnimus.m_pMaster.m_EP:GetEff_Rate(_EFF_RATE.Fg_Def))
 	end
 
 	return defFC, 0
 end
 
----@param _this CAnimus
+---@param pAnimus CAnimus
 ---@return number
-function sirinAnimusMgr.GetWeaponAdjust(_this)
-	return _this.m_pRecord.m_fAttGap
+function sirinAnimusMgr.GetWeaponAdjust(pAnimus)
+	return pAnimus.m_pRecord.m_fAttGap
 end
 
 return sirinAnimusMgr

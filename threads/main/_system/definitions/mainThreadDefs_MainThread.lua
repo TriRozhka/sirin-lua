@@ -389,7 +389,7 @@ local modForceLogoutAfterUsePotion = {}
 ---@class (exact) modRaceBossChipHolderBonus
 ---@field GetAttackBonus fun(pPlayer: CPlayer, bActiveSkill: boolean): number
 ---@field GetUnitAttackBonus fun(pPlayer: CPlayer, bGenerator: boolean): number
----@field GetDefenseBonus fun(pPlayer: CPlayer): number
+---@field GetDefenseBonus fun(pPlayer: CPlayer, bGenerator: boolean): number
 ---@field GetHPBonus fun(pPlayer: CPlayer): number
 local modRaceBossChipHolderBonus = {}
 
@@ -1336,6 +1336,8 @@ local _TOWER_PARAM = {}
 ---@param a1 integer
 ---@return _TOWER_PARAM___list
 function _TOWER_PARAM:m_List_get(a1) end
+---@param pDst CCharacter
+function _TOWER_PARAM:NotifyOwnerAttackInform(pDst) end
 
 ---@class (exact) _TOWER_PARAM___list
 ---@field m_pTowerItem _STORAGE_LIST___db_con

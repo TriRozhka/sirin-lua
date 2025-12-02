@@ -2426,7 +2426,7 @@ end
 ---@param pAttChar CCharacter
 ---@return integer nDefFC
 ---@return integer nConvertPart
-function sirinPlayerMgr.CPlayer__GetDefFC(pPlayer, nAttactPart, pAttChar)
+function sirinPlayerMgr.GetDefFC(pPlayer, nAttactPart, pAttChar)
 	local defFC = 0
 	local nConvertPart = nAttactPart
 	pPlayer.m_nLastBeatenPart = nAttactPart

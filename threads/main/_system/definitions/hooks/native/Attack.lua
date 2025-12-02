@@ -12,7 +12,8 @@ Functions, which exists in native RF Online code. Attack related hooks.
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CPlayer__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CPlayer__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -22,7 +23,8 @@ local function CPlayer__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, 
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CAnimus__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CAnimus__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -32,7 +34,8 @@ local function CAnimus__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, 
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CGuardTower__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CGuardTower__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -42,7 +45,8 @@ local function CGuardTower__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackTy
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CHolyKeeper__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CHolyKeeper__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -52,7 +56,8 @@ local function CHolyKeeper__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackTy
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CHolyStone__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CHolyStone__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -62,7 +67,8 @@ local function CHolyStone__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackTyp
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CTrap__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CTrap__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -72,7 +78,8 @@ local function CTrap__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dw
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function CMonster__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function CMonster__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: apply damage event.
 ---Hook positions: 'pre_event'.
@@ -82,7 +89,8 @@ local function CMonster__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType,
 ---@param pSrc CCharacter
 ---@param nAttackType integer
 ---@param dwAttackSerial integer
-local function AutominePersonal__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial) end
+---@param bCrit boolean
+local function AutominePersonal__SetDamage(pTarget, nDamage, nHPLeft, pSrc, nAttackType, dwAttackSerial, bCrit) end
 
 ---Purpose: Kill notification to player.
 ---Hook positions: 'after_event'.

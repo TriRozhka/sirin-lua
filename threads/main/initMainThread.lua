@@ -58,7 +58,6 @@ SirinLua.onThreadBegin = {
 	function() SirinLua.GmCommMgr.loadScripts() end,
 	function() PlayerMgr.initHooks(); PlayerMgr.init() end,
 	function() AutoLootMgr.initHooks() end,
-	function() TowerMgr.initHooks() end,
 	function() RiftMgr.initHooks(); RiftMgr.loadScripts(); SirinLua.LoopMgr.addMainLoopCallback(RiftMgr.m_strUUID, function() RiftMgr.onLoop() end, 100) end,
 	function() CombineExMgr.initHooks(); CombineExMgr.loadScripts() end,
 	function() BotMgr.initHooks(); BotMgr.init(); SirinLua.LoopMgr.addMainLoopCallback(BotMgr.m_strUUID, function() BotMgr.onLoop() end, 50) end,
