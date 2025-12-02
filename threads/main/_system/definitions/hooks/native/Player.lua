@@ -131,6 +131,15 @@ local function CPlayer__Emb_DelStorage(pPlayer, byStorageCode, byStorageIndex, b
 ---@param Ret integer
 local function CPlayer__Emb_AlterDurPoint(pPlayer, byStorageCode, byStorageIndex, nAlter, bUpdate, bSend, Ret) end
 
+---Purpose: Alter item upgrade notification.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+---@param byUpgradeType integer
+---@param byStorageCode integer
+---@param byStorageIndex integer
+---@param dwGradeInfo integer
+local function CPlayer__Emb_ItemUpgrade(pPlayer, byUpgradeType, byStorageCode, byStorageIndex, dwGradeInfo) end
+
 ---Purpose: Calc pvp points routine.
 ---Hook positions: 'original'
 ---@param pKiller CPlayer
@@ -327,6 +336,13 @@ local function CPlayer__pc_UnitBulletFillRequest(pPlayer, pMsg, bUseNPCLinkIntem
 ---@param pMsg _unit_pack_fill_request_clzo
 ---@param bUseNPCLinkIntem boolean
 local function CPlayer__pc_UnitPackFillRequest(pPlayer, pMsg, bUseNPCLinkIntem) end
+
+---Purpose: Unit ride change notify.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+---@param bRiding boolean
+---@param pCreateUnit CParkingUnit
+local function CPlayer__Emb_RidindUnit(pPlayer, bRiding, pCreateUnit) end
 
 ---Purpose: Teleport potion filter.
 ---Hook positions: 'filter'
