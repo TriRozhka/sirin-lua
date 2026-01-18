@@ -36,6 +36,12 @@ local function CPlayer__SendMsg_GuildJoinApplyResult(pPlayer, byErrCode, pApplyG
 ---@param pData CBinaryData
 local function CGuild__MakeDownApplierPacket(pGuild, pData) end
 
+---Purpose: Make member list packet.
+---Hook positions: 'original'.
+---@param pGuild CGuild
+---@param pData CBinaryData
+local function CGuild__MakeDownMemberPacket(pGuild, pData) end
+
 ---Purpose: Send new applier data to guild senate.
 ---Hook positions: 'original'.
 ---@param pGuild CGuild

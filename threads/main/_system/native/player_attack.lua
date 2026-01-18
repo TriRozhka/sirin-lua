@@ -27,7 +27,7 @@ local CONST_PatriarchBonus_Atk = CONST_PatriarchBonus_Atk
 local CONST_AttackCouncilBonus_Atk = CONST_AttackCouncilBonus_Atk
 
 local s_nLimitDist = CONST_nLimitDist
-local s_nLimitAngle = CONST_nLimitDist
+local s_nLimitAngle = CONST_nLimitAngle
 local s_nLimitRadius = CONST_nLimitRadius
 
 local s_nAddMstFc = {}

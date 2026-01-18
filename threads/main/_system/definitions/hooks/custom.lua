@@ -376,3 +376,27 @@ local function combineButtonResult(pPlayer, byErrCode, wTmpManualIndex, dwFee, l
 ---@param pActPlayer CPlayer
 ---@param pCont _sf_continous_ex
 local function PreContEffectInsert(pPlayer, pActPlayer, pCont) end
+
+---Purpose: check if user can send default recall request.
+---Hook positions: 'original'
+---@param pkPerformer CPlayer
+---@param pkDest CPlayer
+---@param bRecallParty boolean
+---@param bStone boolean
+---@param bBattleModeUse boolean
+---@return integer
+local function onRequestRecall(pkPerformer, pkDest, bRecallParty, bStone, bBattleModeUse) return 0 end
+
+---Purpose: check if user can complete default recall.
+---Hook positions: 'original'
+---@param pRequest CRecallRequest
+---@param pDstPlayer CPlayer
+---@return integer
+local function CRecallRequest__DecideRecall(pRequest, pDstPlayer) return 0 end
+
+---Purpose: check if user can complete custom recall.
+---Hook positions: 'original'
+---@param pRequest CRecallRequestEx
+---@param pDstPlayer CPlayer
+---@return integer
+local function CRecallRequestEx__DecideRecall(pRequest, pDstPlayer) return 0 end

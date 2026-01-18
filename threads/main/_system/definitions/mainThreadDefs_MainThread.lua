@@ -301,6 +301,8 @@ local console = {}
 ---@field CandidateMgr CandidateMgr
 ---@field PatriarchElectProcessor PatriarchElectProcessor
 ---@field CWeeklyGuildRankManager CWeeklyGuildRankManager
+---@field CRecallEffectControllerFix CRecallEffectControllerFix
+---@field CUnmannedTraderTaxRateManager CUnmannedTraderTaxRateManager
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -2976,6 +2978,61 @@ local _unit_pack_fill_request_clzo = {}
 ---@return _unit_pack_fill_request_clzo____list
 function _unit_pack_fill_request_clzo:List_get(index) end
 
+---@class (exact) CRecallEffectControllerFix
+---@field Instance fun(): CRecallEffectControllerFix
+local CRecallEffectControllerFix = {}
+---@param pCaller CPlayer
+---@param pDestChar CCharacter
+---@param bRecallParty boolean
+---@param bStone boolean
+---@param bBattleModeUse boolean
+---@return integer
+function CRecallEffectControllerFix:RequestRecall(pCaller, pDestChar, bRecallParty, bStone, bBattleModeUse) end
+---@param pszCaller string
+---@param pDstMap CMapData
+---@param x number
+---@param y number
+---@param z number
+---@param wDstLayer integer
+---@param dwTimeOut integer
+---@param pDestChar CCharacter
+---@param bRecallParty boolean
+---@param bStone boolean
+---@param bBattleModeUse boolean
+---@return integer
+function CRecallEffectControllerFix:RequestRecallNoPerformer(pszCaller, pDstMap, x, y, z, wDstLayer, dwTimeOut, pDestChar, bRecallParty, bStone, bBattleModeUse) end
+---@param dwTimeout integer miliseconds
+function CRecallEffectControllerFix:SetTimeout(dwTimeout) end
+
+---@class (exact) CRecallRequest
+---@field m_usID integer
+---@field m_eState STATE
+---@field m_pkOwner CPlayer?
+---@field m_dwOwnerSerial integer
+---@field m_pkDest CPlayer
+---@field m_dwDestSerial integer
+---@field m_dwCloseTime integer
+---@field m_bRecallParty boolean
+---@field m_bStone boolean
+---@field m_bBattleModeUse boolean
+local CRecallRequest = {}
+
+---@class (exact) CRecallRequestEx : CRecallRequest
+---@field m_fRecallPos_x number
+---@field m_fRecallPos_y number
+---@field m_fRecallPos_z number
+---@field m_pRecallMap CMapData
+---@field m_wRecallLayer integer
+local CRecallRequestEx = {}
+
+---@class (exact) CUnmannedTraderTaxRateManager
+---@field Instance fun(): CUnmannedTraderTaxRateManager
+---@field m_pkTimer lightuserdata CMyTimer
+local CUnmannedTraderTaxRateManager = {}
+---@param byRace integer
+---@return TRC_AutoTrade
+function CUnmannedTraderTaxRateManager:m_vecTRC_get(byRace) end
+
 Sirin.NATS = NATS
 Sirin.UUIDv4 = UUIDv4
 Sirin.CAssetController = CAssetController
@@ -3017,3 +3074,4 @@ Sirin.mainThread.CHonorGuild = CHonorGuild
 Sirin.mainThread.CandidateMgr = CandidateMgr
 Sirin.mainThread.PatriarchElectProcessor = PatriarchElectProcessor
 Sirin.mainThread.CWeeklyGuildRankManager = CWeeklyGuildRankManager
+Sirin.mainThread.CUnmannedTraderTaxRateManager = CUnmannedTraderTaxRateManager

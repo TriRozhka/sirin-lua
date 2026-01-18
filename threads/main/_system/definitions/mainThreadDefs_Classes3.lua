@@ -932,3 +932,35 @@ function _MASTERY_PARAM:GetCumPerMast(a1, a2) end
 ---@param a2 integer
 ---@param a3 integer
 function _MASTERY_PARAM:UpdateCumPerMast(a1, a2, a3) end
+
+---@class (exact) ControllerTaxRate
+---@field m_bInit boolean
+---@field m_fMinTaxRate number
+---@field m_fMaxTaxRate number
+---@field m_fCurTaxRate number
+local ControllerTaxRate = {}
+
+---@class (exact) _suggested_matter_change_taxrate
+---@field byMatterType integer
+---@field dwMatterDst integer
+---@field wszMatterDst string
+---@field dwNext integer
+---@field dwSuggestedTime integer
+local _suggested_matter_change_taxrate = {}
+
+---@class (exact) TRC_AutoTrade
+---@field m_bInit boolean
+---@field m_byCurDay integer
+---@field m_wCurMonth integer
+---@field m_wCurYear integer
+---@field m_bChangeTaxRate boolean
+---@field m_fCommonTaxRate number
+---@field m_pOwnerGuild CGuild
+---@field m_Controller ControllerTaxRate
+---@field m_sysLog CLogFile
+---@field m_serviceLog CLogFile
+---@field m_dwTrade integer
+---@field m_dIncomeMoney number
+---@field m_byRace integer
+---@field m_suggested _suggested_matter_change_taxrate
+local TRC_AutoTrade = {}

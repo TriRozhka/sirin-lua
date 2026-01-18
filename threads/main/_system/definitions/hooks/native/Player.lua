@@ -337,7 +337,7 @@ local function CPlayer__pc_UnitBulletFillRequest(pPlayer, pMsg, bUseNPCLinkIntem
 ---@param bUseNPCLinkIntem boolean
 local function CPlayer__pc_UnitPackFillRequest(pPlayer, pMsg, bUseNPCLinkIntem) end
 
----Purpose: Unit ride change notify.
+---Purpose: Unit ride change notification.
 ---Hook positions: 'after_event'
 ---@param pPlayer CPlayer
 ---@param bRiding boolean
@@ -361,3 +361,9 @@ local function CPlayer__SF_TeleportToDestination(pPlayer, pDstObj, bStone) retur
 ---@param pConsumeSerial_3 integer
 ---@return boolean
 local function CPlayer__pc_MovePortal(pPlayer, nPortalIndex, pConsumeSerial_1, pConsumeSerial_2, pConsumeSerial_3) return true end
+
+---Purpose: Change siege mode notification.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+---@param pSiegeItem _STORAGE_LIST___db_con
+local function CPlayer__SetSiege(pPlayer, pSiegeItem) end
