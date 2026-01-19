@@ -262,10 +262,11 @@ local console = {}
 ---@field CloseConnect fun(dwSocket: integer, strReason?: string)
 ---@field electProcessorToVoter fun(electProc: ElectProcessor): Voter
 ---@field electProcessorToCandidateRegister fun(electProc: ElectProcessor): CandidateRegister
----@field eGetTex fun(byRace): number
----@field eGetTexRate fun(byRace): integer
----@field eGetOreRate fun(byRace): number
+---@field eGetTex fun(byRace: integer): number
+---@field eGetTexRate fun(byRace: integer): integer
+---@field eGetOreRate fun(byRace: integer): number
 ---@field cloneQuestResult fun(): _quest_check_result
+---@field recallRequestToRecallRequestEx fun(pRequest: CRecallRequest): CRecallRequestEx
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
