@@ -31,9 +31,10 @@ local sirinDummyRift = {
 
 ---@return sirinDummyRift self
 function sirinDummyRift:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@class sirinRift: sirinDummyRift
@@ -2563,9 +2564,10 @@ end
 
 ---@return sirinRift self
 function sirinRift:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param pPlayer CPlayer

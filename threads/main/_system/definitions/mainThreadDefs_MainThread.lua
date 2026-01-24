@@ -111,10 +111,10 @@ local console = {}
 ---@field Major_Cash_Item integer
 ---@field Major_Add_Character integer
 ---@field _100_per_random_table _100_per_random_table
----@field processCheatCommand fun(pOne: CPlayer, strCmd: string): boolean
----@field processAsyncCheatCommand fun(pOne: CPlayer, strCmd: string): boolean
----@field processCheatCommandSilent fun(pOne: CPlayer, strCmd: string): boolean
----@field processAsyncCheatCommandSilent fun(pOne: CPlayer, strCmd: string): boolean
+---@field processCheatCommand fun(pOne?: CPlayer, strCmd: string): boolean
+---@field processAsyncCheatCommand fun(pOne?: CPlayer, strCmd: string): boolean
+---@field processCheatCommandSilent fun(pOne?: CPlayer, strCmd: string): boolean
+---@field processAsyncCheatCommandSilent fun(pOne?: CPlayer, strCmd: string): boolean
 ---@field getCheatWordNum fun(): integer
 ---@field getCheatWord fun(nIndex: integer): string
 ---@field registCheat fun(strCmdCode: string, strUse: string, strMgr: string): boolean

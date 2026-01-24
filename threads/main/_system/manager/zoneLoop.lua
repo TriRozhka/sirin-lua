@@ -9,9 +9,10 @@ local callbackObject = {
 }
 
 function callbackObject:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@class (exact) sirinZoneLoopMgr

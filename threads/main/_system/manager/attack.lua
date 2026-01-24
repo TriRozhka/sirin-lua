@@ -42,9 +42,10 @@ Sirin_be_damaged_char = sirin_be_damaged_char
 
 ---@return sirin_be_damaged_char self
 function sirin_be_damaged_char:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@class (exact) sirin_attack_param
@@ -108,9 +109,10 @@ Sirin_attack_param = sirin_attack_param
 
 ---@return sirin_attack_param self
 function sirin_attack_param:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@class (exact) sirinCAttack
@@ -135,9 +137,10 @@ SirinCAttack = sirinCAttack
 
 ---@return sirinCAttack self
 function sirinCAttack:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param pDst CCharacter
@@ -1361,9 +1364,10 @@ SirinCMonsterAttack = sirinCMonsterAttack
 
 ---@return sirinCMonsterAttack
 function sirinCMonsterAttack:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param fAttFc number

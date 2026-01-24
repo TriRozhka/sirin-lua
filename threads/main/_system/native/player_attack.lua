@@ -62,9 +62,10 @@ local sirinCPlayerAttack = SirinCAttack:new()
 
 ---@return sirinCPlayerAttack self
 function sirinCPlayerAttack:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param bUseEffBullet boolean
@@ -525,9 +526,10 @@ Sirin_CPartyModeKillMonsterExpNotify = sirin_CPartyModeKillMonsterExpNotify
 
 ---@return sirin_CPartyModeKillMonsterExpNotify self
 function sirin_CPartyModeKillMonsterExpNotify:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param pkMember CPlayer
@@ -835,9 +837,20 @@ function sirinPlayerAttack.SendMsg_AttackResult_Count(pPlayer, pAT)
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
+
 		sendBuf:PushUInt8(d.m_bActiveSucc and 1 or 0)
-		sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nActiveDamage < 0 then
+			sendBuf:PushInt16(d.m_nActiveDamage)
+		else
+			sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nActiveDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 11, sendBuf, true)
@@ -859,9 +872,20 @@ function sirinPlayerAttack.SendMsg_AttackResult_Gen(pPlayer, pAT, wBulletIndex)
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
+
 		sendBuf:PushUInt8(d.m_bActiveSucc and 1 or 0)
-		sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nActiveDamage < 0 then
+			sendBuf:PushInt16(d.m_nActiveDamage)
+		else
+			sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nActiveDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 7, sendBuf, true)
@@ -889,9 +913,20 @@ function sirinPlayerAttack.SendMsg_AttackResult_Skill(pPlayer, byEffectCode, pAT
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
+
 		sendBuf:PushUInt8(d.m_bActiveSucc and 1 or 0)
-		sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nActiveDamage < 0 then
+			sendBuf:PushInt16(d.m_nActiveDamage)
+		else
+			sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nActiveDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 8, sendBuf, true)
@@ -913,9 +948,20 @@ function sirinPlayerAttack.SendMsg_AttackResult_Force(pPlayer, pAT)
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
+
 		sendBuf:PushUInt8(d.m_bActiveSucc and 1 or 0)
-		sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nActiveDamage < 0 then
+			sendBuf:PushInt16(d.m_nActiveDamage)
+		else
+			sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nActiveDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 9, sendBuf, true)
@@ -938,7 +984,12 @@ function sirinPlayerAttack.SendMsg_AttackResult_Unit(pPlayer, pAT, byWeaponPart,
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 10, sendBuf, true)
@@ -961,7 +1012,12 @@ function sirinPlayerAttack.SendMsg_AttackResult_Siege(pPlayer, pAT, wBulletIndex
 	for _,d in ipairs(pAT.m_DamList) do
 		sendBuf:PushUInt8(d.m_pChar.m_ObjID.m_byID)
 		sendBuf:PushUInt32(d.m_pChar.m_dwObjSerial)
-		sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+
+		if d.m_nDamage < 0 then
+			sendBuf:PushInt16(d.m_nDamage)
+		else
+			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 122, sendBuf, true)

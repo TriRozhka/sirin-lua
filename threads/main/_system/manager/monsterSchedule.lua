@@ -320,9 +320,10 @@ local SirinMonsterScheduleScript = {
 
 ---@return SirinMonsterScheduleScript self
 function SirinMonsterScheduleScript:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param t? integer
@@ -346,9 +347,10 @@ local SirinMonsterSpawnRule = {}
 
 ---@return SirinMonsterSpawnRule self
 function SirinMonsterSpawnRule:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param t integer
@@ -501,9 +503,10 @@ end
 
 ---@return SirinMonster self
 function SirinMonster:new(o)
-	o = o or {}
+	local _i = clone(self)
+	for k,v in pairs(o or {}) do _i[k] = v end
 	self.__index = self
-	return setmetatable(o, self)
+	return setmetatable(_i, self)
 end
 
 ---@param pMonster CMonster
