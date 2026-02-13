@@ -190,28 +190,27 @@ function sirinTowerMgr.searchNearEnemy(pTower)
 
 		for _,pTestObj in ipairs(ListObjects) do
 			repeat
-				if IsSameObject(pTower, pTestObj) or pTower:GetObjRace() == pTestObj:GetObjRace() then
-					break
-				end
-
 				local pTestChar = objectToCharacter(pTestObj)
 				local idChar = pTestObj.m_ObjID.m_byID
 
-				if idChar == ID_CHAR.animus
-					or idChar == ID_CHAR.tower
-					or idChar == ID_CHAR.amine_personal
+				if (idChar == ID_CHAR.animus
+					or (idChar == ID_CHAR.tower and not IsSameObject(pTower, pTestObj))
+					or idChar == ID_CHAR.amine_personal)
+						and pTower:GetObjRace() ~= pTestObj:GetObjRace()
 					then
 					if sirinTowerMgr.testTowerTarget(pTower, pTestChar) then
 						table.insert(aroundEnemyPlayerProperty, pTestChar)
 					end
 				elseif idChar == ID_CHAR.monster then
-					local pMonTar = objectToMonster(pTestObj).m_pTargetChar
+					local pTestMon = objectToMonster(pTestObj)
+					local pMonTar = pTestMon.m_pTargetChar
 
-					if pMonTar and not pMonTar.m_bCorpse then
-						if (sirinTowerMgr.m_bMasterDefense and IsSameObject(pMonTar, pTower.m_pMasterTwr) or
-						sirinTowerMgr.m_bTowerSelfDefense and IsSameObject(pTower, pMonTar) or
-						(sirinTowerMgr.m_bSystemTowerAssist and not pTower.m_pMasterTwr or sirinTowerMgr.m_bPlayerTowerAssist and pTower.m_pMasterTwr) and pMonTar:GetObjRace() == pTower:GetObjRace()) and
-						sirinTowerMgr.testTowerTarget(pTower, pTestChar) then
+					if pTower:GetObjRace() ~= pTestMon.m_pMonRec.m_nMobRace and pMonTar and not pMonTar.m_bCorpse then
+						if (sirinTowerMgr.m_bMasterDefense and pTower.m_pMasterTwr and IsSameObject(pMonTar, pTower.m_pMasterTwr)
+						or sirinTowerMgr.m_bTowerSelfDefense and IsSameObject(pTower, pMonTar)
+						or (sirinTowerMgr.m_bSystemTowerAssist and not pTower.m_pMasterTwr or sirinTowerMgr.m_bPlayerTowerAssist and pTower.m_pMasterTwr) and pMonTar:GetObjRace() == pTower:GetObjRace())
+							and sirinTowerMgr.testTowerTarget(pTower, pTestChar)
+						then
 							table.insert(aroundEnemyMonsters, pTestChar)
 						end
 					end
