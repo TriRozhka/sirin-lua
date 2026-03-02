@@ -367,3 +367,23 @@ local function CPlayer__pc_MovePortal(pPlayer, nPortalIndex, pConsumeSerial_1, p
 ---@param pPlayer CPlayer
 ---@param pSiegeItem _STORAGE_LIST___db_con
 local function CPlayer__SetSiege(pPlayer, pSiegeItem) end
+
+---Purpose: Manual mining ore gain event notification.
+---Hook positions: 'after_event'
+---@param pPlayer CPlayer
+---@param byErrCode integer
+---@param byNewOreIndex integer
+---@param wOreSerial integer
+---@param byOreDur integer
+---@param dwBatteryLeftDurPoint integer
+local function CPlayer__SendMsg_MineCompleteResult(pPlayer, byErrCode, byNewOreIndex, wOreSerial, byOreDur, dwBatteryLeftDurPoint) end
+
+---Purpose: Automatic mining ore gain even notification.
+---Hook positions: 'after_event'
+---@param pAMP AutominePersonal
+---@param wItemIndex integer
+---@param wItemSerial integer
+---@param byStorageIndex integer
+---@param nNewOre integer
+---@param dwDur integer
+local function AutominePersonal__make_minepacket(pAMP, wItemIndex, wItemSerial, byStorageIndex, nNewOre, dwDur) end

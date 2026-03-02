@@ -1,3 +1,7 @@
+
+local projectName = 'sirin'
+local moduleName = 'RiftMgr'
+
 ---@class (exact) sirinDummyRift
 ---@field __index table
 ---@field m_strScriptID string
@@ -49,7 +53,8 @@ local sirinRift = sirinDummyRift:new{m_bDelete = false}
 ---@field m_strUUID string
 ---@field m_pszModReturnGateLogPath string
 ---@field m_pszModReturnGateConfigPath string
----@field initHooks fun()
+---@field onThreadBegin fun()
+---@field onThreadEnd fun()
 ---@field init fun()
 ---@field uninit fun()
 ---@field loadScripts fun(): boolean
@@ -67,12 +72,12 @@ local sirinRift = sirinDummyRift:new{m_bDelete = false}
 ---@field canUseRift fun(pRift: sirinDummyRift, pPlayer: CPlayer): integer
 ---@field onUse fun(pRift:sirinDummyRift, pPlayer: CPlayer)
 local sirinRiftMgr = {
+	m_strUUID = projectName .. ".lua." .. moduleName,
 	m_bSaveState = true,
 	m_tLoopTime = os.time(),
 	m_Gates = {},
 	m_ListGates = {},
 	m_bDebugLog = true,
-	m_strUUID = 'sirin.lua.sirinRiftMgr',
 	m_pszModReturnGateLogPath = '.\\sirin-log\\guard\\ModReturnGate.log',
 	m_pszModReturnGateConfigPath = '..\\SystemSave\\ModReturnGate.ini',
 }
@@ -82,76 +87,6 @@ local armorParts = { "_upper", "_lower", "_gloves", "_shoes", "_helmet", "_shiel
 local timeInterval = { "year", "month", "day", "hour", "minute", "second" }
 local limitMin = { 0, 1, 1, 0, 0, 0 }
 local limitMax = { 0x7FFFFFFFFFFFFFFF, 12, 31, 23, 59, 59 }
-
-function sirinRiftMgr.initHooks()
-	SirinLua.HookMgr.addHook("CDummyRift__CDummyRift_ctor", HOOK_POS.original, sirinRiftMgr.m_strUUID, sirinRiftMgr.createRift)
-	SirinLua.HookMgr.addHook("CDummyRift__CDummyRift_dtor", HOOK_POS.original, sirinRiftMgr.m_strUUID, sirinRiftMgr.destroyRift)
-	SirinLua.HookMgr.addHook("CDummyRift__Enter", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		---@param pPlayer CPlayer
-		---@return integer
-		function (pCObj, pPlayer)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then return rift:Enter(pPlayer) end
-			return 3
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__Close", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		function (pCObj)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then rift:Close() end
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__IsClose", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		---@return boolean
-		function (pCObj)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then return rift:IsClose() end
-			return true
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__IsValidOwner", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		---@return boolean
-		function (pCObj)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then return rift:IsValidOwner() end
-			return true
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_Create", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		function (pCObj)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then rift:SendMsg_Create() end
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_Destroy", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		function (pCObj)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then rift:SendMsg_Destroy() end
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_FixPosition", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		---@param nIndex integer
-		function (pCObj, nIndex)
-			local rift = sirinRiftMgr.getRift(pCObj)
-			if rift then rift:SendMsg_FixPosition(nIndex) end
-		end
-	)
-	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_MovePortal", HOOK_POS.original, sirinRiftMgr.m_strUUID,
-		---@param pCObj CDummyRift
-		---@param pPlayer CPlayer
-		function (pCObj, pPlayer)
-			local rift = sirinRiftMgr.getRift(pCObj)
- 			if rift then rift:SendMsg_MovePortal(pPlayer) end
-		end
-	)
-end
 
 ---@param bSet boolean
 function sirinRiftMgr.setSaveState(bSet)
@@ -1398,7 +1333,7 @@ function sirinRiftMgr.init()
 							if not NewGate.m_LuaScript.exitGateType or NewGate.m_LuaScript.exitGateType == 0 then
 								NewGate.m_ExitDummyGate.m_tNextCloseTime = -1
 							elseif NewGate.m_LuaScript.exitGateType == 2 then
-								NewGate.m_ExitDummyGate.m_tNextCloseTime = RiftMgr:getLoopTime() + (NewGate.m_LuaScript.exitGateDelay or 60)
+								NewGate.m_ExitDummyGate.m_tNextCloseTime = sirinRiftMgr:getLoopTime() + (NewGate.m_LuaScript.exitGateDelay or 60)
 							else
 								break
 							end
@@ -1795,7 +1730,7 @@ function sirinDummyRift:IsClose()
 		return true
 	end
 
-	if self.m_tNextCloseTime >= 0 and RiftMgr:getLoopTime() > self.m_tNextCloseTime then
+	if self.m_tNextCloseTime >= 0 and sirinRiftMgr:getLoopTime() > self.m_tNextCloseTime then
 		return true
 	end
 
@@ -1814,7 +1749,7 @@ function sirinDummyRift:Open(pParam)
 
 	repeat
 		if not self.m_pCObj:Create(pParam) then
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua sirinDummyRift:Open(pParam) Rift:'%s' CGameObject::Create() Failed!\n", self.m_strScriptID), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua sirinDummyRift:Open(pParam) Rift:'%s' CGameObject::Create() Failed!\n", self.m_strScriptID), true, true)
 			break
 		end
 
@@ -2503,7 +2438,7 @@ function sirinDummyRift:openExitDummy(bUse)
 		if not self.m_ExitDummyGate:Open(param) then
 			if sirinRiftMgr.m_bDebugLog then
 				print(string.format("Rift '%s' exit dummy open fail", self.m_strScriptID))
-				Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' exit dummy open fail\n", self.m_strScriptID), true, true)
+				Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' exit dummy open fail\n", self.m_strScriptID), true, true)
 			end
 
 			self.m_ExitDummyGate.m_bOpen = false
@@ -2514,7 +2449,7 @@ function sirinDummyRift:openExitDummy(bUse)
 	if not self.m_LuaScript.exitGateType or self.m_LuaScript.exitGateType == 0 then
 		self.m_ExitDummyGate.m_tNextCloseTime = -1
 	else
-		self.m_ExitDummyGate.m_tNextCloseTime = RiftMgr:getLoopTime() + (self.m_LuaScript.exitGateDelay or 60)
+		self.m_ExitDummyGate.m_tNextCloseTime = sirinRiftMgr:getLoopTime() + (self.m_LuaScript.exitGateDelay or 60)
 	end
 end
 
@@ -2525,7 +2460,7 @@ function sirinDummyRift:openEnterDummy()
 	param.m_pRecordSet = nil
 
 	if not self.m_pSrcMap then
-		Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua. sirinDummyRift:openEnterDummy() Rift:'%s' self.m_pSrcMap == NULL\n", self.m_strScriptID), true, true)
+		Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua. sirinDummyRift:openEnterDummy() Rift:'%s' self.m_pSrcMap == NULL\n", self.m_strScriptID), true, true)
 		return
 	end
 
@@ -2539,7 +2474,7 @@ function sirinDummyRift:openEnterDummy()
 	if not self:Open(param) then
 		if sirinRiftMgr.m_bDebugLog then
 			print(string.format("Rift '%s' open fail", self.m_strScriptID))
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' open fail\n", self.m_strScriptID), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' open fail\n", self.m_strScriptID), true, true)
 		end
 
 		self.m_bOpen = false
@@ -2555,7 +2490,7 @@ function sirinDummyRift:openEnterDummy()
 			end
 
 			print(string.format("Rift '%s' open success. Next close: %s", self.m_strScriptID, szBufr))
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' open success. Next close: %s\n", self.m_strScriptID, szBufr), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' open success. Next close: %s\n", self.m_strScriptID, szBufr), true, true)
 		end
 
 		self:openExitDummy()
@@ -2623,10 +2558,10 @@ function sirinRift:Close()
 			end
 
 			print(string.format("Rift '%s' closed. Next open: %s", self.m_strScriptID, szBufr))
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' closed. Next open: %s\n", self.m_strScriptID, szBufr), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Rift '%s' closed. Next open: %s\n", self.m_strScriptID, szBufr), true, true)
 		end
 
-		Sirin.WritePrivateProfileStringA(self.m_strScriptID, "IsOpen", "0", RiftMgr.m_pszModReturnGateConfigPath)
+		Sirin.WritePrivateProfileStringA(self.m_strScriptID, "IsOpen", "0", sirinRiftMgr.m_pszModReturnGateConfigPath)
 
 		if self.m_LuaScript.onClose then
 			self.m_LuaScript.onClose(self)
@@ -2640,7 +2575,7 @@ end
 
 ---@return boolean
 function sirinRift:IsClose()
-	if self.m_tNextCloseTime >= 0 and RiftMgr:getLoopTime() > self.m_tNextCloseTime then
+	if self.m_tNextCloseTime >= 0 and sirinRiftMgr:getLoopTime() > self.m_tNextCloseTime then
 		return true
 	end
 
@@ -2667,7 +2602,7 @@ function sirinRift:Open(pParam)
 
 	repeat
 		if not self.m_pDstMap then
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' self.m_pDstMap == NULL\n", self.m_strScriptID), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' self.m_pDstMap == NULL\n", self.m_strScriptID), true, true)
 			break
 		end
 
@@ -2680,7 +2615,7 @@ function sirinRift:Open(pParam)
 				local nErr = Sirin.mainThread.activateLayer(MapFld.m_dwIndex, self.m_DstPos[4], true)
 
 				if nErr ~= 0 then
-					Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' Dst.activateLayer(%d, %d, true) != E_OK\n", self.m_strScriptID, MapFld.m_dwIndex, self.m_DstPos[4]), true, true)
+					Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' Dst.activateLayer(%d, %d, true) != E_OK\n", self.m_strScriptID, MapFld.m_dwIndex, self.m_DstPos[4]), true, true)
 					break
 				end
 			end
@@ -2693,14 +2628,14 @@ function sirinRift:Open(pParam)
 				local nErr = Sirin.mainThread.activateLayer(MapFld.m_dwIndex, pParam.m_nLayerIndex, true)
 
 				if nErr ~= 0 then
-					Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' Src.activateLayer(%d, %d, true) != E_OK\n", self.m_strScriptID, MapFld.m_dwIndex, pParam.m_nLayerIndex), true, true)
+					Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' Src.activateLayer(%d, %d, true) != E_OK\n", self.m_strScriptID, MapFld.m_dwIndex, pParam.m_nLayerIndex), true, true)
 					break
 				end
 			end
 		end
 
 		if not self.m_pCObj:Create(pParam) then
-			Sirin.WriteA(RiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' CGameObject::Create() Failed!\n", self.m_strScriptID), true, true)
+			Sirin.WriteA(sirinRiftMgr.m_pszModReturnGateLogPath, string.format("Lua. SirinRift:Open(pParam) Rift:'%s' CGameObject::Create() Failed!\n", self.m_strScriptID), true, true)
 			break
 		end
 
@@ -2712,9 +2647,9 @@ function sirinRift:Open(pParam)
 		if not self.m_bReOpen then
 			self.m_nUseLeft = self.m_LuaScript.useCount or -1
 			self.m_tNextCloseTime = self:GetCloseNext()
-			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "IsOpen", "1", RiftMgr.m_pszModReturnGateConfigPath)
-			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "UseLeft", string.format("%d", self.m_nUseLeft), RiftMgr.m_pszModReturnGateConfigPath)
-			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "CloseTime", string.format("%d", self.m_tNextCloseTime), RiftMgr.m_pszModReturnGateConfigPath)
+			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "IsOpen", "1", sirinRiftMgr.m_pszModReturnGateConfigPath)
+			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "UseLeft", string.format("%d", self.m_nUseLeft), sirinRiftMgr.m_pszModReturnGateConfigPath)
+			Sirin.WritePrivateProfileStringA(self.m_strScriptID, "CloseTime", string.format("%d", self.m_tNextCloseTime), sirinRiftMgr.m_pszModReturnGateConfigPath)
 		end
 
 		sirinRiftMgr.addRift(self.m_pCObj, self)
@@ -2757,4 +2692,97 @@ function sirinRift:SendMsg_MovePortal(pPlayer)
 	buf:SendBuffer(pPlayer, 8, 2)
 end
 
-return sirinRiftMgr
+function sirinRiftMgr.onThreadBegin()
+	sirinRiftMgr.loadScripts()
+	SirinLua.LoopMgr.addMainLoopCallback(sirinRiftMgr.m_strUUID, function() sirinRiftMgr.onLoop() end, 100)
+end
+
+function sirinRiftMgr.onThreadEnd()
+	sirinRiftMgr.saveState()
+end
+
+local function autoInit()
+	if not _G[moduleName] then
+		_G[moduleName] = sirinRiftMgr
+		table.insert(SirinLua.onThreadBegin, function() _G[moduleName].onThreadBegin() end)
+		table.insert(SirinLua.onThreadEnd, function() _G[moduleName].onThreadEnd() end)
+	else
+		_G[moduleName] = sirinRiftMgr
+	end
+
+	SirinLua.HookMgr.releaseHookByUID(sirinRiftMgr.m_strUUID)
+	SirinLua.HookMgr.addHook("CDummyRift__CDummyRift_ctor", HOOK_POS.original, sirinRiftMgr.m_strUUID, sirinRiftMgr.createRift)
+	SirinLua.HookMgr.addHook("CDummyRift__CDummyRift_dtor", HOOK_POS.original, sirinRiftMgr.m_strUUID, sirinRiftMgr.destroyRift)
+	SirinLua.HookMgr.addHook("CDummyRift__Enter", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		---@param pPlayer CPlayer
+		---@return integer
+		function (pCObj, pPlayer)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then return rift:Enter(pPlayer) end
+			return 3
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__Close", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		function (pCObj)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then rift:Close() end
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__IsClose", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		---@return boolean
+		function (pCObj)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then return rift:IsClose() end
+			return true
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__IsValidOwner", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		---@return boolean
+		function (pCObj)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then return rift:IsValidOwner() end
+			return true
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_Create", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		function (pCObj)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then rift:SendMsg_Create() end
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_Destroy", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		function (pCObj)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then rift:SendMsg_Destroy() end
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_FixPosition", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		---@param nIndex integer
+		function (pCObj, nIndex)
+			local rift = sirinRiftMgr.getRift(pCObj)
+			if rift then rift:SendMsg_FixPosition(nIndex) end
+		end
+	)
+	SirinLua.HookMgr.addHook("CDummyRift__SendMsg_MovePortal", HOOK_POS.original, sirinRiftMgr.m_strUUID,
+		---@param pCObj CDummyRift
+		---@param pPlayer CPlayer
+		function (pCObj, pPlayer)
+			local rift = sirinRiftMgr.getRift(pCObj)
+ 			if rift then rift:SendMsg_MovePortal(pPlayer) end
+		end
+	)
+
+end
+
+autoInit()
+
+if not RiftMgr then
+	RiftMgr = sirinRiftMgr
+end

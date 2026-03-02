@@ -43,7 +43,6 @@ BotMgr = require('threads.main._system.manager.bot')
 
 
 -- Reloadable script handlers
-RiftMgr = require('threads.main._system.manager.rifts')
 CombineExMgr = require('threads.main._system.manager.combineEx')
 MonsterScheduleMgr = require('threads.main._system.manager.monsterSchedule')
 LootingMgr = require('threads.main._system.manager.itemLooting')
@@ -58,7 +57,6 @@ SirinLua.onThreadBegin = {
 	function() SirinLua.GmCommMgr.loadScripts() end,
 	function() PlayerMgr.initHooks(); PlayerMgr.init() end,
 	function() AutoLootMgr.initHooks() end,
-	function() RiftMgr.initHooks(); RiftMgr.loadScripts(); SirinLua.LoopMgr.addMainLoopCallback(RiftMgr.m_strUUID, function() RiftMgr.onLoop() end, 100) end,
 	function() CombineExMgr.initHooks(); CombineExMgr.loadScripts() end,
 	function() BotMgr.initHooks(); BotMgr.init(); SirinLua.LoopMgr.addMainLoopCallback(BotMgr.m_strUUID, function() BotMgr.onLoop() end, 50) end,
 	function() MonsterScheduleMgr.initHooks(); MonsterScheduleMgr.loadScripts(); SirinLua.LoopMgr.addMainLoopCallback(MonsterScheduleMgr.m_strUUID, function() MonsterScheduleMgr.onLoop() end, 1000) end,
@@ -67,7 +65,6 @@ SirinLua.onThreadBegin = {
 
 SirinLua.onThreadEnd = {
 	function() SirinLua.PotionMgr.uninit() end,
-	function() RiftMgr.saveState() end,
 	function() MonsterScheduleMgr.saveState() end,
 	--function() LootingMgr.saveState() end,
 }

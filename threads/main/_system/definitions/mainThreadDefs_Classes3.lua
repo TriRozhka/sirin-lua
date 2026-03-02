@@ -964,3 +964,19 @@ local _suggested_matter_change_taxrate = {}
 ---@field m_byRace integer
 ---@field m_suggested _suggested_matter_change_taxrate
 local TRC_AutoTrade = {}
+
+---@class (exact) AutominePersonalMgr
+---@field instance fun(): AutominePersonalMgr
+---@field m_logService integer
+---@field m_logError integer
+---@field m_dwObjSerial integer
+local AutominePersonalMgr = {}
+---@param index integer
+---@return AutominePersonal
+function AutominePersonalMgr:m_pMachine_get(index) end
+---@param index integer
+---@return integer
+function AutominePersonalMgr:m_wOreIndex_get(index) end
+---@param index integer
+---@param val integer
+function AutominePersonalMgr:m_wOreIndex_set(index, val) end

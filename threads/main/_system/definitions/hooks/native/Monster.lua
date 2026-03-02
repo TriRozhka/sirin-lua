@@ -30,6 +30,13 @@ local function CMonsterHelper__TransPort(pMonster, dwOldSerial) end
 ---@return boolean
 local function CMonster___LootItem_Std(pMonster, pOwner) return false end
 
+---Purpose: Monster eventset looting routine.
+---Hook positions: 'original'.
+---@param pMonster CMonster
+---@param pOwner CPlayer
+---@return boolean
+local function CMonster___LootItem_EventSet(pMonster, pOwner) return false end
+
 ---Purpose: DefGap script value return.
 ---Hook positions: 'original'
 ---@param pMonster CMonster
