@@ -11,6 +11,15 @@ Functions, which exists in native RF Online code. Guild related hooks.
 ---@return boolean
 local function CPlayer__pc_GuildEstablishRequest(pPlayer, pwszGuildName) return true end
 
+---Purpose: Guild pre establish hook.
+---Hook positions: 'pre_event'.
+---@param pGuild CGuild
+---@param dwSerial integer
+---@param pszName string
+---@param byRace integer
+---@param estMembers table<integer, _guild_member_info>
+local function CGuild__EstGuild(pGuild, dwSerial, pszName, byRace, estMembers) end
+
 ---Purpose: Guild establish notification.
 ---Hook positions: 'after_event'.
 ---@param pGuild CGuild
