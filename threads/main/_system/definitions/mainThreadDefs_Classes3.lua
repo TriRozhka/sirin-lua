@@ -980,3 +980,260 @@ function AutominePersonalMgr:m_wOreIndex_get(index) end
 ---@param index integer
 ---@param val integer
 function AutominePersonalMgr:m_wOreIndex_set(index, val) end
+
+---@class (exact) _cash_discount_ini_
+---@field m_bUseCashDiscount integer
+---@field m_bRepeat integer
+---@field m_byRepeatDay integer
+---@field m_wCsDiscount integer
+---@field m_bCoEvent integer
+local _cash_discount_ini_ = {}
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_NextEventTime_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_NextEventTime_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_wYear_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_wYear_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_byMonth_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_byMonth_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_byDay_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_byDay_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_byHour_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_byHour_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_byMinute_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_byMinute_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_discount_ini_:m_cdeTime_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_ini_:m_cdeTime_set(index, val) end
+
+---@class (exact) _cash_discount_
+---@field m_cde_status integer
+---@field m_cde_timer lightuserdata CNetTimer
+---@field m_cde_log CLogFile
+---@field m_ini _cash_discount_ini_
+local _cash_discount_ = {}
+---@return integer dwLowDateTime
+---@return integer dwHighDateTime
+function _cash_discount_:m_cde_ini_file_time() end
+---@param index integer
+---@return integer
+function _cash_discount_:m_cde_inform_before_get(index) end
+---@param index integer
+---@param val integer
+function _cash_discount_:m_cde_inform_before_set(index, val) end
+
+---@class (exact) _cash_event_ini___cash_limited_sale
+---@field m_szLimcode string
+---@field m_wLimcount integer
+local _cash_event_ini___cash_limited_sale = {}
+
+---@class (exact) _cash_event_ini
+---@field m_bUseCashEvent integer
+---@field m_bRepeat integer
+---@field m_byRepeatDay integer
+---@field m_byLimDiscout integer
+---@field m_byDCK integer
+---@field m_byLimited_sale_num integer
+local _cash_event_ini = {}
+---@param index integer
+---@return integer
+function _cash_event_ini:m_NextEventTime_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_NextEventTime_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_wYear_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_wYear_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_byMonth_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_byMonth_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_byDay_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_byDay_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_byHour_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_byHour_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_byMinute_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_byMinute_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_EventTime_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_EventTime_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_ini:m_byDiscout_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_ini:m_byDiscout_set(index, val) end
+---@param index integer
+---@return _cash_event_ini___cash_limited_sale
+function _cash_event_ini:m_Limited_sale_get(index) end
+
+---@class (exact) _cash_event
+---@field m_event_status integer
+---@field m_event_timer lightuserdata CNetTimer
+---@field m_event_log CLogFile
+---@field m_ini _cash_event_ini
+local _cash_event = {}
+---@return integer dwLowDateTime
+---@return integer dwHighDateTime
+function _cash_event:m_event_ini_file_time() end
+---@param index integer
+---@return integer
+function _cash_event:m_event_inform_before_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event:m_event_inform_before_set(index, val) end
+
+---@class (exact) _cash_event_time
+local _cash_event_time = {}
+---@param index integer
+---@return integer
+function _cash_event_time:m_nYear_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_nYear_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_time:m_nMonth_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_nMonth_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_time:m_nDay_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_nDay_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_time:m_nHour_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_nHour_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_time:m_nMinute_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_nMinute_set(index, val) end
+---@param index integer
+---@return integer
+function _cash_event_time:m_EventTime_get(index) end
+---@param index integer
+---@param val integer
+function _cash_event_time:m_EventTime_set(index, val) end
+
+---@class (exact) _con_event_ini
+---@field m_bUseConEvent integer
+---@field m_dwCashMin integer
+---@field m_iEventTime integer
+---@field m_byEventKind integer
+---@field m_szStartMsg string
+---@field m_szMiddletMsg string
+---@field m_szEndMsg string
+local _con_event_ini = {}
+
+---@class (exact) _con_event_
+---@field m_conevent_status integer
+---@field m_conevent_log CLogFile
+---@field m_bConEvent boolean
+---@field m_ini _con_event_ini
+---@field m_eventtime _cash_event_time
+local _con_event_ = {}
+---@return integer dwLowDateTime
+---@return integer dwHighDateTime
+function _con_event_:m_conevent_ini_file_time() end
+
+---@class (exact) _cash_lim_sale__LimEventItemInfo
+---@field byTableCode integer
+---@field dwIndex integer
+---@field wCount integer
+local _cash_lim_sale__LimEventItemInfo = {}
+
+---@class (exact) _cash_lim_sale
+---@field DCK integer
+---@field m_byEventNum integer
+local _cash_lim_sale = {}
+---@param index integer
+---@return _cash_lim_sale__LimEventItemInfo
+function _cash_lim_sale:m_EventItemInfo_get(index) end
+
+---@class (exact) CashItemRemoteStore___remain_num_of_good
+---@field strCode string
+---@field nMaxNum integer
+---@field nRemainNum integer
+local CashItemRemoteStore___remain_num_of_good = {}
+
+---@class (exact) CashItemRemoteStore
+---@field Instance fun(): CashItemRemoteStore
+---@field _kRecGoods CRecordData
+---@field _kRecConEventMSG CRecordData
+---@field m_cde _cash_discount_
+---@field m_con_event _con_event_
+---@field m_TotalEventTimer lightuserdata CMyTimer
+---@field m_lim_event _cash_lim_sale
+---@field m_lim_event_New _cash_lim_sale
+---@field m_lim_event_Old _cash_lim_sale
+---@field _bIsBuyCashItemByGold boolean
+---@field _kSysLog CLogFile
+local CashItemRemoteStore = {}
+---@param index integer
+---@return CLogFile
+function CashItemRemoteStore:_kLoggers_get(index) end
+---@param index integer
+---@return CashItemRemoteStore___remain_num_of_good
+function CashItemRemoteStore:_pkRemainInfo_get(index) end
+---@param index integer
+---@return _cash_event
+function CashItemRemoteStore:m_cash_event_get(index) end
+---@return boolean
+function CashItemRemoteStore:is_cde_time() end
+---@param byEventType integer
+---@return boolean
+function CashItemRemoteStore:IsEventTime(byEventType) end
+
+Sirin.mainThread.CashItemRemoteStore = CashItemRemoteStore

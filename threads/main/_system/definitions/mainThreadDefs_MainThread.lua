@@ -304,6 +304,7 @@ local console = {}
 ---@field CWeeklyGuildRankManager CWeeklyGuildRankManager
 ---@field CRecallEffectControllerFix CRecallEffectControllerFix
 ---@field CUnmannedTraderTaxRateManager CUnmannedTraderTaxRateManager
+---@field CashItemRemoteStore CashItemRemoteStore
 local mainThread = {}
 
 ---@class (exact) modChargeItem

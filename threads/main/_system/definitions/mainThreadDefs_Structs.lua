@@ -1965,3 +1965,17 @@ function _skill_fld:m_nContEffectSec_set(a1, a2) end
 ---@field m_nLimitCount integer
 ---@field m_nProbability integer
 local _monster_sp_fld = {}
+
+---@class (exact) _CashShop_fld: _base_fld
+---@field m_strCsItemCode string
+---@field m_nCsPrice integer
+---@field m_bView integer
+---@field m_strItemPart string
+---@field m_nCsDiscount integer
+local _CashShop_fld = {}
+---@param index integer
+---@return integer
+function _CashShop_fld:m_nCsEvent_get(index) end
+---@param index integer
+---@param val integer
+function _CashShop_fld:m_nCsEvent_set(index, val) end
