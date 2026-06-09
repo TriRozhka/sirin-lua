@@ -62,6 +62,7 @@ local sirinPlayerMgr = {
 
 function sirinPlayerMgr.initHooks()
 	SirinLua.HookMgr.addHook("CPlayer__pc_UpgradeItem", HOOK_POS.original, sirinPlayerMgr.m_strUUID, sirinPlayerMgr.pc_UpgradeItem)
+	SirinLua.HookMgr.addHook("CPlayer__pc_DowngradeItem", HOOK_POS.original, sirinPlayerMgr.m_strUUID, sirinPlayerMgr.pc_DowngradeItem)
 	SirinLua.HookMgr.addHook("CPlayer__pc_MakeItem", HOOK_POS.original, sirinPlayerMgr.m_strUUID, sirinPlayerMgr.pc_MakeItem)
 	--SirinLua.HookMgr.addHook("CPlayer__apply_have_item_std_effect", HOOK_POS.original, sirinPlayerMgr.m_strUUID, sirinPlayerMgr.apply_have_item_std_effect)
 	--SirinLua.HookMgr.addHook("CPlayer__apply_normal_item_std_effect", HOOK_POS.original, sirinPlayerMgr.m_strUUID, sirinPlayerMgr.apply_normal_item_std_effect)
@@ -680,17 +681,17 @@ UPG_RATE_TYPE = {
 ---@param rate integer
 function sirinPlayerMgr.setUpgradeRate(type, grade, level, rate)
 	if rate > 10000 or rate < 0 then
-		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Rate out of range: %n\n", rate))
+		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Rate out of range: %d\n", rate))
 		return
 	end
 
 	if level > 7 or level < 1 then
-		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Upgrade level out of range: %n\n", level))
+		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Upgrade level out of range: %d\n", level))
 		return
 	end
 
 	if grade > 11 or grade < 1 then
-		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Item garde out of range: %n\n", grade))
+		Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("sirinPlayerMgr.setUpgradeRate(...): Item garde out of range: %d\n", grade))
 		return
 	end
 
@@ -929,7 +930,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 
 		if dwTotalRate >= math.random(1, 100000) then
 			-- upgrade success
-			pPlayer:Emb_ItemUpgrade(0, pUpgItemStorage.m_nListCode, pUpgItemCon.m_byStorageIndex, Sirin.mainThread.GetBitAfterUpgrade(pUpgItemCon.m_dwLv, pTalikUpgFld.m_dwIndex, _byUpgedLv))
+			pPlayer:Emb_ItemUpgrade(0, pUpgItemStorage.m_nListCode, pUpgItemCon.m_byStorageIndex, GetBitAfterUpgrade(pUpgItemCon.m_dwLv, pTalikUpgFld.m_dwIndex, _byUpgedLv))
 			pPlayer:SendMsg_FanfareItem(0, pUpgItemCon, nil)
 			local pItemFld = g_Main:m_tblItemData_get(pUpgItemCon.m_byTableCode):GetRecord(pUpgItemCon.m_wItemIndex)
 			pPlayer:Emb_CheckActForQuest(10, pItemFld.m_strCode, 1, false)
@@ -1029,7 +1030,7 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 					Sirin.mainThread.g_PotionMgr:RemovePotionContEffect(pPlayer, ContData)
 					byErrCode = 100
 				else
-					pPlayer:Emb_ItemUpgrade(2, pposUpgItem.byStorageCode, pUpgItemCon.m_byStorageIndex, Sirin.mainThread.GetBitAfterSetLimSocket(bySocketLim))
+					pPlayer:Emb_ItemUpgrade(2, pposUpgItem.byStorageCode, pUpgItemCon.m_byStorageIndex, GetBitAfterSetLimSocket(bySocketLim))
 					byErrCode = 101
 				end
 			else
@@ -1044,6 +1045,158 @@ function sirinPlayerMgr.pc_UpgradeItem(pPlayer, pposTalik, pposToolItem, pposUpg
 	buf:Init()
 	buf:PushUInt8(byErrCode)
 	buf:SendBuffer(pPlayer, 7, 18)
+end
+
+---@param pPlayer CPlayer
+---@param pposTalik _STORAGE_POS_INDIV
+---@param pposToolItem _STORAGE_POS_INDIV
+---@param pposUpgItem _STORAGE_POS_INDIV
+function sirinPlayerMgr.pc_DowngradeItem(pPlayer, pposTalik, pposToolItem, pposUpgItem)
+	---@type integer
+	local byErrCode = 0
+	local pUpgItemStorage = pPlayer.m_Param:m_pStoragePtr_get(pposUpgItem.byStorageCode)
+	---@type __ITEM
+	local pUpgItemCon = nil
+	---@type __ITEM
+	local pTalikCon = nil
+	---@type _ItemUpgrade_fld
+	local pTalikUpgFld = nil
+
+	repeat
+		if pPlayer.m_EP:GetEff_State(_EFF_STATE.Stone_Lck) then
+			byErrCode = 7
+			break
+		end
+
+		if pPlayer.m_EP:GetEff_State(_EFF_STATE.Invincible) then
+			byErrCode = 7
+			break
+		end
+
+		pUpgItemCon = pUpgItemStorage:GetPtrFromSerial(pposUpgItem.wItemSerial)
+
+		if not pUpgItemCon then
+			byErrCode = 5
+			break
+		end
+
+		if pUpgItemCon.m_bLock then
+			byErrCode = 13
+			break
+		end
+
+		if GetItemKindCode(pUpgItemCon.m_byTableCode) ~= 0 then
+			byErrCode = 9
+			break
+		end
+
+		if Sirin.mainThread.GetDefItemUpgSocketNum(pUpgItemCon.m_byTableCode, pUpgItemCon.m_wItemIndex) == 0 then
+			byErrCode = 9
+			break
+		end
+
+		if GetItemUpgedLv(pUpgItemCon.m_dwLv) == 0 then
+			byErrCode = 12
+			break
+		end
+
+		pTalikCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pposTalik.wItemSerial)
+
+		if not pTalikCon then
+			pPlayer:SendMsg_AdjustAmountInform(0, pposTalik.wItemSerial, 0)
+			byErrCode = 1
+			break
+		end
+
+		if pTalikCon.m_byTableCode ~= TBL_CODE.res then
+			byErrCode = 2
+			break
+		end
+
+		if pTalikCon.m_bLock then
+			byErrCode = 13
+			break
+		end
+
+		pTalikUpgFld = g_Main.m_tblItemUpgrade:GetRecordFromRes(pTalikCon.m_wItemIndex)
+
+		if not pTalikUpgFld then
+			byErrCode = 2
+			break
+		end
+
+		if pTalikUpgFld.m_nDataEffect ~= 14 then
+			byErrCode = 2
+			break
+		end
+
+		if not SirinLua.HookMgr.callHook(HOOK_POS.filter, "canUseWithNoTool", false, pPlayer, 3) then
+			local pToolCon = pPlayer.m_Param.m_dbInven:GetPtrFromSerial(pposToolItem.wItemSerial)
+
+			if not pToolCon then
+				pPlayer:SendMsg_AdjustAmountInform(0, pposToolItem.wItemSerial, 0)
+				byErrCode = 3
+				break
+			end
+
+			if pToolCon.m_byTableCode ~= TBL_CODE.maketool then
+				byErrCode = 4
+				break
+			end
+
+			if pToolCon.m_bLock then
+				byErrCode = 13
+				break
+			end
+		end
+
+		local pItemCopy = Sirin.mainThread._STORAGE_LIST___db_con(pUpgItemCon)
+
+		pPlayer:Emb_AlterDurPoint(STORAGE_POS.inven, pTalikCon.m_byStorageIndex, -1, false, false)
+
+		local upgLv = GetItemUpgedLv(pUpgItemCon.m_dwLv)
+		local talikIndex = GetTalikFromSocket(pUpgItemCon.m_dwLv, upgLv - 1)
+		local dwGradeInfo = GetBitAfterDowngrade(pUpgItemCon.m_dwLv, upgLv)
+
+		pPlayer:Emb_ItemUpgrade(1, pUpgItemStorage.m_nListCode, pUpgItemCon.m_byStorageIndex, dwGradeInfo)
+
+		if talikIndex < 13 then
+			local pNewTalikCon = Sirin.mainThread._STORAGE_LIST___db_con()
+
+			pNewTalikCon.m_byTableCode = TBL_CODE.res
+			pNewTalikCon.m_wItemIndex = talikIndex + 20 -- 20 is ignorant talik index in script.
+			pNewTalikCon.m_dwDur = 1
+			pNewTalikCon.m_dwLv = 0xFFFFFFF
+
+			if pPlayer.m_Param.m_dbInven:GetIndexEmptyCon() == 255 then
+				Sirin.mainThread.createItemBoxForAutoLoot(pTalikCon, pPlayer, 0xFFFFFFFF, false, nil, 3, pPlayer.m_pCurMap, pPlayer.m_wMapLayerIndex,
+					{ pPlayer.m_fCurPos_x, pPlayer.m_fCurPos_y, pPlayer.m_fCurPos_z }, false)
+				Sirin.mainThread.CMgrAvatorItemHistory.Instance():reward_add_item(pPlayer, "GradeDown Ground Reward", pNewTalikCon, 109)
+			else
+				pNewTalikCon.m_wSerial = pPlayer.m_Param:GetNewItemSerial()
+
+				if not pPlayer:Emb_AddStorage(STORAGE_POS.inven, pNewTalikCon, false, true) then
+					local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+					buf:Init()
+					buf:PushUInt8(255)
+					buf:SendBuffer(pPlayer, 7, 20)
+					Sirin.WriteA(pPlayer.m_szLvHistoryFileName, string.format("Amb_AddStorage ERR - item:[%d-%d], CodePos:(%s)\n", pNewTalikCon.m_byTableCode, pNewTalikCon.m_wItemIndex, "Lua CPlayer::pc_DowngradeItem - Emb_AddStorage() Fail"), false, false)
+					return
+				end
+
+				pPlayer:SendMsg_RewardAddItem(pNewTalikCon, 0)
+				Sirin.mainThread.CMgrAvatorItemHistory.Instance():reward_add_item(pPlayer, "GradeDown Reward", pNewTalikCon, 108)
+			end
+		end
+
+		Sirin.mainThread.CMgrAvatorItemHistory.Instance():grade_down_item(pPlayer, pItemCopy, pTalikCon, dwGradeInfo)
+
+	until true
+
+	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+	buf:Init()
+	buf:PushUInt8(byErrCode)
+	buf:SendBuffer(pPlayer, 7, 20)
 end
 
 ---@param pPlayer CPlayer
@@ -2253,6 +2406,48 @@ function sirinPlayerMgr.calcMaxSP(pPlayer)
 	tmp = tmp + pPlayer:m_nAddPointByClass_get(2)				-- Class bonus
 
 	return math.floor(math.sqrt((tmp ^ 2) * pPlayer:GetLevel()) * 2.5 + 160)
+end
+
+---@param pPlayer CPlayer
+---@return integer
+function sirinPlayerMgr.getMaxHP(pPlayer)
+	local nVal = math.floor(pPlayer:m_nMaxPoint_get(0) * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.HP_Mx))
+
+	if nVal < 0 then
+		nVal = 1
+	end
+
+	return nVal
+end
+
+---@param pPlayer CPlayer
+---@return integer
+function sirinPlayerMgr.getMaxFP(pPlayer)
+	local nVal = math.floor(pPlayer:m_nMaxPoint_get(1) * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.FP_Mx))
+
+	if nVal < 0 then
+		nVal = 1
+	end
+
+	return nVal
+end
+
+---@param pPlayer CPlayer
+---@return integer
+function sirinPlayerMgr.getMaxSP(pPlayer)
+	local nVal = math.floor(pPlayer:m_nMaxPoint_get(2) * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.SP_Mx))
+
+	if nVal < 0 then
+		nVal = 1
+	end
+
+	return nVal
+end
+
+---@param pPlayer CPlayer
+---@return integer
+function sirinPlayerMgr.getMaxDP(pPlayer)
+	return math.floor(pPlayer.m_nMaxDP + pPlayer.m_EP:GetEff_Plus(_EFF_PLUS.DP_Max))
 end
 
 ---@param pPlayer CPlayer

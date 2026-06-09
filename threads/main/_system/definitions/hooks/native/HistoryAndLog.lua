@@ -25,3 +25,17 @@ local function CMgrAvatorItemHistory__reward_add_item(pHistory, nIndex, pszClaus
 ---@param luaUIDs table<integer, integer>
 ---@param strFileName string
 local function CMgrAvatorItemHistory__combine_ex_reward_item(pHistory, nIndex, byMakeNum, pCombineDB, luaRewardTypeList, luaUIDs, strFileName) end
+
+---Purpose: Hook on logging hero combine consume materials.
+---Hook positions: 'after_event'
+---@param pHistory CMgrAvatorItemHistory
+---@param nIndex integer [0 - 2531]
+---@param dwCheckKey integer
+---@param bySlotNum integer
+---@param luaMaterials table<integer, _STORAGE_LIST___db_con>
+---@param luaMatNum table<integer, integer>
+---@param dwFee integer
+---@param strFileName string
+---@param nSucc integer
+---@param dwFailCount integer
+local function CMgrAvatorItemHistory__combine_ex_using_material(pHistory, nIndex, dwCheckKey, bySlotNum, luaMaterials, luaMatNum, dwFee, strFileName, nSucc, dwFailCount) end

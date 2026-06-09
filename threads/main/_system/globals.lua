@@ -48,6 +48,27 @@ function GetTalikFromSocket(dwLvBit, index)
 	return (dwLvBit >> (index * 4)) & 0xF
 end
 
+---@param dwCurBit integer
+---@param dwTalikCode integer
+---@param byCurLv integer
+---@return integer
+function GetBitAfterUpgrade(dwCurBit, dwTalikCode, byCurLv)
+	return 0xFFFFFFFF & (((dwTalikCode & 0xF) << byCurLv * 4) | ((~(0xF << byCurLv * 4) & 0xFFFFFFFF) & dwCurBit))
+end
+
+---@param dwCurBit integer
+---@param byCurLv integer
+---@return integer
+function GetBitAfterDowngrade(dwCurBit, byCurLv)
+	return (0xF << 4 * (byCurLv - 1)) | dwCurBit
+end
+
+---@param byLimSocketNum integer
+---@return integer
+function GetBitAfterSetLimSocket(byLimSocketNum)
+	return (byLimSocketNum << 28) | 0xFFFFFFF
+end
+
 ---@param nTableCode integer
 ---@return boolean
 function IsOverlapItem(nTableCode)

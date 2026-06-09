@@ -305,6 +305,7 @@ local console = {}
 ---@field CRecallEffectControllerFix CRecallEffectControllerFix
 ---@field CUnmannedTraderTaxRateManager CUnmannedTraderTaxRateManager
 ---@field CashItemRemoteStore CashItemRemoteStore
+---@field modRadar modRadar
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -399,6 +400,12 @@ local modRaceBossChipHolderBonus = {}
 
 ---@class (exact) modNetwork
 ---@field getPlayerHWID fun(dwIndex: integer): boolean, string?
+---@field subscribe fun(byID: integer, bySubID: integer) #allows receive raw packet data using 'onPacketReceive' hook.
+---@field unsubscribe fun(byID: integer, bySubID: integer)
+---@field isSubscribed fun(byID: integer, bySubID: integer): boolean
+---@field isDataAnalysis fun(): boolean
+---@field getClientIndex fun(): integer
+---@field getMsgHeader fun(): integer?, integer?, integer? #returns byID, bySubID, wLen or nil
 local modNetwork = {}
 
 ---@class (exact) CAssetController
@@ -613,9 +620,9 @@ function CMultiBinaryData:GetList() end
 ---@field m_HisMainFPS lightuserdata CConnNumPHMgr
 ---@field m_HisSendFPS lightuserdata CConnNumPHMgr
 ---@field m_HisDataFPS lightuserdata CConnNumPHMgr
----@field m_tmServerState lightuserdata CMyTimer
+---@field m_tmServerState CMyTimer
 ---@field m_bVerCheck boolean
----@field m_tmEconomyState lightuserdata CMyTimer
+---@field m_tmEconomyState CMyTimer
 ---@field m_tmDbUpdate integer
 ---@field m_listDQSData lightuserdata CNetIndexList
 ---@field m_listDQSDataComplete lightuserdata CNetIndexList
@@ -647,11 +654,11 @@ function CMultiBinaryData:GetList() end
 ---@field m_dwMessengerIP integer
 ---@field m_dwAccountIP integer
 ---@field m_dwCheckAccountOldTick integer
----@field m_tmrCheckAvator lightuserdata CMyTimer
----@field m_tmrCheckLoop lightuserdata CMyTimer
----@field m_tmrAccountPing lightuserdata CMyTimer
----@field m_tmrStateMsgGotoWeb lightuserdata CMyTimer
----@field m_tmrCheckRadarDelay lightuserdata CMyTimer
+---@field m_tmrCheckAvator CMyTimer
+---@field m_tmrCheckLoop CMyTimer
+---@field m_tmrAccountPing CMyTimer
+---@field m_tmrStateMsgGotoWeb CMyTimer
+---@field m_tmrCheckRadarDelay CMyTimer
 ---@field m_nFreeServer integer m_bFreeServer
 ---@field m_bRuleThread boolean
 ---@field m_bDQSThread boolean
@@ -693,7 +700,7 @@ function CMultiBinaryData:GetList() end
 ---@field m_logMonNum CLogFile
 ---@field m_logAPIBilling CLogFile
 ---@field m_logRenewalData CLogFile
----@field m_tmForceUserExit lightuserdata CMyTimer
+---@field m_tmForceUserExit CMyTimer
 ---@field m_nForceExitSocketIndexOffset integer
 ---@field m_bServerClosing boolean
 ---@field m_bCheckOverTickCount boolean
@@ -716,7 +723,7 @@ function CMultiBinaryData:GetList() end
 ---@field m_GuildCreateEventInfo lightuserdata GuildCreateEventInfo
 ---@field m_ServerRateLoad lightuserdata _server_rate_realtime_load
 ---@field m_pTimeLimitMgr lightuserdata TimeLimitMgr
----@field m_tmCheckForceClose lightuserdata CMyTimer
+---@field m_tmCheckForceClose CMyTimer
 ---@field m_MobMessage lightuserdata _mob_message
 ---@field m_nLimitPlayerLevel integer m_bLimitPlayerLevel
 ---@field m_byLimitPlayerLevel integer
@@ -860,14 +867,14 @@ function CHolyStoneSaveData:m_dwTerm_set(a1, a2) end
 ---@field m_logQuest CLogFile
 ---@field m_logQuestDestroy CLogFile
 ---@field m_logPer10Min CLogFile
----@field m_tmrHSKSystem lightuserdata CMyTimer
+---@field m_tmrHSKSystem CMyTimer
 ---@field m_pkDestroyer CPlayer
 ---@field m_dwNextStartTime integer
 ---@field m_nHolyStoneNum integer
 ---@field m_HolyKeeperData __holy_keeper_data
 ---@field m_ScheculeData CHolyScheduleData
 ---@field m_SaveData CHolyStoneSaveData
----@field m_tmrCumPlayer lightuserdata CMyTimer
+---@field m_tmrCumPlayer CMyTimer
 ---@field m_strHolyMental string
 ---@field m_fKeeperHPRate number
 ---@field m_fFirstKeeperHPRate number
@@ -1026,6 +1033,10 @@ function CPvpUserAndGuildRankingSystem:GetBossType(byRace, dwSerial) end
 ---@param byRace integer
 ---@return table<integer, integer>
 function CPvpUserAndGuildRankingSystem:GetBossListByRace(byRace) end
+---@param byRace integer [0-2]
+---@param byNth integer [0-8]
+---@return integer default 0xFFFFFFFF
+function CPvpUserAndGuildRankingSystem:GetCurrentRaceBossSerial(byRace, byNth) end
 
 ---@class (exact) CRecordData
 ---@field m_bLoad boolean
@@ -1088,7 +1099,7 @@ function CTranslationAsset:loadTranslationTable(pszMsgID, t) end
 ---@field m_ss lightuserdata _SYNC_STATE
 ---@field m_dwOperLobbyTime integer
 ---@field m_bCreateTrunkFree boolean
----@field m_tmrCheckPlayMin lightuserdata CMyTimer
+---@field m_tmrCheckPlayMin CMyTimer
 ---@field m_bDataUpdate boolean
 ---@field m_dwTermContSaveTime integer
 ---@field m_dwLastContSaveTime integer
@@ -1096,7 +1107,7 @@ function CTranslationAsset:loadTranslationTable(pszMsgID, t) end
 ---@field m_BillingInfo lightuserdata _BILLING_INFO
 ---@field m_bBillingNoLogout boolean
 ---@field m_nTrans integer
----@field m_RadarItemMgr lightuserdata CRadarItemMgr
+---@field m_RadarItemMgr CRadarItemMgr
 local CUserDB = {}
 ---@param a1 CUserDB
 ---@param a2 integer
@@ -1883,6 +1894,20 @@ local CMgrAvatorItemHistory = {}
 ---@param dwAfterLv integer
 function CMgrAvatorItemHistory:grade_up_item(pPlayer, pItemCon, pTalikCon, ppJewelCon, byErrCode, dwAfterLv) end
 ---@param pPlayer CPlayer
+---@param pItemCon _STORAGE_LIST___db_con
+---@param pTalikCon _STORAGE_LIST___db_con
+---@param dwAfterLv integer
+function CMgrAvatorItemHistory:grade_down_item(pPlayer, pItemCon, pTalikCon, dwAfterLv) end
+---@param pPlayer CPlayer
+---@param dwCheckKey integer
+---@param bySlotNum integer
+---@param ppMaterials table<integer, _STORAGE_LIST___db_con>
+---@param pbyMatNum table<integer, integer>
+---@param dwFee integer
+---@param nSucc integer
+---@param dwFailCount integer
+function CMgrAvatorItemHistory:combine_ex_using_material(pPlayer, dwCheckKey, bySlotNum, ppMaterials, pbyMatNum, dwFee, nSucc, dwFailCount) end
+---@param pPlayer CPlayer
 ---@param byMakeNum integer
 ---@param pCombineDB _ITEMCOMBINE_DB_BASE
 ---@param pbyRewardTypeList table<integer, integer>
@@ -1899,6 +1924,11 @@ function CMgrAvatorItemHistory:make_item(pPlayer, pMaterial, pbyMtrNum, byRetCod
 ---@param byRetCode integer
 ---@param pMakeItem _STORAGE_LIST___db_con
 function CMgrAvatorItemHistory:cheat_make_item_no_material(pPlayer, byRetCode, pMakeItem) end
+---@param pPlayer CPlayer
+---@param pszClause string
+---@param pItemCon _STORAGE_LIST___db_con
+---@param nSecretNum? integer AoP only
+function CMgrAvatorItemHistory:reward_add_item(pPlayer, pszClause, pItemCon, nSecretNum) end
 
 ---@class (exact) _100_per_random_table
 ---@field m_wCurTable integer
@@ -3029,7 +3059,7 @@ local CRecallRequestEx = {}
 
 ---@class (exact) CUnmannedTraderTaxRateManager
 ---@field Instance fun(): CUnmannedTraderTaxRateManager
----@field m_pkTimer lightuserdata CMyTimer
+---@field m_pkTimer CMyTimer
 local CUnmannedTraderTaxRateManager = {}
 ---@param byRace integer
 ---@return TRC_AutoTrade

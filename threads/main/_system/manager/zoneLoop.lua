@@ -182,7 +182,7 @@ function sirinZoneLoopMgr.onObjectLoop(obj_id, pObj)
 
 		if not succ then
 			Sirin.console.LogEx(ConsoleForeground.RED, ConsoleBackground.BLACK, string.format("Lua. sirinZoneLoopMgr.onObjectLoop() obj_kind(%d) obj_id(%d) index(%d) uid(%s) exception:\n%s\n", obj_id.m_byKind, obj_id.m_byID, obj_id.m_wIndex, k, tostring(ret)))
-			sirinZoneLoopMgr.m_mainLoopHandlers[k] = nil
+			sirinZoneLoopMgr.m_objectLoopHandlers[k] = nil
 			break
 		end
 	end

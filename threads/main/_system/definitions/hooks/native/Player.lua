@@ -62,8 +62,8 @@ local function CPlayer__NetClose(pPlayer, bMoveOutLobby) end
 ---@param pPlayer CPlayer
 local function CPlayer__Create(pPlayer) end
 
----Purpose: Player enter game notification (later than Create).
----Hook positions: 'after_event'
+---Purpose: Player enter game notification (later than Create). Also happens on GvG teleport. Check m_bCreateComplete flag.
+---Hook positions: 'pre_event'
 ---@param pPlayer CPlayer
 local function CPlayer__CreateComplete(pPlayer) end
 
@@ -387,3 +387,23 @@ local function CPlayer__SendMsg_MineCompleteResult(pPlayer, byErrCode, byNewOreI
 ---@param nNewOre integer
 ---@param dwDur integer
 local function AutominePersonal__make_minepacket(pAMP, wItemIndex, wItemSerial, byStorageIndex, nNewOre, dwDur) end
+
+---Check new character data.
+---Hook positions: 'filter'
+---@param pUser CUserDB
+---@param pwszCharName string
+---@param bySlotIndex integer
+---@param byRaceSexCode integer
+---@param pszClassCode string
+---@param dwBaseShape integer
+---@return boolean
+local function CUserDB__Insert_Char_Request(pUser, pwszCharName, bySlotIndex, byRaceSexCode, pszClassCode, dwBaseShape) return true end
+
+---Rename potion string check
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param bChange boolean
+---@param pItem _STORAGE_POS_INDIV
+---@param strCharacterName string
+---@return boolean
+local function CPlayer__pc_CharacterRenameCash(pPlayer, bChange, pItem, strCharacterName) return true end

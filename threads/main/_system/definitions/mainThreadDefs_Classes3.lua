@@ -117,7 +117,7 @@ local _pnt_rect = {}
 ---@field m_tbQuestDumPos lightuserdata CDummyPosTable
 ---@field m_BspInfo lightuserdata _bsp_info
 ---@field m_SecInfo _sec_info
----@field m_tmrMineGradeReSet lightuserdata CMyTimer
+---@field m_tmrMineGradeReSet CMyTimer
 ---@field m_nMonTotalCount integer
 local CMapData = {}
 ---@param a1 integer
@@ -1214,7 +1214,7 @@ local CashItemRemoteStore___remain_num_of_good = {}
 ---@field _kRecConEventMSG CRecordData
 ---@field m_cde _cash_discount_
 ---@field m_con_event _con_event_
----@field m_TotalEventTimer lightuserdata CMyTimer
+---@field m_TotalEventTimer CMyTimer
 ---@field m_lim_event _cash_lim_sale
 ---@field m_lim_event_New _cash_lim_sale
 ---@field m_lim_event_Old _cash_lim_sale
@@ -1236,4 +1236,108 @@ function CashItemRemoteStore:is_cde_time() end
 ---@return boolean
 function CashItemRemoteStore:IsEventTime(byEventType) end
 
+---@class (exact) _detected_char_list___char_info
+---@field m_byCharType integer
+local _detected_char_list___char_info = {}
+---@param index integer
+---@return number
+function _detected_char_list___char_info:m_fPos_get(index) end
+---@param index integer
+---@param val number
+function _detected_char_list___char_info:m_fPos_set(index, val) end
+
+---@class (exact) _detected_char_list
+---@field nSize integer
+local _detected_char_list = {}
+function _detected_char_list:init() end
+---@param index integer [0-49] max 50
+---@return _detected_char_list___char_info
+function _detected_char_list:CharInfoList_get(index) end
+---@param byCharType integer [0-3]
+---@param x number
+---@param z number
+---@return integer #default -1
+function _detected_char_list:AddCharInfo(byCharType, x, z) end
+
+---@class (exact) CRadarItemMgr
+---@field m_bUse boolean
+---@field m_bUpdate boolean
+---@field m_dwStartTime integer
+---@field m_dwDurTime integer
+---@field m_dwDelayTime integer
+---@field m_pMaster CPlayer
+---@field m_strRadarCode string
+---@field m_pDestMap CMapData
+---@field m_bPlayerEnd boolean
+---@field m_bMonEnd boolean
+---@field m_nPlayerNum integer
+---@field m_nMonNum integer
+---@field m_bSameRace boolean
+---@field m_bNorDiffRace boolean
+---@field m_bChiefDiffRace boolean
+---@field m_bEliteMonster boolean
+---@field m_RadarResult _detected_char_list
+local CRadarItemMgr = {}
+
+---@class (exact) CMyTimer
+---@field m_nTickTerm integer
+---@field m_dwTickOld integer
+---@field m_bOper boolean
+local CMyTimer = {}
+
+---@class (exact) CPostData
+---@field m_nNumber integer
+---@field m_byState integer
+---@field m_byErrCode integer
+---@field m_bySendRace integer
+---@field m_bySenderDgr integer
+---@field m_dwSenderSerial integer
+---@field m_wszSendName string
+---@field m_wszRecvName string
+---@field m_wszTitle string
+---@field m_wszContent string
+---@field m_Key _INVENKEY
+---@field m_dwDur integer
+---@field m_dwUpt integer
+---@field m_lnUID integer
+---@field m_dwGold integer
+---@field m_dwPSSerial integer
+---@field m_bContentLoad boolean
+---@field m_bUpdateIndex boolean
+local CPostData = {}
+
+---@class (exact) CPostStorage
+---@field m_nSize integer
+---@field m_bUpdate boolean
+local CPostStorage = {}
+---@param index integer [0-49]
+---@return CPostData
+function CPostStorage:m_PostData_get(index) end
+
+---@class (exact) CPostSystemManager
+---@field Instance fun():CPostSystemManager
+---@field m_nPostSystemOption integer AoP only
+---@field m_byRegiNum integer
+---@field m_byProcNum integer
+---@field m_tmrRegiTime CMyTimer
+---@field m_tmrProcTime CMyTimer
+---@field m_listEmpty lightuserdata CNetIndexList
+---@field m_listRegist lightuserdata CNetIndexList
+---@field m_listProc lightuserdata CNetIndexList
+---@field m_pkLogger CLogFile
+---@field m_tNextWrite integer
+---@field m_nPostProcCountPerDay integer
+---@field m_nPostReturnCountPerDay integer
+---@field m_dwTimeCheck integer AoP only
+local CPostSystemManager = {}
+---@param index integer [0-49]
+---@return CPostData
+function CPostSystemManager:m_PostData_get(index) end
+
+---@class (exact) modRadar
+---@field addSign fun(pPlayer: CPlayer, dwID :integer, byType: integer, byMapIndex: integer, x: number, y: number, bySpriteID: integer, wGroup: integer, wIndex: integer, bClickable:boolean, description: string)
+---@field removeSign fun(pPlayer: CPlayer, byMode: integer, dwData: integer)
+local modRadar = {}
+
 Sirin.mainThread.CashItemRemoteStore = CashItemRemoteStore
+Sirin.mainThread.modRadar = modRadar

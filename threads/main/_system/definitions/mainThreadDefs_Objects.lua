@@ -420,7 +420,7 @@ local _character_create_setdata = {}
 ---@field m_dwPlayerSerial integer
 ---@field m_wszPlayerName string
 ---@field m_nContEffectSec integer
----@field m_tmrSFCont lightuserdata CMyTimer
+---@field m_tmrSFCont CMyTimer
 local CCharacter = {}
 ---@param a1 integer
 ---@return CCharacter
@@ -670,7 +670,7 @@ local _keeper_create_setdata = {}
 ---@field m_wMagnifications integer
 ---@field m_wRange integer
 ---@field m_wDropCntOnce integer
----@field m_tmrDropTime lightuserdata CMyTimer
+---@field m_tmrDropTime CMyTimer
 local CHolyKeeper = {}
 ---@param a1 integer
 ---@return integer
@@ -696,7 +696,7 @@ function CHolyKeeper:m_nDefPart_set(a1, a2) end
 ---@field m_wRange integer
 ---@field m_wDropCntOnce integer
 ---@field m_wAddCountWithPlayer integer
----@field m_tmrDropTime lightuserdata CMyTimer
+---@field m_tmrDropTime CMyTimer
 local CHolyStone = {}
 ---@param a1 integer
 ---@return integer
@@ -1012,15 +1012,15 @@ function _ATTACK_DELAY_CHECKER:IsDelay(dwCode, dwIndex, dwMastery) end
 ---@field m_nUnitDefFc integer
 ---@field m_pSiegeItem _STORAGE_LIST___db_con
 ---@field m_bIsSiegeActing boolean
----@field m_tmrSiegeTime lightuserdata CMyTimer
+---@field m_tmrSiegeTime CMyTimer
 ---@field m_pRecalledAnimusItem _STORAGE_LIST___db_con
 ---@field m_pRecalledAnimusChar CAnimus
 ---@field m_dwLastRecallTime integer
 ---@field m_byNextRecallReturn integer
 ---@field m_wTimeFreeRecallSerial integer
----@field m_tmrIntervalSec lightuserdata CMyTimer
+---@field m_tmrIntervalSec CMyTimer
 ---@field m_dwLastSetPointTime integer
----@field m_tmrBilling lightuserdata CMyTimer
+---@field m_tmrBilling CMyTimer
 ---@field m_fBeforeDungeonPos_x number
 ---@field m_fBeforeDungeonPos_y number
 ---@field m_fBeforeDungeonPos_z number
@@ -1031,7 +1031,7 @@ function _ATTACK_DELAY_CHECKER:IsDelay(dwCode, dwIndex, dwMastery) end
 ---@field m_nCntEnable integer m_bCntEnable
 ---@field m_tmLoginTime lightuserdata _SYSTEMTIME
 ---@field m_tmCalcTime lightuserdata _SYSTEMTIME
----@field m_tmrAccumPlayingTime lightuserdata CMyTimer
+---@field m_tmrAccumPlayingTime CMyTimer
 ---@field m_bUpCheckEquipEffect boolean
 ---@field m_bDownCheckEquipEffect boolean
 ---@field m_byPosRaceTown integer
@@ -1039,7 +1039,7 @@ function _ATTACK_DELAY_CHECKER:IsDelay(dwCode, dwIndex, dwMastery) end
 ---@field m_fBeforeTownCheckPos_x number
 ---@field m_fBeforeTownCheckPos_y number
 ---@field m_TargetObject CPlayer____target
----@field m_tmrGroupTargeting lightuserdata CMyTimer
+---@field m_tmrGroupTargeting CMyTimer
 ---@field m_bMineMode boolean
 ---@field m_dwMineNextTime integer
 ---@field m_wBatterySerialTmp integer
@@ -1059,16 +1059,16 @@ function _ATTACK_DELAY_CHECKER:IsDelay(dwCode, dwIndex, dwMastery) end
 ---@field m_kPvpOrderView CPvpOrderView
 ---@field m_byBattleMode integer
 ---@field m_dwBattleTime integer
----@field m_tmrAuraSkill lightuserdata CMyTimer
+---@field m_tmrAuraSkill CMyTimer
 ---@field m_kPvpCashPoint lightuserdata CPvpCashPoint
 ---@field m_kPcBangCoupon lightuserdata CCouponMgr
----@field m_tmrEffectStartTime lightuserdata CMyTimer
----@field m_tmrEffectEndTime lightuserdata CMyTimer
+---@field m_tmrEffectStartTime CMyTimer
+---@field m_tmrEffectEndTime CMyTimer
 ---@field m_byBattleTournamentGrade integer
 ---@field m_NameChangeBuddyInfo lightuserdata _NameChangeBuddyInfo
 ---@field m_dwPcBangGiveItemListIndex integer
 ---@field m_dwRaceBuffClearKey lightuserdata MiningTicket___AuthKeyTicket
----@field m_tmrPremiumPVPInform lightuserdata CMyTimer
+---@field m_tmrPremiumPVPInform CMyTimer
 ---@field m_szItemHistoryFileName string
 ---@field m_szLvHistoryFileName string
 ---@field m_dwUMWHLastTime integer

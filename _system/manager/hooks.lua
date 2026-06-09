@@ -69,7 +69,7 @@ function sirinHookMgr.removeHook(func_name, pos, uid)
 
 	if pos == HOOK_POS.original or pos == HOOK_POS.special then
 		if h[1] and h[1] == uid then
-			h = nil
+			p[func_name] = nil
 			bSucc = true
 		end
 	else
@@ -90,9 +90,9 @@ end
 function sirinHookMgr.releaseHookByUID(uid)
 	for k,p in pairs(sirinHookMgr.m_Hooks) do
 		if k == HOOK_POS.original or k == HOOK_POS.special then
-			for _,h in pairs(p) do
+			for f,h in pairs(p) do
 				if h[1] == uid then
-					h = nil
+					sirinHookMgr.m_Hooks[k][f] = nil
 				end
 			end
 		else

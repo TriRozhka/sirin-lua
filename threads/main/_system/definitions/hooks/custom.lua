@@ -16,13 +16,6 @@ local function exitAccountReport(uuid, serial) end
 ---@param serial integer
 local function enterAccountReport(uuid, serial) end
 
----Purpose: check new player name and name used in rename potion.
----Hook positions: 'filter'
----@param pUserDB CUserDB
----@param pszName string
----@return boolean
-local function isValidPlayerName(pUserDB, pszName) return true end
-
 ---Purpose: check new guild name.
 ---Hook positions: 'filter'
 ---@param pPlayer CPlayer
@@ -271,6 +264,13 @@ local function canUseNPCStoreWithNoBeeper(pPlayer, dwStoreIndex) return false en
 ---@return boolean
 local function canUseTrunkWithNoBeeper(pPlayer) return false end
 
+---Purpose: Check for trunk operation request with no password.
+---Hook positions: 'filter'
+---@param pPlayer CPlayer
+---@param strPassword string
+---@return boolean
+local function canUseTrunkWithNoPassword(pPlayer, strPassword) return false end
+
 ---Purpose: Check for AH operation request using mod custom windows.
 ---Hook positions: 'filter'
 ---@param pPlayer CPlayer
@@ -400,3 +400,13 @@ local function CRecallRequest__DecideRecall(pRequest, pDstPlayer) return 0 end
 ---@param pDstPlayer CPlayer
 ---@return integer
 local function CRecallRequestEx__DecideRecall(pRequest, pDstPlayer) return 0 end
+
+---Allows to create custom packet handler/sniffer
+---Hook positions: 'filter'
+---@param dwClientIndex integer [0-2531]
+---@param byID integer
+---@param bySubID integer
+---@param wLen integer
+---@param data CBinaryData
+---@return boolean #Continue execution - true; break execution - false
+local function onPacketReceive(dwClientIndex, byID, bySubID, wLen, data) return true end

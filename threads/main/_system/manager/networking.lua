@@ -197,6 +197,40 @@ function sirinNetworkMgr.monsterLifeStateInform(byType, pMonRecordFld, pMapData,
 	end
 end
 
+---Overrides text of global message box. Can be used to replace default text.
+---@param pPlayer CPlayer
+---@param strText string String will be converted to codepage of client.
+function sirinNetworkMgr.pushGUIMessage_Text(pPlayer, strText)
+	if strText:len() == 0 then return end	
+
+	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+	buf:Init()
+	buf:PushInt8(1) -- 0 for message box that will be opened next. 1 for last opened message box.
+	local str = "pushed data\nline 2\nline 3\n\nline 5"
+	buf:PushString(strText, strText:len() + 1)
+	buf:SendBuffer(pPlayer, 80, 22)
+end
+
+---Opens new message box on client.
+---@param pPlayer CPlayer
+---@param strText string String will be converted to codepage of client.
+function sirinNetworkMgr.openGUIMessage(pPlayer, strText)
+	if strText:len() == 0 then return end
+
+	local buf = Sirin.mainThread.CLuaSendBuffer.Instance()
+	buf:Init()
+	buf:PushUInt32(0xD0000000)	-- ARGB (only Alpha is used. other bytes reserved)
+	buf:PushUInt16(0)			-- box id. By default 0.
+	buf:PushUInt16(4)			-- box style. (what buttons will be displayed) 4 - OK
+	buf:PushUInt32(0xFFFFFFFF)	-- duration time (not tested)
+	buf:PushInt8(0)				-- boolean. Is Scrollable.
+	buf:PushInt8(0)				-- boolean. Use Font info. (not tested)
+	buf:PushInt8(1)				-- boolean. Is Modal. (not tested)
+	buf:PushInt8(1)				-- boolean. Reset request cooldown on client.
+	buf:PushString(strText, strText:len() + 1)
+	buf:SendBuffer(pPlayer, 80, 23)
+end
+
 ---@type table<string, fun(a: NetOP, ...)>
 local tblPackFunc = {}
 
@@ -394,6 +428,21 @@ local protoTypes = {
 		2048,
 		{ 'u32', 'f', { true, { 'u32', 'pu32' } } },
 		{ 'ct', 'noGemRate', { true, { 'SuccRates', 'id', 'data' } } },
+	},
+	["sirin.proto.customMinimap_TypeAdd"] = {
+		4096,
+		{ 'u32', { true, { 'u32', 'pu32', 's', 'b' } } },
+		{ 'ct', { true, { 'data', 'type', 'icon', 'description', 'clickable' } } },
+	},
+	["sirin.proto.customMinimap_PointAdd"] = {
+		4096,
+		{ 'u32', { true, { 'u32', 'u32', 'u32', 'f', 'f' } } },
+		{ 'ct', { true, { 'data', 'id', 'type', 'mapIndex', 'x', 'y' } } },
+	},
+	["sirin.proto.customMinimap_PointRemove"] = {
+		256,
+		{ 'u32', 'pu32' },
+		{ 'mode', 'data' },
 	},
 }
 
