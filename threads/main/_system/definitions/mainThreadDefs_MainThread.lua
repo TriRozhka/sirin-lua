@@ -454,7 +454,7 @@ local CLuaSendBuffer = {}
 ---@param a1 string
 ---@param a2 integer
 function CLuaSendBuffer:PushString(a1, a2) end
----@param a1 CPlayer
+---@param a1 CPlayer|integer
 ---@param a2 integer
 ---@param a3 integer
 function CLuaSendBuffer:SendBuffer(a1, a2, a3) end
