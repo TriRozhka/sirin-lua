@@ -118,22 +118,30 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 		if pTower.m_pMasterTwr then -- we are non system tower
 			if pTower.m_pMasterTwr.m_bInGuildBattle then -- we are in guild battle
 				if not pTarPlayer or not pTarPlayer.m_bInGuildBattle or pTower.m_pMasterTwr.m_byGuildBattleColorInx == pTarPlayer.m_byGuildBattleColorInx then
-					break -- we not allowed to attack anything beside opposite team
+					break -- not allowed to attack anything beside opposite team
 				end
 			else -- we are not in guild battle
-				if pTarPlayer and pTarPlayer.m_bInGuildBattle then
-					break -- we not allwed to touch objects in guild battle
-				end
+				if pTarPlayer then
+					if pTarPlayer.m_bInGuildBattle then
+						break -- not allwed to touch objects in guild battle
+					end
 
-				local bSameRace = pTower:GetObjRace() == pTarget:GetObjRace()
+					local bSameRace = pTower:GetObjRace() == pTarget:GetObjRace()
 
-				if pTarPlayer and bSameRace and not pTarPlayer:IsPunished(1, false) and not pTower.m_pMasterTwr:IsChaosMode() then
-					break -- not allowed to attack player related objects of same race if not have conditions
+					if bSameRace and not pTarPlayer:IsPunished(1, false) and not pTower.m_pMasterTwr:IsChaosMode() then
+						break -- not allowed to attack player related objects of same race if not have conditions
+					end
+				elseif pTarget.m_ObjID.m_byID ~= ID_CHAR.monster then
+					break -- not allowed to attack system property
 				end
 			end
 		else -- we are system tower
-			if pTarPlayer and pTarPlayer.m_bInGuildBattle then
-				break -- we not allwed to touch objects in guild battle
+			if pTarPlayer then
+				if pTarPlayer.m_bInGuildBattle then
+					break -- not allwed to touch objects in guild battle
+				end
+			elseif pTarget.m_ObjID.m_byID ~= ID_CHAR.monster then
+				break -- not allowed to attack system property
 			end
 		end
 
