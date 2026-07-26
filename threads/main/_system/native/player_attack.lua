@@ -1018,6 +1018,14 @@ function sirinPlayerAttack.SendMsg_AttackResult_Siege(pPlayer, pAT, wBulletIndex
 		else
 			sendBuf:PushUInt16(d.m_nDamage >= 0xFFFE and 0xFFFD or d.m_nDamage)
 		end
+
+		sendBuf:PushUInt8(d.m_bActiveSucc and 1 or 0)
+
+		if d.m_nActiveDamage < 0 then
+			sendBuf:PushInt16(d.m_nActiveDamage)
+		else
+			sendBuf:PushUInt16(d.m_nActiveDamage >= 0xFFFE and 0xFFFD or d.m_nActiveDamage)
+		end
 	end
 
 	pPlayer:CircleReport(5, 122, sendBuf, true)

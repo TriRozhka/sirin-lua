@@ -1339,5 +1339,23 @@ function CPostSystemManager:m_PostData_get(index) end
 ---@field removeSign fun(pPlayer: CPlayer, byMode: integer, dwData: integer)
 local modRadar = {}
 
+---@class (exact) _BeeperInfo
+---@field m_dwFlags integer
+---@field m_byStorage integer
+---@field m_byStorageIndex integer
+---@field m_wItemSerial integer
+---@field m_pLinkFld _NPCLink_fld
+---@field m_pStoreFld _StoreList_fld
+---@field m_dwTrunkStartTime integer
+---@field m_dwAHStartTime integer
+---@field m_dwAMPStartTime integer
+local _BeeperInfo = {}
+function _BeeperInfo:Init() end
+
+---@class (exact) modNPCLink
+---@field getLinkData fun(dwIndex: integer): _BeeperInfo
+local modNPCLink = {}
+
 Sirin.mainThread.CashItemRemoteStore = CashItemRemoteStore
 Sirin.mainThread.modRadar = modRadar
+Sirin.mainThread.modNPCLink = modNPCLink

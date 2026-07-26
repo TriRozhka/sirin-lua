@@ -267,6 +267,8 @@ local console = {}
 ---@field eGetOreRate fun(byRace: integer): number
 ---@field cloneQuestResult fun(): _quest_check_result
 ---@field recallRequestToRecallRequestEx fun(pRequest: CRecallRequest): CRecallRequestEx
+---@field resetAccountWaitData fun(dwAccountSerial: integer): boolean
+---@field getActiveWaitData fun(): table<integer, _WAIT_ENTER_ACCOUNT>
 ---@field CMonster__s_logTrace_Boss_Looting CLogFile
 ---@field modChargeItem modChargeItem
 ---@field modContEffect modContEffect
@@ -306,6 +308,7 @@ local console = {}
 ---@field CUnmannedTraderTaxRateManager CUnmannedTraderTaxRateManager
 ---@field CashItemRemoteStore CashItemRemoteStore
 ---@field modRadar modRadar
+---@field modNPCLink modNPCLink
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -610,6 +613,15 @@ function CMultiBinaryData:GetData(key) end
 ---@return table<integer, CBinaryData>
 function CMultiBinaryData:GetList() end
 
+---@class (exact) _WAIT_ENTER_ACCOUNT
+---@field m_bLoad boolean
+---@field m_dwAccountSerial integer
+---@field m_byUserDgr integer
+---@field m_bySubDgr integer
+local _WAIT_ENTER_ACCOUNT = {}
+---@return boolean
+function _WAIT_ENTER_ACCOUNT:isPcBang() end
+
 ---@class (exact) CMainThread
 ---@field m_Rand lightuserdata _SRAND
 ---@field m_pWorldDB lightuserdata CRFWorldDatabase
@@ -738,7 +750,7 @@ function CMultiBinaryData:GetList() end
 ---@field m_dwCheatSetLevel integer
 local CMainThread = {}
 ---@param a1 integer
----@return lightuserdata _WAIT_ENTER_ACCOUNT
+---@return _WAIT_ENTER_ACCOUNT
 function CMainThread:m_WaitEnterAccount_get(a1) end
 ---@param a1 integer
 ---@return string
@@ -1006,7 +1018,7 @@ function CPotionParam:m_dwNextUseTime_set(a1, a2) end
 ---@field m_dPvpCash number
 ---@field m_bAttack boolean
 ---@field m_bDamaged boolean
----@field m_pkInfo lightuserdata _PVP_ORDER_VIEW_DB_BASE
+---@field m_pkInfo _PVP_ORDER_VIEW_DB_BASE
 local CPvpOrderView = {}
 ---@return number
 function CPvpOrderView:GetPvpTempCash() end
@@ -1074,8 +1086,14 @@ local CTranslationAsset = {}
 ---@param t table Translation table
 function CTranslationAsset:loadTranslationTable(pszMsgID, t) end
 
+---@class (exact) _SYNC_STATE
+---@field bEnter boolean Read only!
+---@field bReged boolean Read only!
+---@field bSelect boolean Read only!
+local _SYNC_STATE = {}
+
 ---@class (exact) CUserDB
----@field m_gidGlobal lightuserdata _GLBID
+---@field m_gidGlobal _GLBID
 ---@field m_idWorld _CLID
 ---@field m_dwIP integer
 ---@field m_dwTotalPlayMin integer
@@ -1096,7 +1114,7 @@ function CTranslationAsset:loadTranslationTable(pszMsgID, t) end
 ---@field m_bDBWaitState boolean
 ---@field m_pDBPushData lightuserdata _DB_QRY_SYN_DATA
 ---@field m_bChatLock boolean
----@field m_ss lightuserdata _SYNC_STATE
+---@field m_ss _SYNC_STATE
 ---@field m_dwOperLobbyTime integer
 ---@field m_bCreateTrunkFree boolean
 ---@field m_tmrCheckPlayMin CMyTimer
@@ -1109,18 +1127,15 @@ function CTranslationAsset:loadTranslationTable(pszMsgID, t) end
 ---@field m_nTrans integer
 ---@field m_RadarItemMgr CRadarItemMgr
 local CUserDB = {}
----@param a1 CUserDB
----@param a2 integer
----@return lightuserdata _REGED
-function CUserDB:m_RegedList_get(a1, a2) end
----@param a1 CUserDB
----@param a2 integer
+---@param a1 integer
+---@return _REGED
+function CUserDB:m_RegedList_get(a1) end
+---@param a1 integer
 ---@return lightuserdata _NOT_ARRANGED_AVATOR_DB
-function CUserDB:m_NotArrangedChar_get(a1, a2) end
----@param a1 CUserDB
----@param a2 integer
+function CUserDB:m_NotArrangedChar_get(a1) end
+---@param a1 integer
 ---@return integer
-function CUserDB:m_dwArrangePassCase0_get(a1, a2) end
+function CUserDB:m_dwArrangePassCase0_get(a1) end
 ---@param a1 integer
 ---@param a2 integer
 function CUserDB:m_dwArrangePassCase0_set(a1, a2) end
@@ -1206,6 +1221,11 @@ local _STORAGE_POS = {}
 ---@field wItemSerial integer
 ---@field byNum integer
 local _STORAGE_POS_INDIV = {}
+
+---@class (exact) _GLBID
+---@field dwIndex integer
+---@field dwSerial integer
+local _GLBID = {}
 
 ---@class (exact) _CLID
 ---@field wIndex integer

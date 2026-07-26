@@ -1,3 +1,6 @@
+
+local LINK_TYPE = LINK_TYPE
+
 ---@class (exact) sirinCombineData
 ---@field init fun()
 ---@field combineChecker fun(ppConMats: table<integer, _STORAGE_LIST___db_con>): boolean
@@ -116,6 +119,48 @@ function sirinCombineItemExMgr.pc_CombineItemEx(pPlayer, pRecv)
 	pSend.byErrCode = 0
 
 	repeat
+		local pBeeperInfo = Sirin.mainThread.modNPCLink.getLinkData(pPlayer.m_id.wIndex)
+
+		if Sirin.mainThread.modButtonExt.IsBeNearButton(pPlayer, 22) then
+			if pBeeperInfo.m_dwFlags & LINK_TYPE.HERO_COMBINE ~= 0 then
+				pBeeperInfo:Init()
+			end
+
+			break
+		else
+			if SirinLua.HookMgr.callHook(HOOK_POS.filter, "canUseHeroCombineWithNoBeeper", false, pPlayer) then
+				pRecv.nUseNpcLink = 1
+
+				if pBeeperInfo.m_dwFlags & LINK_TYPE.HERO_COMBINE ~= 0 then
+					pBeeperInfo:Init()
+				end
+
+				break
+			else
+				if pBeeperInfo.m_dwFlags & LINK_TYPE.HERO_COMBINE ~= 0 then
+					local pCon = pPlayer.m_Param:m_pStoragePtr_get(pBeeperInfo.m_byStorage):GetPtrFromSerial(pBeeperInfo.m_wItemSerial)
+
+					if pCon and pCon.m_dwDur > 0 then
+						pRecv.nUseNpcLink = 1
+						pBeeperInfo.m_byStorageIndex = pCon.m_byStorageIndex
+						break
+					end
+				end
+			end
+
+			pRecv.nUseNpcLink = 0
+		end
+
+		pSend.byDlgType = 255
+		pSend.byErrCode = 19
+
+	until true
+
+	repeat
+		if pSend.byErrCode ~= 0 then
+			break
+		end
+
 		local ppConMats = {}
 		local pipMats = {}
 		local lim = pRecv.byCombineSlotNum - 1
@@ -189,6 +234,22 @@ function sirinCombineItemExMgr.pc_CombineItemEx(pPlayer, pRecv)
 
 	if pSend.byErrCode ~= 0 or pRecv.wManualIndex == 0xFFFFFFFE then
 		pPlayer:SendMsg_CombineItemExResult(pSend)
+	end
+
+	if pSend.byErrCode == 0 or pRecv.wManualIndex == 0xFFFFFFFE then
+		local pBeeperInfo = Sirin.mainThread.modNPCLink.getLinkData(pPlayer.m_id.wIndex)
+
+		if pBeeperInfo.m_dwFlags & LINK_TYPE.HERO_COMBINE ~= 0 then
+			if pBeeperInfo.m_pLinkFld.m_nStoragePart == 0 then
+				local dwLeft = pPlayer:Emb_AlterDurPoint(pBeeperInfo.m_byStorage, pBeeperInfo.m_byStorageIndex, -1, true, false)
+
+				if dwLeft > 0 then
+					pPlayer:SendMsg_AdjustAmountInform(pBeeperInfo.m_byStorage, pBeeperInfo.m_wItemSerial, dwLeft)
+				end
+			end
+
+			pBeeperInfo:Init();
+		end
 	end
 end
 

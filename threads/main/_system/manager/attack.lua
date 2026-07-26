@@ -5,6 +5,7 @@ local _EFF_HAVE = _EFF_HAVE
 local math = math
 local objectToCharacter = Sirin.mainThread.objectToCharacter
 local objectToPlayer = Sirin.mainThread.objectToPlayer
+local objectToMonster = Sirin.mainThread.objectToMonster
 local objectToAnimus = Sirin.mainThread.objectToAnimus
 local objectToTower = Sirin.mainThread.objectToTower
 local objectToTrap = Sirin.mainThread.objectToTrap
@@ -630,14 +631,16 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
+				local bSameRace = false
 
-				if not bSameRace then
-					bValid = true
-					break
+				if pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+					local pMonTar = objectToMonster(pTestTar)
+					bSameRace = self.m_pAttChar:GetObjRace() == pMonTar.m_pMonRec.m_nRaceCode
+				else
+					bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 				end
 
-				if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.monster or pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+				if not bSameRace then
 					bValid = true
 					break
 				end
@@ -648,25 +651,13 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 					pSrcPlayer = objectToPlayer(self.m_pAttChar)
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.animus then
 					pSrcPlayer = objectToAnimus(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.tower then
 					pSrcPlayer = objectToTower(self.m_pAttChar).m_pMasterTwr
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.trap then
 					pSrcPlayer = objectToTrap(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				end
 
-				if not pSrcPlayer then
+				if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer)then
 					break
 				end
 
@@ -676,35 +667,19 @@ function sirinCAttack:FlashDamageProc(nLimDist, nAttPower, nAngle, nEffAttPower,
 					pDstPlayer = objectToPlayer(pTestTar)
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.animus then
 					pDstPlayer = objectToAnimus(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.tower then
 					pDstPlayer = objectToTower(pTestTar).m_pMasterTwr
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.trap then
 					pDstPlayer = objectToTrap(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.amine_personal then
 					pDstPlayer = objectToAMP(pTestTar).m_pOwner
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				end
 
-				if not pDstPlayer then
+				if pSrcPlayer and pDstPlayer and IsSameObject(pSrcPlayer, pDstPlayer) then
 					break
 				end
 
-				if pSrcPlayer:IsChaosMode() or pDstPlayer:IsPunished(1, false) then
+				if (pSrcPlayer and pSrcPlayer:IsChaosMode()) or (pDstPlayer and pDstPlayer:IsPunished(1, false)) then
 					bValid = true
 					break
 				end
@@ -846,14 +821,16 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
+				local bSameRace = false
 
-				if not bSameRace then
-					bValid = true
-					break
+				if pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+					local pMonTar = objectToMonster(pTestTar)
+					bSameRace = self.m_pAttChar:GetObjRace() == pMonTar.m_pMonRec.m_nRaceCode
+				else
+					bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 				end
 
-				if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.monster or pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+				if not bSameRace then
 					bValid = true
 					break
 				end
@@ -864,25 +841,13 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					pSrcPlayer = objectToPlayer(self.m_pAttChar)
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.animus then
 					pSrcPlayer = objectToAnimus(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.tower then
 					pSrcPlayer = objectToTower(self.m_pAttChar).m_pMasterTwr
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.trap then
 					pSrcPlayer = objectToTrap(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				end
 
-				if not pSrcPlayer then
+				if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer)then
 					break
 				end
 
@@ -892,35 +857,19 @@ function sirinCAttack:AreaDamageProc(nLimitRadius, nAttPower, x, y, z, nEffAttPo
 					pDstPlayer = objectToPlayer(pTestTar)
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.animus then
 					pDstPlayer = objectToAnimus(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.tower then
 					pDstPlayer = objectToTower(pTestTar).m_pMasterTwr
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.trap then
 					pDstPlayer = objectToTrap(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.amine_personal then
 					pDstPlayer = objectToAMP(pTestTar).m_pOwner
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				end
 
-				if not pDstPlayer then
+				if pSrcPlayer and pDstPlayer and IsSameObject(pSrcPlayer, pDstPlayer) then
 					break
 				end
 
-				if pSrcPlayer:IsChaosMode() or pDstPlayer:IsPunished(1, false) then
+				if (pSrcPlayer and pSrcPlayer:IsChaosMode()) or (pDstPlayer and pDstPlayer:IsPunished(1, false)) then
 					bValid = true
 					break
 				end
@@ -1060,14 +1009,16 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 					break
 				end
 
-				local bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
+				local bSameRace = false
 
-				if not bSameRace then
-					bValid = true
-					break
+				if pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+					local pMonTar = objectToMonster(pTestTar)
+					bSameRace = self.m_pAttChar:GetObjRace() == pMonTar.m_pMonRec.m_nRaceCode
+				else
+					bSameRace = self.m_pAttChar:GetObjRace() == pTestTar:GetObjRace()
 				end
 
-				if self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.monster or pTestTar.m_ObjID.m_byID == ID_CHAR.monster then
+				if not bSameRace then
 					bValid = true
 					break
 				end
@@ -1078,25 +1029,13 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 					pSrcPlayer = objectToPlayer(self.m_pAttChar)
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.animus then
 					pSrcPlayer = objectToAnimus(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.tower then
 					pSrcPlayer = objectToTower(self.m_pAttChar).m_pMasterTwr
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				elseif self.m_pAttChar.m_ObjID.m_byID == ID_CHAR.trap then
 					pSrcPlayer = objectToTrap(self.m_pAttChar).m_pMaster
-
-					if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer) then
-						break
-					end
 				end
 
-				if not pSrcPlayer then
+				if pSrcPlayer and IsSameObject(pTestTar, pSrcPlayer)then
 					break
 				end
 
@@ -1106,35 +1045,19 @@ function sirinCAttack:SectorDamageProc(nAttPower, nAngle, nShotNum, nWeaponRange
 					pDstPlayer = objectToPlayer(pTestTar)
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.animus then
 					pDstPlayer = objectToAnimus(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.tower then
 					pDstPlayer = objectToTower(pTestTar).m_pMasterTwr
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.trap then
 					pDstPlayer = objectToTrap(pTestTar).m_pMaster
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				elseif pTestTar.m_ObjID.m_byID == ID_CHAR.amine_personal then
 					pDstPlayer = objectToAMP(pTestTar).m_pOwner
-
-					if pDstPlayer and IsSameObject(self.m_pAttChar, pDstPlayer) then
-						break
-					end
 				end
 
-				if not pDstPlayer then
+				if pSrcPlayer and pDstPlayer and IsSameObject(pSrcPlayer, pDstPlayer) then
 					break
 				end
 
-				if pSrcPlayer:IsChaosMode() or pDstPlayer:IsPunished(1, false) then
+				if (pSrcPlayer and pSrcPlayer:IsChaosMode()) or (pDstPlayer and pDstPlayer:IsPunished(1, false)) then
 					bValid = true
 					break
 				end

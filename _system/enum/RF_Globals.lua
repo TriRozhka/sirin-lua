@@ -368,3 +368,17 @@ ELECT_PROCESSOR = {
 	_eProcessorNum = 6,
 	_eNonProcessor = 255,
 }
+
+---@enum LINK_TYPE
+LINK_TYPE = {
+	STORE =			1 << 0,	-- 1 consume per operation
+	TRUNK =			1 << 1,	-- 5 min
+	AH_REG =		1 << 2,	-- 5 min
+	AH_SEARCH =		1 << 3,	-- 5 min
+	UNIT_PULL =		1 << 4,	-- 1 consume per operation
+	UNIT_REPAIR =	1 << 5,	-- 1 consume per operation
+	UNIT_TUNING =	1 << 6,	-- 1 consume per operation
+	UNIT_AMMO =		1 << 7,	-- 1 consume per operation
+	UNIT_PACK =		1 << 8,	-- 1 consume per operation
+	HERO_COMBINE =	1 << 9,	-- 1 consume per operation
+}

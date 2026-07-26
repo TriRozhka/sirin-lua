@@ -40,6 +40,13 @@ local function canCreateCharacter(pUserDB, pwszCharName, byRaceSexCode, pszClass
 ---@return boolean
 local function canDeleteCharacter(pUserDB, bySlotIndex) return true end
 
+---Purpose: check select character.
+---Hook positions: 'filter'
+---@param pUserDB CUserDB
+---@param bySlotIndex integer
+---@return boolean
+local function canSelectCharacter(pUserDB, bySlotIndex) return true end
+
 ---Purpose: check can use auto loot.
 ---Hook positions: 'filter'
 ---@param pPlayer CPlayer
@@ -410,3 +417,14 @@ local function CRecallRequestEx__DecideRecall(pRequest, pDstPlayer) return 0 end
 ---@param data CBinaryData
 ---@return boolean #Continue execution - true; break execution - false
 local function onPacketReceive(dwClientIndex, byID, bySubID, wLen, data) return true end
+
+---Allow to block certain accounts enter game. 
+---Hook positions: 'filter'
+---@param dwAccountSerial integer
+---@param pszAccountID string
+---@param dwClientIP integer
+---@param bIsPcBang boolean
+---@param byUserDgr integer
+---@param bySubDgr integer
+---@return boolean
+local function canEnterAccount(dwAccountSerial, pszAccountID, dwClientIP, bIsPcBang, byUserDgr, bySubDgr) return true end
