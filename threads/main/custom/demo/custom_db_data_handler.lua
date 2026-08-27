@@ -60,7 +60,7 @@ local function autoInit()
 
 	SirinLua.HookMgr.releaseHookByUID(script.m_strUUID)
 	SirinLua.HookMgr.addHook("SirinWorldDB_PlayerSave_Prepare", HOOK_POS.pre_event, script.m_strUUID, script.onPlayerSavePrepare) -- happens before DQS cases 5, 6, 12
-	SirinLua.HookMgr.addHook("SirinWorldDB_PlayerUpdate_Complete", HOOK_POS.pre_event, script.m_strUUID, script.onPlayerUpdateComplete) -- happens after DQS case 12 processed
+	SirinLua.HookMgr.addHook("SirinWorldDB_PlayerUpdate_Complete", HOOK_POS.after_event, script.m_strUUID, script.onPlayerUpdateComplete) -- happens after DQS case 12 processed
 	SirinLua.HookMgr.addHook("SirinWorldDB_PlayerLoad_Complete", HOOK_POS.after_event, script.m_strUUID, script.onPlayerLoadComplete) -- happens after DQS case 3 processed
 
 end
