@@ -2361,6 +2361,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Skill(pPlayer, pTarget, x, y, 
 	end
 
 	if nEffectGroup == 4 then
+		pTarget = nil
 		x, y, z = pPlayer.m_fCurPos_x, pPlayer.m_fCurPos_y, pPlayer.m_fCurPos_z
 	end
 
@@ -2439,7 +2440,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Skill(pPlayer, pTarget, x, y, 
 
 	local pAT = sirinPlayerAttack.make_skill_attack_param(pPlayer, pTarget, x, y, z, byEffectCode, pSkillFld, nEffectGroup, pBulletFld, fBulletGARate, pEffBtFld, fEffBtGARate)
 
-	if pAT.m_pp.nShotNum > pBulletCon.m_dwDur then
+	if pBulletCon and pAT.m_pp.nShotNum > pBulletCon.m_dwDur then
 		pAT.m_pp.nShotNum = pBulletCon.m_dwDur
 	end
 
@@ -2576,7 +2577,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Skill(pPlayer, pTarget, x, y, 
 					end
 
 					local point = math.ceil(d.m_pChar:GetLevel() / 10)
-					totalMasteryCumul = totalMasteryCumul + ((lvDiff > point and point or lvDiff) * (pSkillFld.m_nClass == 1) and 2 or 1)
+					totalMasteryCumul = totalMasteryCumul + ((lvDiff > point and point or lvDiff) * (pSkillFld.m_nClass == 1 and 2 or 1))
 					--
 					targetCount = targetCount + 1
 				end

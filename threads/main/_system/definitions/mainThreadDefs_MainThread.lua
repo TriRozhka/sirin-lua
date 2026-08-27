@@ -309,6 +309,7 @@ local console = {}
 ---@field CashItemRemoteStore CashItemRemoteStore
 ---@field modRadar modRadar
 ---@field modNPCLink modNPCLink
+---@field modEffectParamExt modEffectParamExt
 local mainThread = {}
 
 ---@class (exact) modChargeItem
@@ -1634,8 +1635,11 @@ function _dummy_position:m_fDirection_set(a1, a2) end
 
 ---@class (exact) _effect_parameter
 ---@field m_pDataParam _effect_parameter____param_data
+---@field m_pDataParamExt __param_data_ext
 ---@field m_bLock boolean
 local _effect_parameter = {}
+function _effect_parameter:InitEffParam() end
+function _effect_parameter:InitEffHave() end
 ---@param a1 integer
 ---@return number
 function _effect_parameter:GetEff_Rate(a1) end
@@ -1844,30 +1848,30 @@ function cStaticMember_Player:_pLimExp_set(a1, a2) end
 
 ---@class (exact) _effect_parameter____param_data
 local effect_parameter____param_data = {}
----@param a1 integer
+---@param nParamIndex integer
 ---@return number
-function effect_parameter____param_data:m_fEff_Rate_get(a1) end
----@param a1 integer
----@param a2 number
-function effect_parameter____param_data:m_fEff_Rate_set(a1, a2) end
----@param a1 integer
+function effect_parameter____param_data:m_fEff_Rate_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function effect_parameter____param_data:m_fEff_Rate_set(nParamIndex, Val) end
+---@param nParamIndex integer
 ---@return number
-function effect_parameter____param_data:m_fEff_Plus_get(a1) end
----@param a1 integer
----@param a2 number
-function effect_parameter____param_data:m_fEff_Plus_set(a1, a2) end
----@param a1 integer
+function effect_parameter____param_data:m_fEff_Plus_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function effect_parameter____param_data:m_fEff_Plus_set(nParamIndex, Val) end
+---@param nParamIndex integer
 ---@return integer
-function effect_parameter____param_data:m_bEff_State_get(a1) end
----@param a1 integer
----@param a2 integer
-function effect_parameter____param_data:m_bEff_State_set(a1, a2) end
----@param a1 integer
+function effect_parameter____param_data:m_bEff_State_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val integer
+function effect_parameter____param_data:m_bEff_State_set(nParamIndex, Val) end
+---@param nParamIndex integer
 ---@return number
-function effect_parameter____param_data:m_fEff_Have_get(a1) end
----@param a1 integer
----@param a2 number
-function effect_parameter____param_data:m_fEff_Have_set(a1, a2) end
+function effect_parameter____param_data:m_fEff_Have_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function effect_parameter____param_data:m_fEff_Have_set(nParamIndex, Val) end
 
 ---@class (exact) sell_info
 ---@field m_strStore_NPCcode string

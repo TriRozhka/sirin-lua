@@ -1651,21 +1651,21 @@ local apply_case_have = {
 	[76] = function(pPlayer, fVal, bAdd)
 		pPlayer.m_EP:SetEff_Plus(22, fVal, bAdd)
 	end,
-	[77] = function(pPlayer, fVal, bAdd, nDiffCnt)
-		if nDiffCnt > 0 and bAdd then
-			pPlayer:DecHalfSFContDam(nDiffCnt * 0.01)
-		end
-	end,
+	--[77] = function(pPlayer, fVal, bAdd, nDiffCnt)
+	--	if nDiffCnt > 0 and bAdd then
+	--		pPlayer:DecHalfSFContDam(nDiffCnt * 0.01)
+	--	end
+	--end,
 	[78] = function(pPlayer, fVal, bAdd)
 		pPlayer.m_EP:SetEff_Plus(28, fVal, bAdd)
 	end,
 	[79] = function(pPlayer, fVal, bAdd, nDiffCnt)
-		if nDiffCnt ~= 1 and fVal >= 1.0 then
+		if nDiffCnt ~= 1 then
 			pPlayer:SetEquipJadeEffect(79, fVal, bAdd)
 		end
 	end,
 	[80] = function(pPlayer, fVal, bAdd, nDiffCnt)
-		if nDiffCnt ~= 1 and fVal >= 1.0 then
+		if nDiffCnt ~= 1 then
 			pPlayer:SetEquipJadeEffect(80, fVal, bAdd)
 		end
 	end,
@@ -1921,172 +1921,332 @@ local apply_case_talik = {
 ---@param bEquip boolean
 function sirinPlayerMgr.apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip)
 	-- Implementation of this function is optional
-	local dwLvBit = pItem.m_dwLv
-	local byUpgLv = GetItemUpgedLv(dwLvBit)
-	local fApplyEff = 0
+	local dwUpgrade = pItem.m_dwLv
+	local upgedLv = GetItemUpgedLv(dwUpgrade)
+	local defSockNum = Sirin.mainThread.GetDefItemUpgSocketNum(pItem.m_byTableCode, pItem.m_wItemIndex)
+	local sockNum = dwUpgrade >> 28
 
-	if byUpgLv == 0 or Sirin.mainThread.GetDefItemUpgSocketNum(pItem.m_byTableCode, pItem.m_wItemIndex) == 0 then
-		if pItem.m_byTableCode == TBL_CODE.weapon then
-			if Sirin.mainThread.GetItemGrade(pItem.m_byTableCode, pItem.m_wItemIndex) < 3 then
-				local byEffLv = math.floor(pPlayer.m_EP:GetEff_Have(79)) - 1
+	if defSockNum < sockNum then
+		sockNum = defSockNum
+	end
 
-				if byEffLv > 4 then
-					byEffLv = 4
+	if sockNum == 0 then
+		return
+	end
+
+	local nIgnorantCharmLv = 0
+	local nFavorCharmLv = 0
+
+	if upgedLv >= 0 then
+		if Sirin.mainThread.GetItemGrade(pItem.m_byTableCode, pItem.m_wItemIndex) < 3 then
+			if pItem.m_byTableCode == TBL_CODE.weapon then
+				nIgnorantCharmLv = math.floor(pPlayer.m_EP:GetEff_Have(_EFF_HAVE.Mugi_Talic_Eff))
+
+				if nIgnorantCharmLv > 0 then
+					if nIgnorantCharmLv > sockNum then
+						nIgnorantCharmLv = sockNum
+					end
+
+					if nIgnorantCharmLv > 7 then
+						nIgnorantCharmLv = 7
+					end
+
+					local bHaveTalik = false
+
+					for i = 1, upgedLv do
+						if GetTalikFromSocket(dwUpgrade, i - 1) == 0 then
+							bHaveTalik = true
+							break
+						end
+					end
+
+					if upgedLv == 0 or not bHaveTalik then
+						local byEffLv = nIgnorantCharmLv - 1
+						local fApplyEff = 0
+						local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(0))
+
+						if byEffLv == 0 then
+							fApplyEff = pUpgFld.m_fUp1
+						elseif byEffLv == 1 then
+							fApplyEff = pUpgFld.m_fUp2
+						elseif byEffLv == 2 then
+							fApplyEff = pUpgFld.m_fUp3
+						elseif byEffLv == 3 then
+							fApplyEff = pUpgFld.m_fUp4
+						elseif byEffLv == 4 then
+							fApplyEff = pUpgFld.m_fUp5
+						elseif byEffLv == 5 then
+							fApplyEff = pUpgFld.m_fUp6
+						elseif byEffLv == 6 then
+							fApplyEff = pUpgFld.m_fUp7
+						end
+
+						for nParamIndex = 0, 1 do
+							pPlayer.m_EP:SetEff_Rate(nParamIndex, fApplyEff, bEquip)
+							pPlayer.m_EP:SetEff_Rate(nParamIndex + 2, fApplyEff, bEquip)
+						end
+
+						pPlayer.m_EP:SetEff_Rate(4, fApplyEff, bEquip)
+						pPlayer.m_EP:SetEff_Rate(29, fApplyEff, bEquip)
+					end
+				end
+			elseif pItem.m_byTableCode < TBL_CODE.weapon then
+				nFavorCharmLv = math.floor(pPlayer.m_EP:GetEff_Have(_EFF_HAVE.Grace_Talic_Eff))
+
+				if nFavorCharmLv > 0 then
+					if nFavorCharmLv > sockNum then
+						nFavorCharmLv = sockNum
+					end
+
+					if nFavorCharmLv > 7 then
+						nFavorCharmLv = 7
+					end
+
+					local bHaveTalik = false
+
+					for i = 1, upgedLv do
+						if GetTalikFromSocket(dwUpgrade, i - 1) == 5 then
+							bHaveTalik = true
+							break
+						end
+					end
+
+					if upgedLv == 0 or not bHaveTalik then
+						local byEffLv = nFavorCharmLv
+						local fApplyEff = 0
+						local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(5))
+
+						if byEffLv == 1 then
+							fApplyEff = pUpgFld.m_fUp1
+						elseif byEffLv == 2 then
+							fApplyEff = pUpgFld.m_fUp2
+						elseif byEffLv == 3 then
+							fApplyEff = pUpgFld.m_fUp3
+						elseif byEffLv == 4 then
+							fApplyEff = pUpgFld.m_fUp4
+						elseif byEffLv == 5 then
+							fApplyEff = pUpgFld.m_fUp5
+						elseif byEffLv == 6 then
+							fApplyEff = pUpgFld.m_fUp6
+						elseif byEffLv == 7 then
+							fApplyEff = pUpgFld.m_fUp7
+						end
+
+						pPlayer.m_EP:SetEff_Rate(6, fApplyEff, bEquip)
+						pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint + (bEquip and fApplyEff or -fApplyEff)
+					end
+				end
+			end
+		end
+	end
+
+	for i = 1, upgedLv do
+		repeat
+			local talikIndex = GetTalikFromSocket(dwUpgrade, i - 1)
+
+			if talikIndex == 15 then
+				break
+			end
+
+			local numTalik = 1
+
+			for j = i + 1, upgedLv do
+				if GetTalikFromSocket(dwUpgrade, j - 1) == talikIndex then
+					numTalik = numTalik + 1
+					dwUpgrade = dwUpgrade | (0xF << ((j - 1) * 4))
+				end
+			end
+
+			local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(talikIndex))
+
+			if not pUpgFld then
+				break
+			end
+
+			if numTalik > 7 then
+				numTalik = 7
+			end
+
+			local byEffLv = numTalik
+			local fApplyEff = 0
+
+			if talikIndex == 0 then
+				if nIgnorantCharmLv > byEffLv then
+					byEffLv = nIgnorantCharmLv
+				end
+			elseif talikIndex == 5 then
+				if nFavorCharmLv > byEffLv then
+					byEffLv = nFavorCharmLv
+				end
+			end
+
+			if byEffLv == 1 then
+				fApplyEff = pUpgFld.m_fUp1
+			elseif byEffLv == 2 then
+				fApplyEff = pUpgFld.m_fUp2
+			elseif byEffLv == 3 then
+				fApplyEff = pUpgFld.m_fUp3
+			elseif byEffLv == 4 then
+				fApplyEff = pUpgFld.m_fUp4
+			elseif byEffLv == 5 then
+				fApplyEff = pUpgFld.m_fUp5
+			elseif byEffLv == 6 then
+				fApplyEff = pUpgFld.m_fUp6
+			elseif byEffLv == 7 then
+				fApplyEff = pUpgFld.m_fUp7
+			end
+
+			local handler = apply_case_talik[talikIndex]
+
+			if handler then
+				handler(pPlayer, fApplyEff, bEquip, pItem)
+			end
+
+			if talikIndex == 5 then
+				pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint + (bEquip and fApplyEff or -fApplyEff)
+			elseif talikIndex == 12 then
+				fApplyEff = fApplyEff * 0.5
+				pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_AvoidPoint + (bEquip and fApplyEff or -fApplyEff)
+			end
+
+		until true
+	end
+end
+
+---@param pPlayer CPlayer
+---@param nParam integer
+---@param fCurVal number
+---@param bAdd boolean
+function sirinPlayerMgr.SetEquipJadeEffect(pPlayer, nParam, fCurVal, bAdd)
+	if not bAdd then
+		fCurVal = -fCurVal
+	end
+
+	for i = 0, TBL_CODE.weapon do
+		repeat
+			local pItem = pPlayer.m_Param:m_pStoragePtr_get(1):m_pStorageList_get(i)
+
+			if pItem.m_byLoad == 0 then
+				break
+			end
+
+			local dwUpgrade = pItem.m_dwLv
+			local upgedLv = GetItemUpgedLv(dwUpgrade)
+			local defSockNum = Sirin.mainThread.GetDefItemUpgSocketNum(pItem.m_byTableCode, pItem.m_wItemIndex)
+			local sockNum = dwUpgrade >> 28
+
+			if defSockNum < sockNum then
+				sockNum = defSockNum
+			end
+
+			if sockNum == 0 then
+				break
+			end
+
+			if Sirin.mainThread.GetItemGrade(pItem.m_byTableCode, pItem.m_wItemIndex) >= 3 then
+				break
+			end
+
+			local fnGetEffVal = function(talikIndex)
+				local numTalik = 0
+
+				for j = 1, upgedLv do
+					if GetTalikFromSocket(dwUpgrade, j - 1) == talikIndex then
+						numTalik = numTalik + 1
+					end
 				end
 
-				if byEffLv >= 0 then
-					local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(0))
+				local nCharmLv = math.floor(pPlayer.m_EP:GetEff_Have(nParam))
+				local nCharmLvOld = math.floor(pPlayer.m_EP:GetEff_Have(nParam) - fCurVal)
 
-					if byEffLv == 0 then
+				if nCharmLv > sockNum then
+					nCharmLv = sockNum
+				end
+
+				if nCharmLv > 7 then
+					nCharmLv = 7
+				end
+
+				if nCharmLvOld > sockNum then
+					nCharmLvOld = sockNum
+				end
+
+				if nCharmLvOld > 7 then
+					nCharmLvOld = 7
+				end
+
+				if numTalik > nCharmLv then
+					nCharmLv = numTalik
+				end
+
+				if numTalik > nCharmLvOld then
+					nCharmLvOld = numTalik
+				end
+
+				if nCharmLv ~= nCharmLvOld then
+					local pUpgFld = baseToItemUpgrade(Sirin.mainThread.g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(talikIndex))
+					local fApplyEff = 0
+					local fApplyEffOld = 0
+
+					if nCharmLv == 1 then
 						fApplyEff = pUpgFld.m_fUp1
-					elseif byEffLv == 1 then
+					elseif nCharmLv == 2 then
 						fApplyEff = pUpgFld.m_fUp2
-					elseif byEffLv == 2 then
+					elseif nCharmLv == 3 then
 						fApplyEff = pUpgFld.m_fUp3
-					elseif byEffLv == 3 then
+					elseif nCharmLv == 4 then
 						fApplyEff = pUpgFld.m_fUp4
-					elseif byEffLv == 4 then
+					elseif nCharmLv == 5 then
 						fApplyEff = pUpgFld.m_fUp5
-					elseif byEffLv == 5 then
+					elseif nCharmLv == 6 then
 						fApplyEff = pUpgFld.m_fUp6
-					elseif byEffLv == 6 then
+					elseif nCharmLv == 7 then
 						fApplyEff = pUpgFld.m_fUp7
 					end
 
+					if nCharmLvOld == 1 then
+						fApplyEffOld = pUpgFld.m_fUp1
+					elseif nCharmLvOld == 2 then
+						fApplyEffOld = pUpgFld.m_fUp2
+					elseif nCharmLvOld == 3 then
+						fApplyEffOld = pUpgFld.m_fUp3
+					elseif nCharmLvOld == 4 then
+						fApplyEffOld = pUpgFld.m_fUp4
+					elseif nCharmLvOld == 5 then
+						fApplyEffOld = pUpgFld.m_fUp5
+					elseif nCharmLvOld == 6 then
+						fApplyEffOld = pUpgFld.m_fUp6
+					elseif nCharmLvOld == 7 then
+						fApplyEffOld = pUpgFld.m_fUp7
+					end
+
+					return fApplyEff - fApplyEffOld
+				end
+
+				return 0
+			end
+
+			if pItem.m_byTableCode == TBL_CODE.weapon and nParam == _EFF_HAVE.Mugi_Talic_Eff then
+				local fEffVal = fnGetEffVal(0)
+
+				if fEffVal ~= 0 then
 					for nParamIndex = 0, 1 do
-						pPlayer.m_EP:SetEff_Rate(nParamIndex, fApplyEff, bEquip)
-						pPlayer.m_EP:SetEff_Rate(nParamIndex + 2, fApplyEff, bEquip)
+						pPlayer.m_EP:SetEff_Rate(nParamIndex, fEffVal, true)
+						pPlayer.m_EP:SetEff_Rate(nParamIndex + 2, fEffVal, true)
 					end
 
-					pPlayer.m_EP:SetEff_Rate(4, fApplyEff, bEquip)
-					pPlayer.m_EP:SetEff_Rate(29, fApplyEff, bEquip)
+					pPlayer.m_EP:SetEff_Rate(4, fEffVal, true)
+					pPlayer.m_EP:SetEff_Rate(29, fEffVal, true)
+				end
+			elseif pItem.m_byTableCode < TBL_CODE.weapon and nParam == _EFF_HAVE.Grace_Talic_Eff then
+				local fEffVal = fnGetEffVal(5)
+
+				if fEffVal ~= 0 then
+					pPlayer.m_EP:SetEff_Rate(6, fEffVal, true)
+					pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint + fEffVal
 				end
 			end
-		else
-			local byEffLv = math.floor(pPlayer.m_EP:GetEff_Have(80)) - 1
-
-			if byEffLv > 3 then
-				byEffLv = 3
-			end
-
-			if byEffLv >= 0 then
-				local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(5))
-
-				if byEffLv == 0 then
-					fApplyEff = pUpgFld.m_fUp1
-				elseif byEffLv == 1 then
-					fApplyEff = pUpgFld.m_fUp2
-				elseif byEffLv == 2 then
-					fApplyEff = pUpgFld.m_fUp3
-				elseif byEffLv == 3 then
-					fApplyEff = pUpgFld.m_fUp4
-				elseif byEffLv == 4 then
-					fApplyEff = pUpgFld.m_fUp5
-				elseif byEffLv == 5 then
-					fApplyEff = pUpgFld.m_fUp6
-				elseif byEffLv == 6 then
-					fApplyEff = pUpgFld.m_fUp7
-				end
-
-				pPlayer.m_EP:SetEff_Rate(6, fApplyEff, bEquip)
-
-				if bEquip then
-					pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint + fApplyEff
-				else
-					pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint - fApplyEff
-				end
-			end
-		end
-	else
-		for i = 1, byUpgLv do
-			repeat
-				local talik_index = GetTalikFromSocket(dwLvBit, i - 1)
-
-				if talik_index == 15 then
-					break
-				end
-
-				local talik_num = 0
-
-				for j = i, byUpgLv do
-					if GetTalikFromSocket(dwLvBit, j - 1) == talik_index then
-						talik_num = talik_num + 1
-						dwLvBit = dwLvBit | (0xF << (j - 1) * 4)
-					end
-				end
-
-				local pUpgFld = baseToItemUpgrade(g_Main.m_tblItemUpgrade.m_tblItemUpgrade:GetRecord(talik_index))
-
-				if not pUpgFld then
-					break
-				end
-
-				if talik_num > 7 then
-					break
-				end
-
-				local byEffLv = talik_num - 1
-
-				if talik_index == 0 then
-					if pItem.m_byTableCode == TBL_CODE.weapon and Sirin.mainThread.GetItemGrade(pItem.m_byTableCode, pItem.m_wItemIndex) < 3 then
-						local byCharmEffLv = math.floor(pPlayer.m_EP:GetEff_Have(79)) - 1
-
-						if byCharmEffLv > 4 then
-							byCharmEffLv = 4
-						end
-
-						if byCharmEffLv > byEffLv then
-							byEffLv = byCharmEffLv
-						end
-					end
-				elseif talik_index == 5 then
-					local byCharmEffLv = math.floor(pPlayer.m_EP:GetEff_Have(80)) - 1
-
-					if byCharmEffLv > 3 then
-						byCharmEffLv = 3
-					end
-					if byCharmEffLv > byEffLv then
-						byEffLv = byCharmEffLv
-					end
-				end
-
-				if byEffLv == 0 then
-					fApplyEff = pUpgFld.m_fUp1
-				elseif byEffLv == 1 then
-					fApplyEff = pUpgFld.m_fUp2
-				elseif byEffLv == 2 then
-					fApplyEff = pUpgFld.m_fUp3
-				elseif byEffLv == 3 then
-					fApplyEff = pUpgFld.m_fUp4
-				elseif byEffLv == 4 then
-					fApplyEff = pUpgFld.m_fUp5
-				elseif byEffLv == 5 then
-					fApplyEff = pUpgFld.m_fUp6
-				elseif byEffLv == 6 then
-					fApplyEff = pUpgFld.m_fUp7
-				end
-
-				local handler = apply_case_talik[talik_index]
-
-				if handler then
-					handler(pPlayer, fApplyEff, bEquip, pItem)
-				end
-
-				if talik_index == 5 then
-					if bEquip then
-						pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint + fApplyEff
-					else
-						pPlayer.m_fTalik_DefencePoint = pPlayer.m_fTalik_DefencePoint - fApplyEff
-					end
-				elseif talik_index == 12 then
-					if bEquip then
-						pPlayer.m_fTalik_AvoidPoint = pPlayer.m_fTalik_AvoidPoint + (fApplyEff / 2)
-					else
-						pPlayer.m_fTalik_AvoidPoint = pPlayer.m_fTalik_AvoidPoint - (fApplyEff / 2)
-					end
-				end
-			until true
-		end
+		until true
 	end
 end
 

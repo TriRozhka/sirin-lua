@@ -1356,6 +1356,68 @@ function _BeeperInfo:Init() end
 ---@field getLinkData fun(dwIndex: integer): _BeeperInfo
 local modNPCLink = {}
 
+---@class (exact) _request_csi_buy_clzo____item
+---@field nPrice integer
+---@field byDiscount integer
+---@field byTblCode integer
+---@field wItemIdx integer
+---@field wStoreIdx integer
+---@field byOverlapNum integer
+---@field byEventType integer
+local _request_csi_buy_clzo____item = {}
+---@return table<integer, integer>
+function _request_csi_buy_clzo____item:GetEvents() end
+
+---@class (exact) _request_csi_buy_clzo
+---@field nNum integer
+---@field bySetKind integer
+---@field byCouponNum integer
+local _request_csi_buy_clzo = {}
+---@return table<integer, _request_csi_buy_clzo____item>
+function _request_csi_buy_clzo:GetItems() end
+---@return table<integer, _STORAGE_POS_INDIV>
+function _request_csi_buy_clzo:GetCoupons() end
+
+---@class (exact) __param_data_ext
+local __param_data_ext = {}
+---@param nParamIndex integer
+---@return number
+function __param_data_ext:m_fEff_Rate_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function __param_data_ext:m_fEff_Rate_set(nParamIndex, Val) end
+---@param nParamIndex integer
+---@return number
+function __param_data_ext:m_fEff_Plus_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function __param_data_ext:m_fEff_Plus_set(nParamIndex, Val) end
+---@param nParamIndex integer
+---@return integer
+function __param_data_ext:m_bEff_State_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val integer
+function __param_data_ext:m_bEff_State_set(nParamIndex, Val) end
+---@param nParamIndex integer
+---@return number
+function __param_data_ext:m_fEff_Have_get(nParamIndex) end
+---@param nParamIndex integer
+---@param Val number
+function __param_data_ext:m_fEff_Have_set(nParamIndex, Val) end
+
+---@class (exact) modEffectParamExt
+---@field IsUse fun(): boolean
+---@field s_dwRateNum integer read only
+---@field s_dwPlusNum integer read only
+---@field s_dwStateNum integer read only
+---@field s_dwHaveNum integer read only
+---@field IsMAU_Rate fun(nIndex: integer): boolean
+---@field IsMAU_Plus fun(nIndex: integer): boolean
+---@field IsMAU_State fun(nIndex: integer): boolean
+---@field IsMAU_Have fun(nIndex: integer): boolean
+local modEffectParamExt = {}
+
 Sirin.mainThread.CashItemRemoteStore = CashItemRemoteStore
 Sirin.mainThread.modRadar = modRadar
 Sirin.mainThread.modNPCLink = modNPCLink
+Sirin.mainThread.modEffectParamExt = modEffectParamExt

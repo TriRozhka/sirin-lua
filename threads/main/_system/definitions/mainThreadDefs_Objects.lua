@@ -1445,6 +1445,11 @@ function CPlayer:pc_Revival(bUseableJade) end
 ---@param pCon _STORAGE_LIST___storage_con
 ---@return boolean
 function CPlayer:IsEffectableEquip(pCon) end
+---@param nEffCode integer
+---@param fEffVal number
+---@param bAdd boolean
+---@param nDiffCnt integer
+function CPlayer:apply_have_item_std_effect(nEffCode, fEffVal, bAdd, nDiffCnt) end
 
 ---@class (exact) _trap_create_setdata : _character_create_setdata
 ---@field nHP integer

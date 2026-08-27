@@ -58,3 +58,57 @@ local function CCharacter__AssistSkillToOne(pSrcChar, pDstChar, nEffectCode, pSk
 ---@param pSrcChar CCharacter
 ---@param byRet integer
 local function CCharacter__InsertSFContEffect(pDstChar, byContCode, byEffectCode, dwEffectIndex, wDurSec, byLv, bUpMty, pSrcChar, byRet) end
+
+---Purpose: effect rate getter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@return number
+local function _effect_parameter__GetEff_Rate(pEP, nParamIndex) return 1.0 end
+
+---Purpose: effect plus getter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@return number
+local function _effect_parameter__GetEff_Plus(pEP, nParamIndex) return 0.0 end
+
+---Purpose: effect state getter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@return boolean
+local function _effect_parameter__GetEff_State(pEP, nParamIndex) return false end
+
+---Purpose: effect have getter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@return number
+local function _effect_parameter__GetEff_Have(pEP, nParamIndex) return 0.0 end
+
+---Purpose: effect rate setter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@param fVar number
+---@param bAdd boolean
+---@return boolean
+local function _effect_parameter__SetEff_Rate(pEP, nParamIndex, fVar, bAdd) return false end
+
+---Purpose: effect plus setter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@param fVar number
+---@param bAdd boolean
+---@return boolean
+local function _effect_parameter__SetEff_Plus(pEP, nParamIndex, fVar, bAdd) return false end
+
+---Purpose: effect state setter.
+---Hook positions: 'original'.
+---@param pEP _effect_parameter
+---@param nParamIndex integer
+---@param bVar boolean
+---@return boolean
+local function _effect_parameter__SetEff_State(pEP, nParamIndex, bVar) return false end

@@ -44,6 +44,29 @@ local function CPlayer__apply_normal_item_std_effect(pPlayer, nEffCode, fVal, bE
 ---@param bEquip boolean
 local function CPlayer__apply_case_equip_upgrade_effect(pPlayer, pItem, bEquip) end
 
+---Purpose: recalculate jade effect on login, on mau board/unboard, timed jade, premium status change
+---Hook positions: 'pre_event, original, after_event'
+---@param pPlayer CPlayer
+---@param bLogin boolean
+local function CPlayer__SetHaveEffect(pPlayer, bLogin) end
+
+---Purpose: recalculate jade effect on add storage, del storage, alter dur point
+---Hook positions: 'pre_event, original, after_event'
+---@param pPlayer CPlayer
+---@param pFld _ResourceItem_fld
+---@param pItem _STORAGE_LIST___db_con
+---@param bAdd boolean
+---@param nAlter integer
+local function CPlayer__SetMstHaveEffect(pPlayer, pFld, pItem, bAdd, nAlter) end
+
+---Purpose: Ignorant and favor jade effect handler.
+---Hook positions: 'original'
+---@param pPlayer CPlayer
+---@param nParam integer
+---@param fCurVal number
+---@param bAdd boolean
+local function CPlayer__SetEquipJadeEffect(pPlayer, nParam, fCurVal, bAdd) end
+
 ---Purpose: Player enter game notification.
 ---Hook positions: 'after_event'
 ---@param pPlayer CPlayer
