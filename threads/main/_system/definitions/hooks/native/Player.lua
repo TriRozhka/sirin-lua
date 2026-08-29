@@ -25,7 +25,7 @@ local function CPlayer__OutOfMap(pPlayer, pIntoMap, wLayerIndex, byMapOutType, x
 ---@param pPlayer CPlayer
 ---@param nEffCode integer
 ---@param fVal number
----@param bAdd boolean
+---@param bAdd boolean false called on full reset (login, timed jade update, MAU board/leave), true when value updats with some delta (delta can be negative)
 ---@param nDiffCnt integer
 local function CPlayer__apply_have_item_std_effect(pPlayer, nEffCode, fVal, bAdd, nDiffCnt) end
 

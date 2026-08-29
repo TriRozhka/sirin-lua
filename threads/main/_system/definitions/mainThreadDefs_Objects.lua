@@ -1447,7 +1447,7 @@ function CPlayer:pc_Revival(bUseableJade) end
 function CPlayer:IsEffectableEquip(pCon) end
 ---@param nEffCode integer
 ---@param fEffVal number
----@param bAdd boolean
+---@param bAdd boolean false called on full reset (login, timed jade update, MAU board/leave), true when value updats with some delta (delta can be negative)
 ---@param nDiffCnt integer
 function CPlayer:apply_have_item_std_effect(nEffCode, fEffVal, bAdd, nDiffCnt) end
 
