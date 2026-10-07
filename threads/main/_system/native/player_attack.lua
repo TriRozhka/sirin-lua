@@ -250,7 +250,7 @@ function sirinCPlayerAttack:AttackSkill(bUseEffBullet)
 		end
 
 		if bIsCounterAttack then
-			if not self.m_pp.bPassCount and not self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
+			if not self.m_pp.bPassCount and self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
 				local fCounterAttDist = pDst:GetAttackRange() + self.m_pAttChar:GetWidth() / 2 + pDst.m_EP:GetEff_Plus(_EFF_PLUS.GE_Att_Dist_)
 
 				if fCounterAttDist >= GetSqrt(pDst.m_fCurPos_x, pDst.m_fCurPos_z, self.m_pAttChar.m_fCurPos_x, self.m_pAttChar.m_fCurPos_z) then
@@ -374,7 +374,7 @@ function sirinCPlayerAttack:AttackUnit()
 		end
 
 		if bIsCounterAttack then
-			if not self.m_pp.bPassCount and not self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
+			if not self.m_pp.bPassCount and self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
 				local fCounterAttDist = pDst:GetAttackRange() + self.m_pAttChar:GetWidth() / 2 + pDst.m_EP:GetEff_Plus(_EFF_PLUS.GE_Att_Dist_)
 
 				if fCounterAttDist >= GetSqrt(pDst.m_fCurPos_x, pDst.m_fCurPos_z, self.m_pAttChar.m_fCurPos_x, self.m_pAttChar.m_fCurPos_z) then
