@@ -194,4 +194,4 @@ CONST_DefenseCouncilBonus_Def = 1.2
 CONST_nLimitDist = { 42, 56, 70, 84 }
 CONST_nLimitAngle = { { 180, 180, 180, 180 }, { 180, 180, 180, 180 }, { 180, 180, 180, 180 }, { 180, 180, 180, 180 } }
 CONST_nLimitRadius = { 42, 56, 70, 84 }
-CONST_s_fPartGravity = { 0.2, 0,23, 0.22, 0.18, 0.17 }
+CONST_s_fPartGravity = { 0.2, 0.23, 0.22, 0.18, 0.17 }

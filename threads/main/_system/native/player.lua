@@ -2950,7 +2950,7 @@ function sirinPlayerMgr.GetDefFC(pPlayer, nAttactPart, pAttChar)
 
 	if not pPlayer:IsRidingUnit() then
 		if pPlayer.m_fTalik_DefencePoint > 0 then
-			defFC = defFC * (pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc) - pPlayer.m_fTalik_AvoidPoint * (1 - sirinPlayerMgr.CalcDPRate(pPlayer)))
+			defFC = defFC * (pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc) - pPlayer.m_fTalik_DefencePoint * (1 - sirinPlayerMgr.CalcDPRate(pPlayer)))
 		else
 			defFC = defFC * pPlayer.m_EP:GetEff_Rate(_EFF_RATE.DefFc)
 		end

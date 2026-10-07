@@ -250,7 +250,7 @@ function sirinCPlayerAttack:AttackSkill(bUseEffBullet)
 		end
 
 		if bIsCounterAttack then
-			if not self.m_pp.bPassCount and not self.m_pp.nClass and pDst:GetWeaponClass() == 0 then
+			if not self.m_pp.bPassCount and not self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
 				local fCounterAttDist = pDst:GetAttackRange() + self.m_pAttChar:GetWidth() / 2 + pDst.m_EP:GetEff_Plus(_EFF_PLUS.GE_Att_Dist_)
 
 				if fCounterAttDist >= GetSqrt(pDst.m_fCurPos_x, pDst.m_fCurPos_z, self.m_pAttChar.m_fCurPos_x, self.m_pAttChar.m_fCurPos_z) then
@@ -328,7 +328,7 @@ function sirinCPlayerAttack:AttackSkill(bUseEffBullet)
 		attPnt = attPnt * bns
 		attPntEff = attPntEff * bns
 	else
-		local bns = self.m_pAttChar.m_EP:GetEff_Rate(self.m_pp.nClass)
+		local bns = self.m_pAttChar.m_EP:GetEff_Rate(self.m_pp.nClass + 2)
 		attPnt = attPnt * bns
 		attPntEff = attPntEff * bns
 	end
@@ -374,7 +374,7 @@ function sirinCPlayerAttack:AttackUnit()
 		end
 
 		if bIsCounterAttack then
-			if not self.m_pp.bPassCount and not self.m_pp.nClass and pDst:GetWeaponClass() == 0 then
+			if not self.m_pp.bPassCount and not self.m_pp.nClass == 0 and pDst:GetWeaponClass() == 0 then
 				local fCounterAttDist = pDst:GetAttackRange() + self.m_pAttChar:GetWidth() / 2 + pDst.m_EP:GetEff_Plus(_EFF_PLUS.GE_Att_Dist_)
 
 				if fCounterAttDist >= GetSqrt(pDst.m_fCurPos_x, pDst.m_fCurPos_z, self.m_pAttChar.m_fCurPos_x, self.m_pAttChar.m_fCurPos_z) then
@@ -864,8 +864,8 @@ function sirinPlayerAttack.SendMsg_AttackResult_Gen(pPlayer, pAT, wBulletIndex)
 	sendBuf:PushUInt8(pPlayer.m_ObjID.m_byID)
 	sendBuf:PushUInt32(pPlayer.m_dwObjSerial)
 	sendBuf:PushUInt8(pAT.m_pp.nPart)
-	sendBuf:PushUInt8(pAT.m_bIsCrtAtt and 1 or 0)
 	sendBuf:PushUInt16(wBulletIndex)
+	sendBuf:PushUInt8(pAT.m_bIsCrtAtt and 1 or 0)
 	sendBuf:PushUInt8(pAT.m_bActiveSucc and 1 or 0)
 	sendBuf:PushUInt8(#pAT.m_DamList)
 
@@ -1005,6 +1005,7 @@ function sirinPlayerAttack.SendMsg_AttackResult_Siege(pPlayer, pAT, wBulletIndex
 	sendBuf:PushUInt8(pAT.m_pp.nPart)
 	sendBuf:PushInt16(wBulletIndex)
 	sendBuf:PushUInt8(pAT.m_bIsCrtAtt and 1 or 0)
+	sendBuf:PushUInt8(pAT.m_bActiveSucc and 1 or 0)
 	sendBuf:PushInt16(math.floor(pAT.m_pp.fArea_x))
 	sendBuf:PushInt16(math.floor(pAT.m_pp.fArea_z))
 	sendBuf:PushUInt8(#pAT.m_DamList)
@@ -2548,7 +2549,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Skill(pPlayer, pTarget, x, y, 
 
 	for _,d in ipairs(pAT.m_DamList) do
 		repeat
-			d.m_pChar:SetDamage(d.m_nDamage + d.m_nActiveDamage, pPlayer, pPlayer:GetLevel(), pAT.m_bIsCrtAtt, -1, 0, true)
+			d.m_pChar:SetDamage(d.m_nDamage + d.m_nActiveDamage, pPlayer, pPlayer:GetLevel(), pAT.m_bIsCrtAtt, byEffectCode, pSkillFld.m_dwIndex, true)
 
 			if pPlayer:GetObjRace() == d.m_pChar:GetObjRace() then
 				break
@@ -2814,7 +2815,7 @@ function sirinPlayerAttack.CPlayer__pc_PlayAttack_Force(pPlayer, pTarget, x, y, 
 
 	for _,d in ipairs(pAT.m_DamList) do
 		repeat
-			d.m_pChar:SetDamage(d.m_nDamage + d.m_nActiveDamage, pPlayer, pPlayer:GetLevel(), pAT.m_bIsCrtAtt, -1, 0, true)
+			d.m_pChar:SetDamage(d.m_nDamage + d.m_nActiveDamage, pPlayer, pPlayer:GetLevel(), pAT.m_bIsCrtAtt, EFF_CODE.force, pForceFld.m_dwIndex, true)
 
 			if pPlayer:GetObjRace() == d.m_pChar:GetObjRace() then
 				break

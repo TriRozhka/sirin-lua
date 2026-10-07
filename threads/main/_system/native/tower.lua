@@ -113,6 +113,12 @@ function sirinTowerMgr.testTowerTarget(pTower, pTarget)
 			pTarPlayer = objectToAMP(pTarget).m_pOwner
 		elseif pTarget.m_ObjID.m_byID == ID_CHAR.holy_stone then
 			break -- towers not deal damage to stones
+		elseif pTarget.m_ObjID.m_byID == ID_CHAR.holy_keeper then
+			local pKeeper = Sirin.mainThread.objectToHolyKeeper(pTarget)
+
+			if pKeeper:GetObjRace() ~= pTower:GetObjRace() or pTower.m_pMasterTwr:IsChaosMode() then
+				return true
+			end
 		end
 
 		if pTower.m_pMasterTwr then -- we are non system tower
